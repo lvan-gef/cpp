@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/05 15:48:33 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/03/05 15:48:33 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/06/13 22:32:17 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,21 @@
 #include "./ClapTrap.hpp"
 
 class ScavTrap : public ClapTrap {
-public:
-  ScavTrap();
-  explicit ScavTrap(const std::string &name);
+  public:
+    ScavTrap();
+    explicit ScavTrap(const std::string &name);
 
-  ScavTrap(const ScavTrap &scavTrap);
-  ScavTrap &operator=(const ScavTrap &scavTrap);
+    ScavTrap(const ScavTrap &scavTrap);
+    ScavTrap &operator=(const ScavTrap &scavTrap);
 
-  ~ScavTrap();
+    ~ScavTrap();
 
-  // override the takeDamage method from the parrent
-  void attack(const std::string &target);
+    // override the takeDamage method from the parrent
+    void attack(const std::string &target);
 
-  void guardGate(void) const;
+    void guardGate(void) const;
 
-private:
+  private:
 };
 
 #endif
