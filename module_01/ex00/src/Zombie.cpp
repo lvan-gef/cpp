@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/16 04:45:50 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/01/24 15:42:03 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/06/13 21:22:19 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 Zombie::Zombie(std::string name) : _name(name) {}
 
 void Zombie::announce(void) {
-  std::cout << this->_name << ": BraiiiiiiinnnzzzZ..." << std::endl;
+    std::cout << this->_name << ": BraiiiiiiinnnzzzZ..." << std::endl;
 }
 
 Zombie::~Zombie(void) {
-  std::cout << this->_name << " is destroyed" << std::endl;
+    std::cout << this->_name << " is destroyed" << std::endl;
 }

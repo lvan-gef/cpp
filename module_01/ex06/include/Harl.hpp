@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/21 03:49:09 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/01/24 15:44:00 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/06/13 21:27:10 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,22 +20,22 @@
 #include <string>
 
 class Harl {
-public:
-  Harl();
+  public:
+    Harl();
 
-  void complain(std::string level);
+    void complain(std::string level);
 
-  ~Harl();
+    ~Harl();
 
-private:
-  void debug(void);
-  void info(void);
-  void warning(void);
-  void error(void);
-  void silent(void);
+  private:
+    void debug(void);
+    void info(void);
+    void warning(void);
+    void error(void);
+    void silent(void);
 
-  typedef void (Harl::*MemberFunctionPointer)();
-  std::map<std::string, MemberFunctionPointer> functionMap;
+    typedef void (Harl::*MemberFunctionPointer)();
+    std::map<std::string, MemberFunctionPointer> functionMap;
 };
 
 #endif

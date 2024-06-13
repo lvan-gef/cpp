@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/17 05:06:01 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/01/24 15:42:21 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/06/13 21:24:42 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 Zombie::Zombie() { std::cout << "Create a soldier for the zombie army\n"; };
 
 void Zombie::announce(void) {
-  std::cout << this->_name << ": BraiiiiiiinnnzzzZ..." << std::endl;
+    std::cout << this->_name << ": BraiiiiiiinnnzzzZ..." << std::endl;
 }
 
 void Zombie::setName(std::string name) { this->_name = name; }

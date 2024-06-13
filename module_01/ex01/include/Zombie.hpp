@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/16 04:45:26 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/01/24 15:42:16 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/06/13 21:24:27 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@
 #include <string>
 
 class Zombie {
-public:
-  Zombie();
+  public:
+    Zombie();
 
-  void announce(void);
-  void setName(std::string name);
-  std::string getName(void);
+    void announce(void);
+    void setName(std::string name);
+    std::string getName(void);
 
-  ~Zombie(void);
+    ~Zombie(void);
 
-private:
-  std::string _name;
+  private:
+    std::string _name;
 };
 
 Zombie *zombieHorde(int N, std::string name);
