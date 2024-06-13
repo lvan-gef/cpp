@@ -2,7 +2,7 @@ NAME = megaphone
 
 CC = c++
 
-FLAGS = -Wall -Wextra -Werror -std=c++98
+GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++98
 
 SRCDIR = src/
 OBJDIR = obj/
