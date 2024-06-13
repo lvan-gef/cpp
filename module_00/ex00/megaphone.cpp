@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 22:33:48 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/01/12 04:22:34 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/06/13 20:37:26 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ int main(int argc, char **argv) {
     std::cout << "* LOUD AND UNBEARABLE FEEDBACK NOISE *\n";
   } else {
     for (int i = 1; i < argc; i++) {
-      for (int j = 0; j < strlen(argv[i]); j++) {
-        putchar(toupper(argv[i][j]));
+      for (int j = 0; j < (int)strlen(argv[i]); j++) {
+        putwchar(toupper(argv[i][j]));
       }
     }
     std::cout << "\n";
