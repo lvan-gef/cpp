@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/01/11 23:23:51 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/01/12 04:23:13 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/06/13 21:15:29 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int main(void) {
 
-  Phonebook phonebook;
+    Phonebook phonebook;
 
-  phonebook.run();
+    phonebook.run();
 
-  return 0;
+    return 0;
 }
