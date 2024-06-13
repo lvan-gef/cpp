@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/02/02 23:12:08 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/02/03 23:17:28 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/06/13 22:20:52 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,19 @@
 #include <iostream>
 
 class Fixed {
- public:
-  Fixed();
-  Fixed(const Fixed &fixed);
-  Fixed &operator=(const Fixed &fixed);
+  public:
+    Fixed();
+    Fixed(const Fixed &fixed);
+    Fixed &operator=(const Fixed &fixed);
 
-  int getRawBits(void) const;
-  void setRawBits(int const raw);
+    int getRawBits(void) const;
+    void setRawBits(int const raw);
 
-  ~Fixed();
+    ~Fixed();
 
- private:
-  int value;
-  static const int fraction = 8;
+  private:
+    int value;
+    static const int fraction = 8;
 };
 
 #endif
