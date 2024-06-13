@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/26 23:34:52 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/03/29 18:41:05 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/06/13 22:39:26 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ struct AMateriaNode {
     AMateria *materia;
     AMateriaNode *next{};
 
-    AMateriaNode(AMateria *m) : materia(m), next(nullptr){};
+    AMateriaNode(AMateria *m) : materia(m), next(nullptr) {};
 };
 
 class Character : public ICharacter {

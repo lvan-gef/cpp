@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/26 23:34:52 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/03/26 23:34:52 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/06/13 22:39:26 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ class ICharacter {
     virtual void unequip(int idx) = 0;
     virtual void use(int idx, ICharacter &target) = 0;
 
-    virtual ~ICharacter(){};
+    virtual ~ICharacter() {};
 };
 
 #endif // !ICHARACTER_HPP

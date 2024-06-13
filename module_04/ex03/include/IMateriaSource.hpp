@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/03/26 23:34:52 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/03/26 23:34:52 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/06/13 22:39:26 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ class IMateriaSource {
     virtual void learnMateria(AMateria *) = 0;
     virtual AMateria *createMateria(std::string const &type) = 0;
 
-    virtual ~IMateriaSource(){};
+    virtual ~IMateriaSource() {};
 };
 
 #endif // !IMATERIASOURCE_HPP
