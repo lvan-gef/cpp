@@ -1,0 +1,42 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-I",
+      "include",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wshadow",
+      "-Wpedantic",
+      "-std=c++11",
+      "-o",
+      "obj/ScalarConverter.o",
+      "src/ScalarConverter.cpp"
+    ],
+    "directory": "/Users/luxesound/github/cpp06/ex00",
+    "file": "/Users/luxesound/github/cpp06/ex00/src/ScalarConverter.cpp",
+    "output": "/Users/luxesound/github/cpp06/ex00/obj/ScalarConverter.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/c++",
+      "-I",
+      "include",
+      "-c",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Wshadow",
+      "-Wpedantic",
+      "-std=c++11",
+      "-o",
+      "obj/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/Users/luxesound/github/cpp06/ex00",
+    "file": "/Users/luxesound/github/cpp06/ex00/src/main.cpp",
+    "output": "/Users/luxesound/github/cpp06/ex00/obj/main.o"
+  }
+]
