@@ -1,11 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   ScalarConverter.hpp                                :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/10/14 20:21:57 by lvan-gef      #+#    #+#                 */
+/*   Updated: 2024/10/14 20:22:01 by lvan-gef      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef SCALARCONVERTER_HPP
 #define SCALARCONVERTER_HPP
 
-#include <iostream>
-#include <string>
+#include <climits>
 #include <cmath>
 #include <iomanip>
-
+#include <iostream>
+#include <limits>
+#include <string>
 
 class ScalarConverter {
   public:
@@ -22,7 +35,7 @@ class ScalarConverter {
     ~ScalarConverter();
 
   private:
-	enum class ScalarType { CHAR, INT, FLOAT, DOUBLE, INVALID };
+    enum class ScalarType { CHAR, INT, FLOAT, DOUBLE, INVALID };
     static ScalarType detectType(const std::string &data);
 };
 

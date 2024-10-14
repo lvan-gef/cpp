@@ -1,19 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   main.cpp                                           :+:    :+:            */
+/*   Tester.hpp                                         :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/10/14 20:23:32 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/14 20:29:05 by lvan-gef      ########   odam.nl         */
+/*   Created: 2024/10/14 20:29:49 by lvan-gef      #+#    #+#                 */
+/*   Updated: 2024/10/14 20:29:56 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/Tester.hpp"
+#include <cassert>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
 
-int main() {
-    tester();
+#include "../include/ScalarConverter.hpp"
 
-    return 0;
-}
+void tester();

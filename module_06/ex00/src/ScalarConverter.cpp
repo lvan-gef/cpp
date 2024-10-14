@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   ScalarConverter.cpp                                :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/10/14 20:22:08 by lvan-gef      #+#    #+#                 */
+/*   Updated: 2024/10/14 20:22:11 by lvan-gef      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/ScalarConverter.hpp"
 
 ScalarConverter::ScalarConverter() {
@@ -6,7 +18,7 @@ ScalarConverter::ScalarConverter() {
 
 // check wat de type is voor dat we converten??
 void ScalarConverter::convert(const std::string &data) {
-ScalarType type = ScalarConverter::detectType(data);
+    ScalarType type = ScalarConverter::detectType(data);
 
     if (type == ScalarType::INVALID) {
         std::cout << "Invalid input" << std::endl;
@@ -19,7 +31,8 @@ ScalarType type = ScalarConverter::detectType(data);
     if (type == ScalarType::CHAR) {
         std::cout << "char: '" << data[1] << "'" << std::endl;
         std::cout << "int: " << static_cast<int>(data[1]) << std::endl;
-        std::cout << "float: " << static_cast<float>(data[1]) << "f" << std::endl;
+        std::cout << "float: " << static_cast<float>(data[1]) << "f"
+                  << std::endl;
         std::cout << "double: " << static_cast<double>(data[1]) << std::endl;
         return;
     }
@@ -35,12 +48,14 @@ ScalarType type = ScalarConverter::detectType(data);
 
         // Char
         if (value >= 32 && value <= 126)
-            std::cout << "char: '" << static_cast<char>(value) << "'" << std::endl;
+            std::cout << "char: '" << static_cast<char>(value) << "'"
+                      << std::endl;
         else
             std::cout << "char: Non displayable" << std::endl;
 
         // Int
-        if (value > std::numeric_limits<int>::max() || value < std::numeric_limits<int>::min() || std::isnan(value))
+        if (value > std::numeric_limits<int>::max() ||
+            value < std::numeric_limits<int>::min() || std::isnan(value))
             std::cout << "int: impossible" << std::endl;
         else
             std::cout << "int: " << static_cast<int>(value) << std::endl;
@@ -56,12 +71,13 @@ ScalarType type = ScalarConverter::detectType(data);
             std::cout << "double: " << data << std::endl;
         else
             std::cout << "double: " << value << std::endl;
-    } catch (const std::exception& e) {
+    } catch (const std::exception &e) {
         std::cout << "char: impossible" << std::endl;
         std::cout << "int: impossible" << std::endl;
         std::cout << "float: impossible" << std::endl;
         std::cout << "double: impossible" << std::endl;
-    }}
+    }
+}
 
 ScalarConverter::ScalarType
 ScalarConverter::detectType(const std::string &data) {

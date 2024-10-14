@@ -1,22 +1,19 @@
-NAME = ScalarConverter
-TESTNAME = test
-BUILD_MODE = build
+NAME = scalarConverter
 
 CC = c++
 
 GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11
 
 SRCDIR = src/
-TESTDIR = tester/src/
 OBJDIR = obj/
 
-SRCFILES = ScalarConverter.cpp main.cpp
+SRCFILES = main.cpp ScalarConverter.cpp Tester.cpp
 
 SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)
 
 HEADERS = -I include
 
-.PHONY: all clean fclean re test
+.PHONY: all clean fclean re
 
 all: $(NAME)
 
