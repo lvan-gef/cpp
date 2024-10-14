@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   Serializer.cpp                                     :+:    :+:            */
+/*   Tester.hpp                                         :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/10/13 21:16:48 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/14 20:34:49 by lvan-gef      ########   odam.nl         */
+/*   Created: 2024/10/14 20:34:25 by lvan-gef      #+#    #+#                 */
+/*   Updated: 2024/10/14 20:34:34 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <cassert>
+#include <iostream>
+#include <type_traits>
+
 #include "../include/Serializer.hpp"
 
-uintptr_t Serializer::serialize(Data *ptr) {
-    return reinterpret_cast<uintptr_t>(ptr);
-}
-
-Data *Serializer::deserialize(uintptr_t raw) {
-    return reinterpret_cast<Data *>(raw);
-}
+void test_serializer();

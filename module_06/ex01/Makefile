@@ -7,7 +7,7 @@ GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11
 SRCDIR = src/
 OBJDIR = obj/
 
-SRCFILES = main.cpp Serializer.cpp
+SRCFILES = main.cpp Serializer.cpp Tester.cpp
 
 SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)
 
