@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 20:21:57 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/14 20:22:01 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/15 16:52:43 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@
 
 class ScalarConverter {
   public:
-    ScalarConverter();
-
+    ScalarConverter() = delete;
     ScalarConverter(const ScalarConverter &rhs) = delete;
     ScalarConverter &operator=(const ScalarConverter &rhs) = delete;
 
@@ -31,12 +30,12 @@ class ScalarConverter {
     ScalarConverter &operator=(ScalarConverter &&rhs) noexcept = delete;
 
     static void convert(const std::string &data);
-
-    ~ScalarConverter();
+    ~ScalarConverter() = delete;
 
   private:
     enum class ScalarType { CHAR, INT, FLOAT, DOUBLE, INVALID };
     static ScalarType detectType(const std::string &data);
+
 };
 
 #endif // !SCALARCONVERTER_HPP

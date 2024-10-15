@@ -6,17 +6,13 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 20:22:08 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/14 20:22:11 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/15 16:53:04 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "../include/ScalarConverter.hpp"
 
-ScalarConverter::ScalarConverter() {
-    std::cout << "Default constructor for ScalarConverter is called" << "\n";
-}
-
-// check wat de type is voor dat we converten??
 void ScalarConverter::convert(const std::string &data) {
     ScalarType type = ScalarConverter::detectType(data);
 
@@ -27,7 +23,6 @@ void ScalarConverter::convert(const std::string &data) {
 
     std::cout << std::fixed << std::setprecision(1);
 
-    // Char conversion
     if (type == ScalarType::CHAR) {
         std::cout << "char: '" << data[1] << "'" << std::endl;
         std::cout << "int: " << static_cast<int>(data[1]) << std::endl;
@@ -37,7 +32,7 @@ void ScalarConverter::convert(const std::string &data) {
         return;
     }
 
-    double value;
+    double value = NAN;
     try {
         if (type == ScalarType::INT)
             value = std::stoi(data);
@@ -121,8 +116,4 @@ ScalarConverter::detectType(const std::string &data) {
         return ScalarType::DOUBLE;
 
     return ScalarType::INT;
-}
-
-ScalarConverter::~ScalarConverter() {
-    std::cout << "Default destructor for ScalarConverter is called" << "\n";
 }
