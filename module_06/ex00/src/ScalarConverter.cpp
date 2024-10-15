@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 20:22:08 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/15 17:15:41 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/15 21:29:01 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,51 +31,39 @@ void ScalarConverter::convert(const std::string &data) {
         return;
     }
 
-    double value = NAN;
-    try {
-        if (type == ScalarType::INT) {
-            value = std::stoi(data);
-        } else if (type == ScalarType::FLOAT) {
-            value = std::stof(data);
-        } else {
-            value = std::stod(data);
-        }
-
-        // Char
-        if (value >= 32 && value <= 126) {
-            std::cout << "char: '" << static_cast<char>(value) << "'"
-                      << std::endl;
-        } else {
-            std::cout << "char: Non displayable" << std::endl;
-        }
-
-        // Int
-        if (value > std::numeric_limits<int>::max() ||
-            value < std::numeric_limits<int>::min() || std::isnan(value)) {
-            std::cout << "int: impossible" << std::endl;
-        } else {
-            std::cout << "int: " << static_cast<int>(value) << std::endl;
-        }
-
-        // Float
-        if (type == ScalarType::FLOAT) {
-            std::cout << "float: " << data << std::endl;
-        } else {
-            std::cout << "float: " << value << "f" << std::endl;
-        }
-
-        // Double
-        if (type == ScalarType::DOUBLE) {
-            std::cout << "double: " << data << std::endl;
-        } else {
-            std::cout << "double: " << value << std::endl;
-        }
-    } catch (const std::exception &e) {
-        std::cout << "char: impossible" << std::endl;
-        std::cout << "int: impossible" << std::endl;
-        std::cout << "float: impossible" << std::endl;
-        std::cout << "double: impossible" << std::endl;
+    double dValue = NAN;
+    long int iValue = NAN;
+    if (type == ScalarType::INT) {
+        iValue = std::stol(data);
+        dValue = iValue;
+    } else if (type == ScalarType::FLOAT) {
+        dValue = std::stof(data);
+        iValue = dValue;
+    } else {
+        dValue = std::stod(data);
+        iValue = dValue;
     }
+
+    // Char
+    if (iValue >= 32 && iValue <= 126) {
+        std::cout << "char: '" << static_cast<char>(iValue) << "'" << std::endl;
+    } else {
+        std::cout << "char: Non displayable" << std::endl;
+    }
+
+    // Int
+    if (iValue > std::numeric_limits<int>::max() ||
+        iValue < std::numeric_limits<int>::min() || std::isnan(iValue)) {
+        std::cout << "int: impossible" << std::endl;
+    } else {
+        std::cout << "int: " << static_cast<int>(iValue) << std::endl;
+    }
+
+    // Float
+    std::cout << "float: " << static_cast<float>(dValue) << "f" << std::endl;
+
+    // Double
+    std::cout << "double: " << static_cast<double>(dValue) << std::endl;
 }
 
 ScalarConverter::ScalarType

@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 20:29:33 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/15 16:53:29 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/15 21:07:18 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,15 @@ void tester() {
     std::vector<std::pair<std::string, std::string>> testCases = {
         {"'a'", "char: 'a'\nint: 97\nfloat: 97.0f\ndouble: 97.0\n"},
         {"0", "char: Non displayable\nint: 0\nfloat: 0.0f\ndouble: 0.0\n"},
+        {"2147483647", "char: Non displayable\nint: 2147483647\nfloat: "
+                       "2147483647.0f\ndouble: 2147483647.0\n"},
+        {"2147483648", "char: Non displayable\nint: impossible\nfloat: "
+                       "2147483648.0f\ndouble: 2147483648.0\n"},
         {"42", "char: '*'\nint: 42\nfloat: 42.0f\ndouble: 42.0\n"},
         {"-42",
          "char: Non displayable\nint: -42\nfloat: -42.0f\ndouble: -42.0\n"},
         {"4.2f", "char: Non displayable\nint: 4\nfloat: 4.2f\ndouble: 4.2\n"},
+        {"4.", "char: Non displayable\nint: 4\nfloat: 4.0f\ndouble: 4.0\n"},
         {"4.2", "char: Non displayable\nint: 4\nfloat: 4.2f\ndouble: 4.2\n"},
         {"nan",
          "char: Non displayable\nint: impossible\nfloat: nanf\ndouble: nan\n"},
