@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 20:21:57 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/15 16:52:43 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/15 17:16:06 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ class ScalarConverter {
   private:
     enum class ScalarType { CHAR, INT, FLOAT, DOUBLE, INVALID };
     static ScalarType detectType(const std::string &data);
-
 };
 
 #endif // !SCALARCONVERTER_HPP

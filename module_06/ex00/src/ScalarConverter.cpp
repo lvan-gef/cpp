@@ -6,10 +6,9 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 20:22:08 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/15 16:53:04 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/15 17:15:41 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../include/ScalarConverter.hpp"
 
@@ -34,38 +33,43 @@ void ScalarConverter::convert(const std::string &data) {
 
     double value = NAN;
     try {
-        if (type == ScalarType::INT)
+        if (type == ScalarType::INT) {
             value = std::stoi(data);
-        else if (type == ScalarType::FLOAT)
+        } else if (type == ScalarType::FLOAT) {
             value = std::stof(data);
-        else
+        } else {
             value = std::stod(data);
+        }
 
         // Char
-        if (value >= 32 && value <= 126)
+        if (value >= 32 && value <= 126) {
             std::cout << "char: '" << static_cast<char>(value) << "'"
                       << std::endl;
-        else
+        } else {
             std::cout << "char: Non displayable" << std::endl;
+        }
 
         // Int
         if (value > std::numeric_limits<int>::max() ||
-            value < std::numeric_limits<int>::min() || std::isnan(value))
+            value < std::numeric_limits<int>::min() || std::isnan(value)) {
             std::cout << "int: impossible" << std::endl;
-        else
+        } else {
             std::cout << "int: " << static_cast<int>(value) << std::endl;
+        }
 
         // Float
-        if (type == ScalarType::FLOAT)
+        if (type == ScalarType::FLOAT) {
             std::cout << "float: " << data << std::endl;
-        else
+        } else {
             std::cout << "float: " << value << "f" << std::endl;
+        }
 
         // Double
-        if (type == ScalarType::DOUBLE)
+        if (type == ScalarType::DOUBLE) {
             std::cout << "double: " << data << std::endl;
-        else
+        } else {
             std::cout << "double: " << value << std::endl;
+        }
     } catch (const std::exception &e) {
         std::cout << "char: impossible" << std::endl;
         std::cout << "int: impossible" << std::endl;
@@ -89,7 +93,7 @@ ScalarConverter::detectType(const std::string &data) {
     }
 
     bool hasDecimal = false;
-    bool hasF = false;
+    bool hasFloat = false;
 
     for (size_t i = 0; i < data.length(); ++i) {
         if (i == 0 && data[i] == '-') {
@@ -102,15 +106,15 @@ ScalarConverter::detectType(const std::string &data) {
             hasDecimal = true;
         } else if (i == data.length() - 1 &&
                    (data[i] == 'f' || data[i] == 'F')) {
-            hasF = true;
+            hasFloat = true;
         } else if (!std::isdigit(data[i])) {
             return ScalarType::INVALID;
         }
     }
 
-    if (hasF && !hasDecimal)
+    if (hasFloat && !hasDecimal)
         return ScalarType::INVALID;
-    if (hasF)
+    if (hasFloat)
         return ScalarType::FLOAT;
     if (hasDecimal)
         return ScalarType::DOUBLE;
