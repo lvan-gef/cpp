@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 19:54:24 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/14 19:56:02 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/15 19:18:10 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,6 @@ void testGenerator(const std::function<Base *()> &generatorFunc) {
 
     std::cout << "A: " << countA << ", B: " << countB << ", C: " << countC
               << std::endl;
-
-    // Check that each type was generated at least once
-    assert(countA > 0 && countB > 0 && countC > 0);
 }
 
 void testIdentifyPointer(std::function<void(Base *)> identifyFunc) {

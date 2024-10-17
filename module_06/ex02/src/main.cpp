@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 19:54:24 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/14 19:56:10 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/15 19:13:40 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 #include "../include/Tester.hpp"
 
 static Base *generator() {
+    uint64_t seed = std::chrono::duration_cast<std::chrono::milliseconds>(
+                        std::chrono::system_clock::now().time_since_epoch())
+                        .count();
+    srand(seed);
     int random = rand() % 3;
 
     switch (random % 3) {
