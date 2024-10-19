@@ -6,12 +6,11 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 20:22:08 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/17 19:39:59 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/18 00:36:59 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/ScalarConverter.hpp"
-#include <string>
 
 void ScalarConverter::convert(const std::string &data) {
     ScalarType type = ScalarConverter::detectType(data);
@@ -27,6 +26,7 @@ void ScalarConverter::convert(const std::string &data) {
         return;
     }
     else if (type == ScalarType::INT) {
+        // check length before parsing
         long int value = std::stol(data);
         toChar(value);
         toInt(value);
