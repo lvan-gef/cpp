@@ -1,125 +1,92 @@
 #! /usr/bin/env python3
 
-import multiprocessing as mp
-from typing import Generator, Tuple, List
+from typing import Generator, Tuple
 import subprocess
 import numpy
-import signal
-
-# def gen_input():
-# data = [
-#     ['a', "char: 'a'\nint: 97\nfloat: 97.0f\ndouble: 97.0\n"],
-# ]
-# {"0", "char: Non displayable\nint: 0\nfloat: 0.0f\ndouble: 0.0\n"},
-# {"2147483647", "char: Non displayable\nint: 2147483647\nfloat: 2147483647.0f\ndouble: 2147483647.0\n"},
-# {"2147483648", "char: Non displayable\nint: impossible\nfloat: 2147483648.0f\ndouble: 2147483648.0\n"},
-# {"42", "char: '*'\nint: 42\nfloat: 42.0f\ndouble: 42.0\n"},
-# {"-42",
-#  "char: Non displayable\nint: -42\nfloat: -42.0f\ndouble: -42.0\n"},
-# {"4.2f", "char: Non displayable\nint: 4\nfloat: 4.2f\ndouble: 4.2\n"},
-# {"4.", "char: Non displayable\nint: 4\nfloat: 4.0f\ndouble: 4.0\n"},
-# {"4.2", "char: Non displayable\nint: 4\nfloat: 4.2f\ndouble: 4.2\n"},
-# {"nan",
-#  "char: Non displayable\nint: impossible\nfloat: nanf\ndouble: nan\n"},
-# {"nanf",
-#  "char: Non displayable\nint: impossible\nfloat: nanf\ndouble: nan\n"},
-# {"+inf",
-#  "char: Non displayable\nint: impossible\nfloat: inff\ndouble: +inf\n"},
-# {"-inff", "char: Non displayable\nint: impossible\nfloat: "
-#           "-inff\ndouble: -inf\n"},
-# {"42.42.42", "Invalid input\n"}
-
-# for d in data:
-#     yield d
+import struct
 
 
-# def create_floating_map(ranges):
-#     result = {}
-#
-#     for start, end, value in ranges:
-#         result.update({i: value for i in range(start, end + 1)})
-#
-#     return result
-
-
-# Define the ranges and their corresponding values
-# ranges = [
-#     (-2147483647, -2147483584, -2147483648),
-#     (-2147483583, -2147483520, -2147483520)
-# ]
-
-# Define the complete range mappings
-# ranges = [
-#     (-2147483648, -2147483648, -2147483648),  # Minimum 32-bit integer value
-#     (-2147483647, -2147483610, -2147483648),  # Your original range
-#     (-2147483609, -2147483520, -2147483520.00),  # The range you mentioned
-#     (-2147483519, -1073741824, None),  # Midpoint, assuming linear progression
-#     (-1073741823, -1, None),  # Up to -1
-#     (0, 0, 0)  # Zero
-# ]
-
-# floating_map = create_floating_map(ranges)
-
-# def create_floating_map(ranges):
-#     result = {}
-#     for start, end, value in ranges:
-#         result.update({i: value for i in range(start, end + 1)})
-#     return result
-#
-#
-# # Define the complete range mappings
-# ranges = [
-#     (-2147483648, -2147483648, -2147483648),  # Minimum 32-bit integer value
-#     (-2147483647, -2147483610, -2147483648),  # Your original range
-#     (-2147483609, -2147483520, -2147483520.00),  # The range you mentioned
-#     (-2147483519, -1073741824, None),  # Midpoint, assuming linear progression
-#     (-1073741823, -1, None),  # Up to -1
-#     (0, 0, 0)  # Zero
-# ]
-#
-#
-# # Function to calculate float value for the middle ranges
-# def calculate_float(x):
-#     if -2147483519 >= x >= -1073741824:
-#         return float(x)
-#     elif -1073741823 >= x >= -1:
-#         return float(x)
-#     else:
-#         return x  # For values already specified
-
-
-# # Create the floating map
-# floating_map = create_floating_map(ranges)
-#
-# # Fill in the calculated float values
-# for i in range(-2147483519, 0):
-#     floating_map[i] = calculate_float(i)
-#
-# with open('float_mapping', 'w') as f:
-#     json.dump(floating_map, f, indent=4)
+def to_float32(value):
+    return struct.unpack('f', struct.pack('f', value))[0]
 
 
 def gen_chars() -> Generator[Tuple[str, str], None, None]:
     # skip 0 it gives a error in python (NULL byte)
     for i in range(1, 128):
         if i < 32 or i > 126:
-            output = f'char: Non displayable\nint: {
-                i}\nfloat: {i}.00f\ndouble: {i}.00'
+            output = f'char: Non displayable\nint: impossible\nfloat: impossible\ndouble: impossible'
+        elif i >= 48 and i <= 57:
+            output = f"char: Non displayable\nint: {i - 48}\nfloat: {i - 48}.00f\ndouble: {i - 48}.00"
         else:
-            output = f"char: '{chr(i)}'\nint: {i}\nfloat: {
-                i}.00f\ndouble: {i}.00"
+            output = f"char: '{chr(i)}'\nint: impossible\nfloat: impossible\ndouble: impossible"
+
         yield chr(i), output
 
 
-# nanf +inff -inff nan +inf -inf
-# def gen_int_space() -> Generator[Tuple[int, str], None, None]:
-#     for nbr in range(-2147483648, 2147483648):
-#         if nbr < 32 or nbr > 126:
-#             output = f'char: Non displayable\nint: {nbr}\nfloat: {numpy.float32(nbr):.2f}f\ndouble: {nbr}.00'
-#         else:
-#             output = f'char: {chr(nbr)}\nint: {nbr}\nfloat: {numpy.float32(nbr):.2f}f\ndouble: {nbr}.00'
-#
-#         yield nbr, output
+def gen_int_space() -> Generator[Tuple[int, str], None, None]:
+    # for nbr in range(-2147483648, 2147483648):
+    for nbr in range(0, 2147483648):
+        if nbr < 0 or nbr > 127:
+            output = f'char: impossible\nint: {nbr}\nfloat: {numpy.float32(nbr):.2f}f\ndouble: {nbr}.00'
+        elif nbr < 32 or nbr == 127:
+            output = f'char: Non displayable\nint: {nbr}\nfloat: {numpy.float32(nbr):.2f}f\ndouble: {nbr}.00'
+        else:
+            output = f"char: '{chr(nbr)}'\nint: {nbr}\nfloat: {numpy.float32(nbr):.2f}f\ndouble: {nbr}.00"
+
+        yield nbr, output
+
+    yield 2147483648, f'char: impossible\nint: impossible\nfloat: {numpy.float32(2147483648):.2f}f\ndouble: {to_float32(2147483648)}0'
+    yield -2147483649, f'char: impossible\nint: impossible\nfloat: {numpy.float32(-2147483649):.2f}f\ndouble: {to_float32(-2147483649)}0'
+
+
+def gen_nan_inf() -> Generator[Tuple[int, str], None, None]:
+    yield 'nan', 'char: impossible\nint: impossible\nfloat: nanf\ndouble: nan'
+    yield 'nanf', 'char: impossible\nint: impossible\nfloat: nanf\ndouble: nan'
+    yield 'inf', 'char: impossible\nint: impossible\nfloat: inff\ndouble: inf'
+    yield 'inff', 'char: impossible\nint: impossible\nfloat: inff\ndouble: inf'
+    yield '+inf', 'char: impossible\nint: impossible\nfloat: inff\ndouble: inf'
+    yield '+inff', 'char: impossible\nint: impossible\nfloat: inff\ndouble: inf'
+    yield '-inf', 'char: impossible\nint: impossible\nfloat: -inff\ndouble: -inf'
+    yield '-inff', 'char: impossible\nint: impossible\nfloat: -inff\ndouble: -inf'
+
+
+def gen_edge_cases() -> Generator[Tuple[str, str], None, None]:
+    # Extreme values
+    yield "2147483647", "char: impossible\nint: 2147483647\nfloat: 2147483648.00f\ndouble: 2147483647.00"
+    yield "-2147483648", "char: impossible\nint: -2147483648\nfloat: -2147483648.00f\ndouble: -2147483648.00"
+    yield "2147483648", "char: impossible\nint: impossible\nfloat: 2147483648.00f\ndouble: 2147483648.00"
+    yield "-2147483649", "char: impossible\nint: impossible\nfloat: -2147483648.00f\ndouble: -2147483649.00"
+
+    # Float edge cases
+    yield "340282346638528859811704183484516925440.0f", "char: impossible\nint: impossible\nfloat: 340282346638528859811704183484516925440.00f\ndouble: 340282346638528859811704183484516925440.00"
+    yield "-340282346638528859811704183484516925440.0f", "char: impossible\nint: impossible\nfloat: -340282346638528859811704183484516925440.00f\ndouble: -340282346638528859811704183484516925440.00"
+
+    # Special cases
+    yield "0", "char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00"
+    yield "+0", "char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00"
+    yield "-0", "char: Non displayable\nint: 0\nfloat: -0.00f\ndouble: -0.00"
+    yield "0.0f", "char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00"
+    yield "-0.0f", "char: Non displayable\nint: 0\nfloat: -0.00f\ndouble: -0.00"
+
+    # Borderline displayable characters
+    yield "31", "char: Non displayable\nint: 31\nfloat: 31.00f\ndouble: 31.00"
+    yield "32", "char: ' '\nint: 32\nfloat: 32.00f\ndouble: 32.00"
+    yield "126", "char: '~'\nint: 126\nfloat: 126.00f\ndouble: 126.00"
+    yield "127", "char: Non displayable\nint: 127\nfloat: 127.00f\ndouble: 127.00"
+
+    # Floating point precision
+    yield "0.1f", "char: Non displayable\nint: 0\nfloat: 0.10f\ndouble: 0.10"
+    yield "0.2f", "char: Non displayable\nint: 0\nfloat: 0.20f\ndouble: 0.20"
+    yield "0.3f", "char: Non displayable\nint: 0\nfloat: 0.30f\ndouble: 0.30"
+
+    # Scientific notation
+    yield "1e-40", "char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00"
+    yield "1e-40f", "char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00"
+    yield "1e40", "char: Non displayable\nint: impossible\nfloat: inff\ndouble: 10000000000000000303786028427003666890752.00"
+
+    yield "-0", "char: Non displayable\nint: 0\nfloat: -0.00f\ndouble: -0.00"
+    yield "1e-45", "char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00"
+    yield "-1e-45", "char: impossible\nint: 0\nfloat: -0.00f\ndouble: -0.00"
 
 
 def test_char_input() -> None:
@@ -146,98 +113,70 @@ def test_char_input() -> None:
     print('The char test passed\n')
 
 
-# def test_int_input() -> None:
-#     print('The int test')
-#
-#     for nbr, output in gen_int_space():
-#         result = subprocess.run(
-#             f'./scalarConverter {nbr}', shell=True, capture_output=True, text=True)
-#         stdout = result.stdout.rstrip()
-#         stderr = result.stderr
-#
-#         try:
-#             assert stdout == output
-#         except AssertionError:
-#             print(nbr)
-#             print(f'Expected:\n{output}\n\nGot:\n{stdout}')
-#             print(f'stderr: {stderr}')
-#             exit(1)
-#
-#     print('The char test passed\n')
+def test_int_input() -> None:
+    print('The int test')
 
-def gen_int_space(start: int, end: int) -> Generator[Tuple[int, str], None, None]:
-    for nbr in range(start, end):
-        if nbr < 32 or nbr > 126:
-            output = f'char: Non displayable\nint: {nbr}\nfloat: {
-                numpy.float32(nbr):.2f}f\ndouble: {nbr}.00'
-        else:
-            output = f'char: {chr(nbr)}\nint: {nbr}\nfloat: {
-                numpy.float32(nbr):.2f}f\ndouble: {nbr}.00'
-        yield nbr, output
-
-
-def worker(start: int, end: int) -> bool:
-    print(f"Worker processing range: {start} to {end}")
-    for nbr in range(start, end):
-        if nbr < 32 or nbr > 126:
-            output = f'char: Non displayable\nint: {nbr}\nfloat: {
-                numpy.float32(nbr):.2f}f\ndouble: {nbr}.00'
-        else:
-            output = f'char: {chr(nbr)}\nint: {nbr}\nfloat: {
-                numpy.float32(nbr):.2f}f\ndouble: {nbr}.00'
-
+    for nbr, output in gen_int_space():
         result = subprocess.run(
             f'./scalarConverter {nbr}', shell=True, capture_output=True, text=True)
         stdout = result.stdout.rstrip()
         stderr = result.stderr
 
-        if stdout != output:
-            print(f"Error for number: {nbr}")
+        try:
+            assert stdout == output
+        except AssertionError:
+            print(nbr)
             print(f'Expected:\n{output}\n\nGot:\n{stdout}')
             print(f'stderr: {stderr}')
-            return False  # Indicate failure
-    print(f"Worker finished range: {start} to {end}")
-    return True  # Indicate success
+            exit(1)
+
+    print('The int test passed\n')
 
 
-def init_worker():
-    signal.signal(signal.SIGINT, signal.SIG_IGN)
+def test_nan_inf_input():
+    print('The nan and inf test')
+    for inpt, output in gen_nan_inf():
+        result = subprocess.run(
+            f'./scalarConverter {inpt}', shell=True, capture_output=True, text=True)
+        stdout = result.stdout.rstrip()
+        stderr = result.stderr
+
+        try:
+            assert stdout == output
+        except AssertionError:
+            print(inpt)
+            print(f'Expected:\n{output}\n\nGot:\n{stdout}')
+            print(f'stderr: {stderr}')
+            exit(1)
+
+    print('The nan and inf test passed')
 
 
-def test_int_input() -> None:
-    print('The int test')
+def test_edge_cases():
+    print('The edge cases test')
 
-    num_processes = mp.cpu_count()
-    start, end = -2147483648, 2147483647  # Corrected end value
-    total_range = end - start + 1
-    chunk_size = total_range // num_processes
+    for input_value, expected_output in gen_edge_cases():
+        result = subprocess.run(
+            f'./scalarConverter {input_value}', shell=True, capture_output=True, text=True)
+        stdout = result.stdout.rstrip()
+        stderr = result.stderr
 
-    pool = mp.Pool(processes=num_processes, initializer=init_worker)
-    try:
-        results = []
-        for i in range(num_processes):
-            chunk_start = start + i * chunk_size
-            chunk_end = chunk_start + chunk_size if i < num_processes - 1 else end + 1
-            results.append(pool.apply_async(worker, (chunk_start, chunk_end)))
+        try:
+            assert stdout == expected_output
+        except AssertionError:
+            print(f'Input: {input_value}')
+            print(f'Expected:\n{expected_output}\n\nGot:\n{stdout}')
+            print(f'stderr: {stderr}')
+            exit(1)
 
-        for result in results:
-            if not result.get(timeout=3600):  # 1 hour timeout, adjust as needed
-                raise Exception("Test failed in a worker process")
-
-        print('The int test passed\n')
-    except KeyboardInterrupt:
-        print("Caught KeyboardInterrupt, terminating workers")
-    except Exception as e:
-        print(f"An error occurred: {e}")
-    finally:
-        pool.terminate()
-        pool.join()
-        print("All worker processes have been terminated")
+    print('The edge cases test passed\n')
 
 
 def main():
     test_char_input()
     test_int_input()
+    test_nan_inf_input()
+    test_edge_cases()
 
 
 if __name__ == '__main__':
