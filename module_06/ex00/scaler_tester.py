@@ -74,18 +74,17 @@ def gen_edge_cases() -> Generator[Tuple[str, str], None, None]:
     yield '0.3f', 'char: Non displayable\nint: 0\nfloat: 0.30f\ndouble: 0.30'
 
     # Scientific notation
-    yield '1e-40', 'char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00'
-    yield '1e-40f', 'char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00'
-    yield '1e40', 'char: Non displayable\nint: impossible\nfloat: inff\ndouble: 10000000000000000303786028427003666890752.00'
-    yield '3.14159e0', 'char: Non displayable\nint: 3\nfloat: 3.14f\ndouble: 3.14'
-    yield '6.022e23', f'char: Non displayable\nint: impossible\nfloat: {numpy.float32("6.022e23"):.2f}f\ndouble: 602200000000000027262976.00'
-    yield '5e-2', 'char: Non displayable\nint: 0\nfloat: 0.05f\ndouble: 0.05'
+    yield '1e-40', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
+    yield '1e-40f', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
+    yield '1e40', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
+    yield '3.14159e0', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
+    yield '6.022e23', f'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
+    yield '5e-2', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
     yield '1e', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
     yield '1e+', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
     yield '1e-', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
-
-    yield '1e-45', 'char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00'
-    yield '-1e-45', 'char: impossible\nint: 0\nfloat: -0.00f\ndouble: -0.00'
+    yield '1e-45', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
+    yield '-1e-45', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
 
     yield '42.0f', "char: '*'\nint: 42\nfloat: 42.00f\ndouble: 42.00"
 
