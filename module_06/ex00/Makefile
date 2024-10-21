@@ -13,7 +13,7 @@ SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)
 
 HEADERS = -I include
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re tester
 
 all: $(NAME)
 
@@ -23,6 +23,9 @@ $(NAME): $(SRCOBJ)
 $(OBJDIR)%.o: $(SRCDIR)%.cpp
 	@mkdir -p ${OBJDIR}
 	$(CC) -I include -c $(GFLAGS) -o $@ $<
+
+tester: $(NAME)
+	python scaler_tester.py
 
 clean:
 	@rm -rf $(OBJDIR)
