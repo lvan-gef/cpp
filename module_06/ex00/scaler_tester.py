@@ -25,7 +25,8 @@ def gen_chars() -> Generator[Tuple[str, str], None, None]:
 
 def gen_int_space() -> Generator[Tuple[int, str], None, None]:
     # for nbr in range(-2147483648, 2147483648):
-    for nbr in range(0, 2147483648):
+    # for nbr in range(0, 2147483648):
+    for nbr in range(-200, 201):
         if nbr < 0 or nbr > 127:
             output = f'char: impossible\nint: {nbr}\nfloat: {numpy.float32(nbr):.2f}f\ndouble: {nbr}.00'
         elif nbr < 32 or nbr == 127:
