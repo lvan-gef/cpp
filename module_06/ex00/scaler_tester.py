@@ -35,7 +35,8 @@ def gen_int_space() -> Generator[Tuple[int, str], None, None]:
 
         yield nbr, output
 
-    yield 2147483648, f'char: impossible\nint: impossible\nfloat: {numpy.float32(2147483648):.2f}f\ndouble: {to_float32(2147483648)}0'
+    yield 12312313213123, f'char: impossible\nint: impossible\nfloat: {numpy.float32(12312313213123):.2f}f\ndouble: 12312313213123.00'
+    yield 2147483648, f'char: impossible\nint: impossible\nfloat: {numpy.float32(2147483648):.2f}f\ndouble: {to_float32(2147483648):.2f}'
     yield -2147483649, f'char: impossible\nint: impossible\nfloat: {numpy.float32(-2147483649):.2f}f\ndouble: -2147483649.00'
 
 
