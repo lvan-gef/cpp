@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/21 18:03:58 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/21 19:58:29 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/22 00:47:50 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <cmath>
 #include <iostream>
 #include <limits>
+#include <cctype>
 
 enum class ScalarType { CHAR, INT, FLOAT, DOUBLE, INVALID };
 ScalarType detectType(const std::string &data);
