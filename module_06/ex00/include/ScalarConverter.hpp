@@ -6,19 +6,16 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 20:21:57 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/19 19:35:43 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/21 18:10:06 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SCALARCONVERTER_HPP
 #define SCALARCONVERTER_HPP
 
-#include <climits>
-#include <cmath>
 #include <iomanip>
-#include <iostream>
-#include <limits>
-#include <string>
+
+#include "./Helpers.hpp"
 
 class ScalarConverter {
   public:
@@ -31,14 +28,6 @@ class ScalarConverter {
 
     static void convert(const std::string &data);
     ~ScalarConverter() = delete;
-
-  private:
-    // enum class ScalarType { CHAR, INT, FLOAT, DOUBLE, INVALID };
-    // static ScalarType detectType(const std::string &data);
-    static void toChar(const std::string &data);
-    static void toInt(const std::string &data);
-    static void toFloat(const std::string &data);
-    static void toDouble(const std::string &data);
 };
 
 #endif // !SCALARCONVERTER_HPP

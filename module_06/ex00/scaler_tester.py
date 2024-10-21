@@ -62,17 +62,10 @@ def gen_edge_cases() -> Generator[Tuple[str, str], None, None]:
     yield '-340282346638528859811704183484516925440.0f', 'char: impossible\nint: impossible\nfloat: -340282346638528859811704183484516925440.00f\ndouble: -340282346638528859811704183484516925440.00'
 
     # Special cases
-    yield '0', 'char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00'
     yield '+0', 'char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00'
     yield '-0', 'char: Non displayable\nint: 0\nfloat: -0.00f\ndouble: -0.00'
     yield '0.0f', 'char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00'
     yield '-0.0f', 'char: Non displayable\nint: 0\nfloat: -0.00f\ndouble: -0.00'
-
-    # Borderline displayable characters
-    yield '31', 'char: Non displayable\nint: 31\nfloat: 31.00f\ndouble: 31.00'
-    yield '32', 'char: ' '\nint: 32\nfloat: 32.00f\ndouble: 32.00'
-    yield '126', 'char: '~'\nint: 126\nfloat: 126.00f\ndouble: 126.00'
-    yield '127', 'char: Non displayable\nint: 127\nfloat: 127.00f\ndouble: 127.00'
 
     # Floating point precision
     yield '0.1f', 'char: Non displayable\nint: 0\nfloat: 0.10f\ndouble: 0.10'
@@ -83,10 +76,17 @@ def gen_edge_cases() -> Generator[Tuple[str, str], None, None]:
     yield '1e-40', 'char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00'
     yield '1e-40f', 'char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00'
     yield '1e40', 'char: Non displayable\nint: impossible\nfloat: inff\ndouble: 10000000000000000303786028427003666890752.00'
+    yield '3.14159e0', 'char: Non displayable\nint: 3\nfloat: 3.14f\ndouble: 3.14'
+    yield '6.022e23', f'char: Non displayable\nint: impossible\nfloat: {numpy.float32("6.022e23"):.2f}f\ndouble: 602200000000000027262976.00'
+    yield '5e-2', 'char: Non displayable\nint: 0\nfloat: 0.05f\ndouble: 0.05'
+    yield '1e', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
+    yield '1e+', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
+    yield '1e-', 'char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible'
 
-    yield '-0', 'char: Non displayable\nint: 0\nfloat: -0.00f\ndouble: -0.00'
     yield '1e-45', 'char: Non displayable\nint: 0\nfloat: 0.00f\ndouble: 0.00'
     yield '-1e-45', 'char: impossible\nint: 0\nfloat: -0.00f\ndouble: -0.00'
+
+    yield '42.0f', "char: '*'\nint: 42\nfloat: 42.00f\ndouble: 42.00"
 
 
 def test_char_input() -> None:

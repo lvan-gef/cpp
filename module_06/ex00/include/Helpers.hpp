@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   Tester.hpp                                         :+:    :+:            */
+/*   Helpers.hpp                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/10/14 20:29:49 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/14 20:29:56 by lvan-gef      ########   odam.nl         */
+/*   Created: 2024/10/21 18:03:58 by lvan-gef      #+#    #+#                 */
+/*   Updated: 2024/10/21 18:38:57 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cassert>
+#ifndef HELPERS_HPP
+#define HELPERS_HPP
+
 #include <iostream>
-#include <sstream>
-#include <string>
-#include <vector>
+#include <cmath>
+#include <limits>
 
-#include "../include/ScalarConverter.hpp"
+enum class ScalarType { CHAR, INT, FLOAT, DOUBLE, INVALID };
+ScalarType detectType(const std::string &data);
+void toChar(const std::string &data);
+void toInt(const std::string &data);
+void toFloat(const std::string &data);
+void toDouble(const std::string &data);
+void printer(const std::string &data);
 
-void tester();
+#endif // !HELPERS_HPP

@@ -7,7 +7,7 @@ GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11
 SRCDIR = src/
 OBJDIR = obj/
 
-SRCFILES = main.cpp ScalarConverter.cpp Tester.cpp
+SRCFILES = Helpers.cpp main.cpp ScalarConverter.cpp
 
 SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)
 
@@ -25,7 +25,7 @@ $(OBJDIR)%.o: $(SRCDIR)%.cpp
 	$(CC) -I include -c $(GFLAGS) -o $@ $<
 
 tester: $(NAME)
-	python scaler_tester.py
+	python3 scaler_tester.py
 
 clean:
 	@rm -rf $(OBJDIR)
