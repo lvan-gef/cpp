@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 19:54:24 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/15 19:18:10 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/22 00:39:42 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ std::string captureOutput(const std::function<void()> &func) {
     return buffer.str();
 }
 
+// Helper function to capture cerr output
 std::string captureStderr(const std::function<void()> &func) {
     std::stringstream buffer;
     std::streambuf *old = std::cerr.rdbuf(buffer.rdbuf());
@@ -45,7 +46,7 @@ captureOutputAndError(const std::function<void()> &func) {
 
 // Test functions
 void testGenerator(const std::function<Base *()> &generatorFunc) {
-    std::cout << "Testing generator()..." << std::endl;
+    std::cout << "Testing generator()..." << '\n';
 
     // Redirect cout to a stringstream
     std::stringstream buffer;
@@ -74,11 +75,11 @@ void testGenerator(const std::function<Base *()> &generatorFunc) {
     std::cout.rdbuf(old);
 
     std::cout << "A: " << countA << ", B: " << countB << ", C: " << countC
-              << std::endl;
+              << '\n';
 }
 
 void testIdentifyPointer(std::function<void(Base *)> identifyFunc) {
-    std::cout << "Testing identify(Base*)..." << std::endl;
+    std::cout << "Testing identify(Base*)..." << '\n';
 
     std::stringstream buffer;
     std::streambuf *old = std::cout.rdbuf(buffer.rdbuf());
@@ -100,7 +101,7 @@ void testIdentifyPointer(std::function<void(Base *)> identifyFunc) {
 }
 
 void testIdentifyReference(std::function<void(Base &)> identifyFunc) {
-    std::cout << "Testing identify(Base&)..." << std::endl;
+    std::cout << "Testing identify(Base&)..." << '\n';
 
     A a;
     B b;
@@ -120,7 +121,7 @@ void testIdentifyReference(std::function<void(Base &)> identifyFunc) {
 
 void testEdgeCases(const std::function<void(Base *)> &identifyFunc,
                    const std::function<void(Base &)> &identifyFuncRef) {
-    std::cout << "Testing edge cases..." << std::endl;
+    std::cout << "Testing edge cases..." << '\n';
 
     D d;
     assert(captureStderr([&]() { identifyFunc(&d); }) == "Unknown type\n");

@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 19:54:24 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/15 19:13:40 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/22 00:42:36 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,13 @@
 #include "../include/C.hpp"
 #include "../include/Tester.hpp"
 
-static Base *generator() {
-    uint64_t seed = std::chrono::duration_cast<std::chrono::milliseconds>(
-                        std::chrono::system_clock::now().time_since_epoch())
-                        .count();
-    srand(seed);
-    int random = rand() % 3;
+static Base *generate() {
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    std::default_random_engine generator(seed);
 
-    switch (random % 3) {
+    std::uniform_int_distribution<int> distribution(0, 2);
+    int random_number = distribution(generator);
+    switch (random_number) {
         case 0:
             return new A();
         case 1:
@@ -36,37 +35,37 @@ static Base *generator() {
 
 static void identify(Base *p) {
     if (dynamic_cast<A *>(p) != nullptr) {
-        std::cout << "A" << std::endl;
+        std::cout << "A" << '\n';
     } else if (dynamic_cast<B *>(p) != nullptr) {
-        std::cout << "B" << std::endl;
+        std::cout << "B" << '\n';
     } else if (dynamic_cast<C *>(p) != nullptr) {
-        std::cout << "C" << std::endl;
+        std::cout << "C" << '\n';
     } else {
-        std::cerr << "Unknown type" << std::endl;
+        std::cerr << "Unknown type" << '\n';
     }
 }
 
 static void identify(Base &p) {
     try {
         (void)dynamic_cast<A &>(p);
-        std::cout << "A" << std::endl;
+        std::cout << "A" << '\n';
     } catch (std::bad_cast const &) {
         try {
             (void)dynamic_cast<B &>(p);
-            std::cout << "B" << std::endl;
+            std::cout << "B" << '\n';
         } catch (std::bad_cast const &) {
             try {
                 (void)dynamic_cast<C &>(p);
-                std::cout << "C" << std::endl;
+                std::cout << "C" << '\n';
             } catch (std::bad_cast const &e) {
-                std::cerr << e.what() << std::endl;
+                std::cerr << e.what() << '\n';
             }
         }
     }
 }
 
 int main() {
-    testGenerator(generator);
+    testGenerator(generate);
     std::cout << "generator() test passed!" << '\n' << '\n';
 
     testIdentifyPointer(static_cast<void (*)(Base *)>(identify));
@@ -79,6 +78,6 @@ int main() {
                   [](Base &p) { identify(p); });
     std::cout << "Edge cases test passed!" << '\n' << '\n';
 
-    std::cout << "All tests passed successfully!" << std::endl;
+    std::cout << "All tests passed successfully!" << '\n';
     return 0;
 }

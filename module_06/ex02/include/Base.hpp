@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 19:54:31 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/15 19:12:49 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/22 00:39:41 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define BASE_HPP
 
 #include <iostream>
+#include <random>
 #include <chrono>
 
 class Base {
