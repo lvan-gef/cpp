@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 20:22:08 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/21 19:43:08 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/21 19:58:03 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,10 @@ void ScalarConverter::convert(const std::string &data) {
             break;
         case ScalarType::DOUBLE:
             printer(data);
-            break;;
+            break;
         case ScalarType::INVALID:
-            std::cerr << "Invalid\n";
-            std::cout << "char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible" << '\n';
+            std::cout << "char: impossible\nint: impossible\nfloat: "
+                         "impossible\ndouble: impossible"
+                      << '\n';
     }
 }

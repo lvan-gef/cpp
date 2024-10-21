@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/21 18:20:51 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/21 19:42:40 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/21 19:58:03 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ ScalarType detectType(const std::string &data) {
         return ScalarType::CHAR;
     }
 
-    if (data == "nanf" || data == "+inff" || data == "-inff" || data == "inff") {
+    if (data == "nanf" || data == "+inff" || data == "-inff" ||
+        data == "inff") {
         return ScalarType::FLOAT;
     }
 
