@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 19:54:32 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/14 19:54:32 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/21 20:04:51 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 class D : public Base {
   public:
     D() = default;
-    ~D() = default;
+    ~D() override = default;
 };
 
 // helper function
