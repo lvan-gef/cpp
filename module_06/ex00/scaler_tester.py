@@ -37,7 +37,7 @@ def gen_int_space() -> Generator[Tuple[int, str], None, None]:
         yield nbr, output
 
     yield 2147483648, f'char: impossible\nint: impossible\nfloat: {numpy.float32(2147483648):.2f}f\ndouble: {to_float32(2147483648)}0'
-    yield -2147483649, f'char: impossible\nint: impossible\nfloat: {numpy.float32(-2147483649):.2f}f\ndouble: {to_float32(-2147483649)}0'
+    yield -2147483649, f'char: impossible\nint: impossible\nfloat: {numpy.float32(-2147483649):.2f}f\ndouble: -2147483649.00'
 
 
 def gen_nan_inf() -> Generator[Tuple[int, str], None, None]:
