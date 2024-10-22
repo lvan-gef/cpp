@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 20:34:02 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/22 04:15:21 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/22 14:50:59 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ void test_serializer() {
     Data *deserializedChain = Serializer::deserialize(serializedChain);
 
     assert(deserializedChain == originalPtr);
-    assert(deserializedChain == originalPtr);
     assert(deserializedChain->name == "John Doe");
     assert(deserializedChain->age == 30);
     assert(deserializedChain->next == &second);
@@ -77,5 +76,5 @@ void test_serializer() {
         assert(false && "deserialize: throw wrong type of exception");
     }
 
-    std::cout << "All tests passed successfully!" << std::endl;
+    std::cout << "All tests passed successfully!" << '\n';
 }

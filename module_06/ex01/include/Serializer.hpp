@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/13 21:10:14 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/22 02:42:31 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/22 14:48:46 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 #include <cstdint>
 #include <iostream>
-#include <stdexcept>
 
 using Data = struct Data {
     std::string name;
