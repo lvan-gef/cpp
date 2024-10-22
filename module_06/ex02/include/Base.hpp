@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 19:54:31 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/22 17:56:50 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/22 20:16:01 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ class Base {
     Base &operator=(const Base &rhs) = delete;
 
     Base(Base &&rhs) noexcept = delete;
-    Base &operator=(Base &&rhs) noexcept;
+    Base &operator=(Base &&rhs) noexcept = delete;
 
     virtual ~Base();
 };
