@@ -18,11 +18,11 @@ HEADERS = -I include
 all: $(NAME)
 
 $(NAME): $(SRCOBJ)
-	$(CC) -I include $(GFLAGS) $(SRCOBJ) $(HEADERS) -o $(NAME)
+	$(CC) $(GFLAGS) $(SRCOBJ) $(HEADERS) -o $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.cpp
 	@mkdir -p ${OBJDIR}
-	$(CC) -I include -c $(GFLAGS) -o $@ $<
+	$(CC) HEADERS -c $(GFLAGS) -o $@ $<
 
 clean:
 	@rm -rf $(OBJDIR)
