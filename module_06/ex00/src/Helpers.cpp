@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/21 18:20:51 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/22 00:23:49 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/22 17:40:34 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ ScalarType detectType(const std::string &data) {
 
     bool hasDecimal = false;
     bool hasFloat = false;
-    bool hasScientific = false;
 
     for (size_t i = 0; i < data.length(); ++i) {
         if (i == 0 && (data[i] == '-' || data[i] == '+')) {
@@ -47,9 +46,6 @@ ScalarType detectType(const std::string &data) {
         }
     }
 
-    if (hasScientific) {
-        return ScalarType::DOUBLE;
-    }
     if (hasFloat && !hasDecimal) {
         return ScalarType::INVALID;
     }
