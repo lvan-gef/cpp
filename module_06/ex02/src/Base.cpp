@@ -6,11 +6,14 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 19:54:24 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/22 17:45:29 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/22 18:03:12 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Base.hpp"
+#include "../include/A.hpp"
+#include "../include/B.hpp"
+#include "../include/C.hpp"
 
 Base::Base() { std::cout << "Default constructor for Base is called" << '\n'; }
 
@@ -50,17 +53,22 @@ void identify(Base &p) {
     try {
         (void)dynamic_cast<A &>(p);
         std::cout << "A" << '\n';
+        return;
     } catch (std::bad_cast const &) {
-        try {
-            (void)dynamic_cast<B &>(p);
-            std::cout << "B" << '\n';
-        } catch (std::bad_cast const &) {
-            try {
-                (void)dynamic_cast<C &>(p);
-                std::cout << "C" << '\n';
-            } catch (std::bad_cast const &e) {
-                std::cerr << e.what() << '\n';
-            }
-        }
+    }
+
+    try {
+        (void)dynamic_cast<B &>(p);
+        std::cout << "B" << '\n';
+        return;
+    } catch (std::bad_cast const &) {
+    }
+
+    try {
+        (void)dynamic_cast<C &>(p);
+        std::cout << "C" << '\n';
+        return;
+    } catch (std::bad_cast const &e) {
+        std::cerr << e.what() << '\n';
     }
 }

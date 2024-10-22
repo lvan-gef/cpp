@@ -22,7 +22,7 @@ $(NAME): $(SRCOBJ)
 
 $(OBJDIR)%.o: $(SRCDIR)%.cpp
 	@mkdir -p ${OBJDIR}
-	$(CC) HEADERS -c $(GFLAGS) -o $@ $<
+	$(CC) $(HEADERS) -c $(GFLAGS) -o $@ $<
 
 clean:
 	@rm -rf $(OBJDIR)
