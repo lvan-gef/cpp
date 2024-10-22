@@ -6,16 +6,20 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 19:54:31 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/22 00:39:41 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/22 17:47:42 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BASE_HPP
 #define BASE_HPP
 
+#include <chrono>
 #include <iostream>
 #include <random>
-#include <chrono>
+
+class A; // forward declaration
+class B; // forward declaration
+class C; // forward declaration
 
 class Base {
   public:
@@ -29,5 +33,9 @@ class Base {
 
     virtual ~Base();
 };
+
+Base *generate();
+void identify(Base *p);
+void identify(Base &p);
 
 #endif // !BASE_HPP
