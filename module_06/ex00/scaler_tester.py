@@ -149,7 +149,7 @@ def test_nan_inf_input():
             print(f'stderr: {stderr}')
             exit(1)
 
-    print('The nan and inf test passed')
+    print('The nan and inf test passed\n')
 
 
 def test_edge_cases():
@@ -169,7 +169,7 @@ def test_edge_cases():
             print(f'stderr: {stderr}')
             exit(1)
 
-    print('The edge cases test passed\n')
+    print('The edge cases test passed')
 
 
 def main():
