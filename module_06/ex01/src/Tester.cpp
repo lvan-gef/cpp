@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/14 20:34:02 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/14 20:34:06 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/22 04:15:21 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,30 +24,22 @@ void test_serializer() {
                   "Serializer should not be copy assignable");
     static_assert(!std::is_move_assignable<Serializer>::value,
                   "Serializer should not be move assignable");
+    static_assert(!std::is_destructible<Serializer>::value,
+                  "Serializer should not be destructible");
 
     // Test 2: Verify serialization and deserialization
     Data original = {"John Doe", 30, nullptr};
     Data *originalPtr = &original;
 
-    // Serialize
     uintptr_t serialized = Serializer::serialize(originalPtr);
-
-    // Deserialize
     Data *deserialized = Serializer::deserialize(serialized);
 
-    // Check if the deserialized pointer is the same as the original
     assert(deserialized == originalPtr);
     assert(deserialized->name == "John Doe");
     assert(deserialized->age == 30);
     assert(deserialized->next == nullptr);
 
-    // Test 3: Verify with nullptr
-    Data *nullPtr = nullptr;
-    uintptr_t serializedNull = Serializer::serialize(nullPtr);
-    Data *deserializedNull = Serializer::deserialize(serializedNull);
-    assert(deserializedNull == nullptr);
-
-    // Test 4: Verify with a chain of Data structs
+    // Test 3: Verify with a chain of Data structs
     Data second = {"Jane Doe", 28, nullptr};
     original.next = &second;
 
@@ -55,10 +47,35 @@ void test_serializer() {
     Data *deserializedChain = Serializer::deserialize(serializedChain);
 
     assert(deserializedChain == originalPtr);
+    assert(deserializedChain == originalPtr);
+    assert(deserializedChain->name == "John Doe");
+    assert(deserializedChain->age == 30);
     assert(deserializedChain->next == &second);
     assert(deserializedChain->next->name == "Jane Doe");
     assert(deserializedChain->next->age == 28);
     assert(deserializedChain->next->next == nullptr);
+
+    // Test 4: Convert from nullptr (Should throw)
+    Data *nullPtr = nullptr;
+    try {
+        Serializer::serialize(nullPtr);
+        assert(false && "serialize: should throw on nullptr");
+    } catch (const std::invalid_argument &e) {
+        static_assert(true, "");
+    } catch (...) {
+        assert(false && "serialize: throw wrong type of exception");
+    }
+
+    // Test 5: convert from null addr (Should throw)
+    uintptr_t null_addr = 0;
+    try {
+        Serializer::deserialize(null_addr); // Points to null
+        assert(false && "deserialize: should throw on 0");
+    } catch (const std::invalid_argument &e) {
+        static_assert(true, "");
+    } catch (...) {
+        assert(false && "deserialize: throw wrong type of exception");
+    }
 
     std::cout << "All tests passed successfully!" << std::endl;
 }
