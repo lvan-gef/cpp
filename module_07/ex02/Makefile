@@ -33,16 +33,12 @@ $(OBJDIR)%.o: $(SRCDIR)%.cpp
 	fi
 
 	@mkdir -p ${OBJDIR}
-	$(CC) -c $(GFLAGS) -o $@ $<
-
-# $(OBJDIR)%.o: $(SRCDIR)%.cpp
-# 	@mkdir -p ${OBJDIR}
-# 	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -o $@ $<
+	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -o $@ $<
 
 test: BUILD_MODE = test
 
 $(TESTNAME): clean $(TESTOBJ) $(SRCOBJ)
-	$(CC) $(GFLAGS) $(SRCOBJ) $(TESTOBJ) $(HEADERS) -I tester/include -o $(TESTNAME)
+	$(CC) $(GFLAGS) -MMD -MP $(SRCOBJ) $(TESTOBJ) $(HEADERS) -I tester/include -o $(TESTNAME)
 	@rm -rf $(OBJDIR)
 
 $(OBJDIR)%.o: $(TESTDIR)%.cpp
@@ -51,13 +47,14 @@ $(OBJDIR)%.o: $(TESTDIR)%.cpp
 	fi
 
 	@mkdir -p ${OBJDIR}
-	$(CC) -c $(GFLAGS) -o $@ $<
+	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -o $@ $<
 
 clean:
 	@rm -rf $(OBJDIR)
 
 fclean: clean
 	@rm -f $(NAME)
+	@rm -f $(TESTNAME)
 
 re: fclean all
 
