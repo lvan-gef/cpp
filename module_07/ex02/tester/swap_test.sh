@@ -50,7 +50,7 @@ if [ ! -f "$src_path" ]; then
 fi
 
 user_input="$1"
-filters=('#include "../tester/include/tester.hpp"' 'array_test();')
+filters=('#include "../tester/include/tester.hpp"' 'testMax();')
 
 if [ "$user_input" == "build" ]; then
 	sed_string=''
