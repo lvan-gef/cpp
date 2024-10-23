@@ -1,15 +1,20 @@
 NAME = opperators
+TESTNAME = test
+BUILD_MODE = build
 
 CC = c++
 
-GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11
+GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11 -g3
 
 SRCDIR = src/
+TESTDIR = tester/src/
 OBJDIR = obj/
 
 SRCFILES = main.cpp
+TESTFILES = $(NAME)_test.cpp max_test.cpp min_test.cpp swap_test.cpp
 
 SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)
+TESTOBJ = $(TESTFILES:%.cpp=$(OBJDIR)%.o)
 DEPS = $(SRCOBJ:.o=.d)
 
 HEADERS = -I include
@@ -21,6 +26,25 @@ $(NAME): $(SRCOBJ)
 	$(CC) $(GFLAGS) $(SRCOBJ) $(HEADERS) -o $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.cpp
+	@if [ "$(BUILD_MODE)" = "build" ]; then \
+		if [ "$<" = "$(SRCDIR)main.cpp" ]; then \
+			./tester/swap_test.sh build; \
+		fi \
+	fi
+
+	@mkdir -p ${OBJDIR}
+	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -o $@ $<
+
+test: BUILD_MODE = test
+$(TESTNAME): clean $(TESTOBJ) $(SRCOBJ)
+	$(CC) $(GFLAGS) -MMD -MP $(SRCOBJ) $(TESTOBJ) $(HEADERS) -I tester/include -o $(TESTNAME)
+	@rm -rf $(OBJDIR)
+
+$(OBJDIR)%.o: $(TESTDIR)%.cpp
+	@if [ "$<" = "$(TESTDIR)$(NAME)_test.cpp" ]; then \
+		./tester/swap_test.sh test; \
+	fi
+
 	@mkdir -p ${OBJDIR}
 	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -o $@ $<
 
@@ -29,8 +53,9 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME)
+	@rm -f $(TESTNAME)
 
 re: fclean all
 
 -include $(DEPS)
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re test

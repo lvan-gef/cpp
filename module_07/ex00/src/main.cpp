@@ -1,36 +1,24 @@
-#include "../include/Swap.hpp"
-#include "../include/Min.hpp"
 #include "../include/Max.hpp"
-#include <cassert>
+#include "../include/Min.hpp"
+#include "../include/Swap.hpp"
 #include <iostream>
 
 void subject_test() {
     int a = 2;
     int b = 3;
+    swap(a, b);
+    std::cout << "a = " << a << ", b = " << b << '\n';
+    std::cout << "min( a, b ) = " << min(a, b) << '\n';
+    std::cout << "max( a, b ) = " << max(a, b) << '\n';
     std::string c = "chaine1";
     std::string d = "chaine2";
-
-    int result = min(a, b);
-    assert(result == a);
-
-    result = max(a, b);
-    assert(result == b);
-
-    swap(a, b);
-    assert(a == 3);
-    assert(b == 2);
-
-    std::string sResult = min(c, d);
-    assert(sResult == c);
-
-    sResult = max(c, d);
-    assert(sResult == d);
-
     swap(c, d);
-    assert(c == "chaine2");
-    assert(d == "chaine1");
+    std::cout << "c = " << c << ", d = " << d << '\n';
+    std::cout << "min( c, d ) = " << min(c, d) << '\n';
+    std::cout << "max( c, d ) = " << max(c, d) << '\n';
 }
 
 int main() {
+    subject_test();
     return 0;
 }
