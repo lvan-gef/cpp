@@ -10,7 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../tester/include/tester.hpp"
 #include "../include/Array.hpp"
 
 #define MAX_VAL 750
@@ -56,6 +55,5 @@ bool subject_cpp() {
 }
 int main(int, char **) {
     subject_cpp();
-    array_test();
     return 0;
 }
