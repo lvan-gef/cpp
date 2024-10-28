@@ -1,13 +1,11 @@
 #ifndef SPAN_HPP
 #define SPAN_HPP
 
-#include <algorithm>
 #include <cassert>
 #include <climits>
 #include <iostream>
 #include <random>
-#include <stdexcept>
-#include <vector>
+#include <set>
 
 class Span {
   public:
@@ -15,9 +13,8 @@ class Span {
 
     template <typename Iterator>
     explicit Span(Iterator begin, Iterator end)
-        : size(std::distance(begin, end)), min(0), max(0) {
+        : size(std::distance(begin, end)) {
 
-        data.reserve(size);
         for (Iterator it = begin; it != end; ++it) {
             addNumber(*it);
         }
@@ -37,10 +34,8 @@ class Span {
     ~Span();
 
   private:
-    std::vector<int> data;
+    std::multiset<int> data;
     unsigned int size;
-    unsigned int min;
-    unsigned int max;
 };
 
 std::vector<int> randomVector(unsigned int N);

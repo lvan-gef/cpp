@@ -1,73 +1,37 @@
 #include "../include/Span.hpp"
-#include <chrono>
 
-Span::Span(unsigned int N) : size(N), min(0), max(0) { data.reserve(N); }
+Span::Span(unsigned int N) : size(N) {};
 
 Span::Span(const Span &rhs)
-    : data(rhs.data), size(rhs.size), min(rhs.min), max(rhs.max) {}
+    : data(rhs.data), size(rhs.size) {}
 
 Span &Span::operator=(const Span &rhs) {
     if (this != &rhs) {
         data = rhs.data;
         size = rhs.size;
-        min = rhs.min;
-        max = rhs.max;
     }
 
     return *this;
 }
 
 Span::Span(Span &&rhs) noexcept
-    : data(std::move(rhs.data)), size(rhs.size), min(rhs.min), max(rhs.max) {}
+    : data(std::move(rhs.data)), size(rhs.size) {}
 
 Span &Span::operator=(Span &&rhs) noexcept {
     if (this != &rhs) {
         data = std::move(rhs.data);
         size = rhs.size;
-        min = rhs.min;
-        max = rhs.max;
     }
 
     return *this;
 }
 
 void Span::addNumber(int x) {
-    auto start = std::chrono::high_resolution_clock::now();
     if (data.size() >= size) {
         throw std::out_of_range("Cannot add more numbers, container is full");
     }
 
-    auto insert_pos = std::lower_bound(data.begin(), data.end(), x);
-    data.insert(insert_pos, x);
-
-    if (data.size() >= 2) {
-        min = UINT_MAX;
-        auto current = data.begin();
-        auto next = std::next(current);
-
-        while (next != data.end()) {
-            long long diff = static_cast<long long>(*next) -
-                             static_cast<long long>(*current);
-            auto current_span = static_cast<unsigned int>(std::abs(diff));
-            min = std::min(min, current_span);
-
-            current = next;
-            ++next;
-        }
-
-        max = static_cast<unsigned int>(
-            std::abs(static_cast<long long>(data.back()) -
-                     static_cast<long long>(data.front())));
-    }
-    // End timing
-    auto end = std::chrono::high_resolution_clock::now();
-
-    // Calculate duration in microseconds
-    auto duration =
-        std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-    // Print the duration
-    std::cout << "addNumber took " << duration.count() << " microseconds\n";
+    data.insert(x);
 }
 
 unsigned int Span::shortestSpan() const {
@@ -75,7 +39,20 @@ unsigned int Span::shortestSpan() const {
         throw std::out_of_range("Not enough elements in Span");
     }
 
-    return min;
+    unsigned int min_span = UINT_MAX;
+    auto it = data.begin();
+    auto next = std::next(it);
+
+    while (next != data.end()) {
+        long long diff =
+            static_cast<long long>(*next) - static_cast<long long>(*it);
+        auto current_span = static_cast<unsigned int>(std::abs(diff));
+        min_span = std::min(min_span, current_span);
+        it = next;
+        ++next;
+    }
+
+    return min_span;
 }
 
 unsigned int Span::longestSpan() const {
@@ -83,15 +60,16 @@ unsigned int Span::longestSpan() const {
         throw std::out_of_range("Not enough elements in Span");
     }
 
-    return max;
+    auto first = static_cast<long long>(*data.begin());
+    auto last = static_cast<long long>(*data.rbegin());
+
+    return static_cast<unsigned int>(std::abs(last - first));
 }
 
 void Span::printer() {
     for (int nbr : data) {
         std::cerr << nbr << '\n';
     }
-
-    std::cerr << min << '\n' << max << '\n';
 }
 
 Span::~Span() {}
@@ -102,7 +80,6 @@ std::vector<int> randomVector(unsigned int N) {
     std::uniform_int_distribution<> dis(std::numeric_limits<int>::min(),
                                         std::numeric_limits<int>::max());
 
-    auto start = std::chrono::high_resolution_clock::now();
     std::vector<int> tmp;
     tmp.reserve(N);
 
@@ -110,13 +87,5 @@ std::vector<int> randomVector(unsigned int N) {
         tmp.push_back(dis(gen));
     }
 
-        // End timing
-    auto end = std::chrono::high_resolution_clock::now();
-
-    // Calculate duration in microseconds
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-    // Print the duration
-    std::cout << "randomVector took " << duration.count() << " microseconds\n";
     return tmp;
 }
