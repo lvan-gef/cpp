@@ -20,16 +20,32 @@ def run(many: int):
         if nbr
     ]
 
-    print(data)
-    spans = [abs(data[i + 1]) - abs(data[i]) for i in range(len(data) - 1)]
+    assert data[:-2] == list(sorted(data[:-2]))
+
+    spans = []
+    for i in range(len(data[:-2])):
+        for j in range(i + 1, len(data[:-2])):
+            span = abs(data[j] - data[i])
+            spans.append(span)
+
     shortest_span = min(spans)
-    longest_span = max(spans)
+
+    lowest = min(data[:-2])
+    highest = max(data[:-2])
+
+    longest_span = abs(highest - lowest)
+    # print(f"Shortest span: {shortest_span}")
+    # print(f"Longest span: {longest_span}")
+    # print(f"Between numbers: {lowest} and {highest}")
 
     try:
         assert result.stdout == f'{shortest_span}\n{longest_span}\n'
     except AssertionError:
-        print(f'except:\n{shortest_span}\n{
-              longest_span}\n\ngot:\n{result.stdout}')
+        print(f'except:\n{shortest_span}\n{ longest_span}\n\ngot:\n{result.stdout}')
 
 
-run(100)
+inputs = [1, 10, 100, 1_000, 10_000, 100_000, 1_000_000]
+for ip in inputs[1:]:
+    print(f'Start test with: {ip} numbers')
+    run(ip)
+    print(f'Pass test with: {ip} numbers')

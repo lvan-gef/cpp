@@ -1,6 +1,4 @@
 #include "../include/Span.hpp"
-#include <cassert>
-#include <stdexcept>
 
 static void check_fail(Span sp) {
     try {
@@ -41,13 +39,12 @@ static void subject_test() {
     assert(sp.longestSpan() == 14 && "Expect that longestSpan is 14");
 
     sp.addNumber(11);
-    sp.printer();
     assert(sp.shortestSpan() == 2 && "Expect that shortestSpan is 2");
     assert(sp.longestSpan() == 14 && "Expect that longestSpan is 14");
 
-    // sp.addNumber(12);
-    // assert(sp.shortestSpan() == 1 && "Expect that shortestSpan is 1");
-    // assert(sp.longestSpan() == 14 && "Expect that longestSpan is 14");
+    sp.addNumber(12);
+    assert(sp.shortestSpan() == 1 && "Expect that shortestSpan is 1");
+    assert(sp.longestSpan() == 14 && "Expect that longestSpan is 14");
 }
 
 int main(int argc, char **argv) {
@@ -58,16 +55,15 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    (void)argv;
-    // int amount = std::atoi(argv[1]);
-    // Span x = Span(amount);
-    //
-    // x.randomFill();
-    // x.printer();
-    //
-    // int shortes = x.shortestSpan();
-    // int longest = x.longestSpan();
-    //
-    // std::cout << shortes << '\n';
-    // std::cout << longest << '\n';
+    int amount = std::atoi(argv[1]);
+    Span x = Span(amount);
+
+    x.randomFill();
+    x.printer();
+
+    unsigned int shortes = x.shortestSpan();
+    unsigned int longest = x.longestSpan();
+
+    std::cout << shortes << '\n';
+    std::cout << longest << '\n';
 }

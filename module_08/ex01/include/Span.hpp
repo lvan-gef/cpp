@@ -1,6 +1,8 @@
 #ifndef SPAN_HPP
 #define SPAN_HPP
 
+#include <algorithm>
+#include <cassert>
 #include <climits>
 #include <iostream>
 #include <random>

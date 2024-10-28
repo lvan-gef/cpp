@@ -21,45 +21,26 @@ Span &Span::operator=(Span &&rhs) noexcept {
 }
 
 void Span::addNumber(int x) {
-    if (data.size() == data.capacity()) {
-        throw std::out_of_range("Span is full\n");
+    if (data.size() >= size) {
+        throw std::out_of_range("Cannot add more numbers, container is full");
     }
 
-    if (data.size() == 0) {
-        data.push_back(x);
-        return;
-    }
-
-    std::cout << data.size() << '\n';
-    unsigned int index = 0;
-    for (index = 0; index < data.size(); index++) {
-        if (data.size() > 0 && x < data[index]) {
-            if (index == 0) {
-                std::cout << "x: " << x << " is kleiner dan elm 0: " << data[index] << '\n';
-                min = data[index] - x;
-                max = data[index] - x;
-                data.insert(data.begin(), x);
-                return;
-            }
-
-            std::cout << "x: " << x << " is kleiner dan elm " << index << ": " << data[index] << '\n';
-            if ((unsigned int)data[index] - x < min) {
-                min = data[index] - x;
-            }
-            data.insert(data.begin() + index, x);
-
-            // update min
-            // min = data[index] - x;
-            // min = x - data[index];
-            return;
-        }
-    }
-
-    std::cout << "x: " << x << " is groter dan elm " << index << ": " << data[index - 1] << '\n';
-    max = x - data[0];
     data.push_back(x);
-    return;
+    std::sort(data.begin(), data.end(), std::less<int>());
 
+    if (data.size() >= 2) {
+        min = UINT_MAX;
+        for (size_t i = 1; i < data.size(); i++) {
+            long long diff = static_cast<long long>(data[i]) -
+                             static_cast<long long>(data[i - 1]);
+            auto current_span = static_cast<unsigned int>(std::abs(diff));
+            min = std::min(min, current_span);
+        }
+
+        auto largest = static_cast<long long>(data.back());
+        auto smallest = static_cast<long long>(data.front());
+        max = static_cast<unsigned int>(std::abs(largest - smallest));
+    }
 }
 
 unsigned int Span::shortestSpan() const {
@@ -94,7 +75,7 @@ void Span::printer() {
         std::cerr << nbr << '\n';
     }
 
-    std::cerr << "min: " << min << '\n' << "max: " << max << '\n';
+    std::cerr << min << '\n' << max << '\n';
 }
 
 Span::~Span() {}
