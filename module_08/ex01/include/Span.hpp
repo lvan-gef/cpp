@@ -18,8 +18,8 @@ class Span {
         : size(std::distance(begin, end)), min(0), max(0) {
 
         data.reserve(size);
-        for (int nbr : data) {
-            addNumber(nbr);
+        for (Iterator it = begin; it != end; ++it) {
+            addNumber(*it);
         }
     }
 
@@ -34,8 +34,6 @@ class Span {
     unsigned int longestSpan() const;
     void printer();
 
-    void randomFill();
-
     ~Span();
 
   private:
@@ -45,4 +43,5 @@ class Span {
     unsigned int max;
 };
 
+std::vector<int> randomVector(unsigned int N);
 #endif // !SPAN_HPP

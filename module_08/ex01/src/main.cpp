@@ -56,14 +56,13 @@ int main(int argc, char **argv) {
     }
 
     int amount = std::atoi(argv[1]);
-    Span x = Span(amount);
-
-    x.randomFill();
-    x.printer();
-
-    unsigned int shortes = x.shortestSpan();
-    unsigned int longest = x.longestSpan();
-
-    std::cout << shortes << '\n';
-    std::cout << longest << '\n';
+    std::vector<int> rv = randomVector(amount);
+    Span x = Span(rv.begin(), rv.end());
+    // // x.printer();
+    //
+    // unsigned int shortes = x.shortestSpan();
+    // unsigned int longest = x.longestSpan();
+    //
+    // std::cout << shortes << '\n';
+    // std::cout << longest << '\n';
 }
