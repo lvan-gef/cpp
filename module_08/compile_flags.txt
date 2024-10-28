@@ -1,0 +1,9 @@
+-xc++
+-std=c++11
+-Wall
+-Wextra
+-Werror
+-Wshadow
+-Wpedantic
+-I.
+-Iinclude
