@@ -20,7 +20,7 @@ def run(many: int):
         if nbr
     ]
 
-    assert data[:-2] == list(sorted(data[:-2]))
+    assert data == list(sorted(data))
 
     spans = []
     for i in range(len(data[:-2])):
@@ -30,8 +30,8 @@ def run(many: int):
 
     shortest_span = min(spans)
 
-    lowest = min(data[:-2])
-    highest = max(data[:-2])
+    lowest = min(data)
+    highest = max(data)
 
     longest_span = abs(highest - lowest)
     # print(f"Shortest span: {shortest_span}")
@@ -42,6 +42,9 @@ def run(many: int):
         assert result.stdout == f'{shortest_span}\n{longest_span}\n'
     except AssertionError:
         print(f'except:\n{shortest_span}\n{ longest_span}\n\ngot:\n{result.stdout}')
+        with open('error_list.txt', 'w') as f:
+            f.write('\n'.join((str(x) for x in data)))
+        exit(1)
 
 
 inputs = [1, 10, 100, 1_000, 10_000, 100_000, 1_000_000]
