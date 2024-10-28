@@ -2,19 +2,31 @@
 
 Span::Span(unsigned int N) : size(N), min(0), max(0) { data.reserve(N); }
 
-Span::Span(const Span &rhs) : data(rhs.data), size(rhs.size) {}
+
+Span::Span(const Span &rhs)
+    : data(rhs.data), size(rhs.size), min(rhs.min), max(rhs.max) {}
 
 Span &Span::operator=(const Span &rhs) {
     if (this != &rhs) {
+        data = rhs.data;
+        size = rhs.size;
+        min = rhs.min;
+        max = rhs.max;
     }
 
     return *this;
 }
 
-Span::Span(Span &&rhs) noexcept { (void)rhs; }
+Span::Span(Span &&rhs) noexcept
+    : data(std::move(rhs.data)), size(rhs.size),
+      min(rhs.min), max(rhs.max) {}
 
 Span &Span::operator=(Span &&rhs) noexcept {
     if (this != &rhs) {
+        data = std::move(rhs.data);
+        size = rhs.size;
+        min = rhs.min;
+        max = rhs.max;
     }
 
     return *this;

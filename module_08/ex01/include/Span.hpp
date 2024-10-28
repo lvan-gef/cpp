@@ -13,6 +13,16 @@ class Span {
   public:
     explicit Span(unsigned int N);
 
+    template <typename Iterator>
+    explicit Span(Iterator begin, Iterator end)
+        : size(std::distance(begin, end)), min(0), max(0) {
+
+        data.reserve(size);
+        for (int nbr : data) {
+            addNumber(nbr);
+        }
+    }
+
     Span(const Span &rhs);
     Span &operator=(const Span &rhs);
 
@@ -24,7 +34,6 @@ class Span {
     unsigned int longestSpan() const;
     void printer();
 
-    // add member to fill it with numbers in a iter form
     void randomFill();
 
     ~Span();
