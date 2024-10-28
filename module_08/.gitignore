@@ -4,3 +4,5 @@
 obj/
 span
 compile_commands.json
+easyfind
+test
