@@ -115,12 +115,11 @@ func main() {
 	}
 
 	fmt.Printf("Using span executable: %s\n", spanPath)
-    // 100000000, takes 04:30 minutes to create and find it (cpp code) and 4.84 GiB (ryzen 5 5600x)  golang 2.47 GIB
-    // 100000000, takes 15:33 minutes to create and find it (cpp code) and 4.84 GiB (rpi cortex A72) golang 2.47 GIB
+	// 100000000, takes 04:30 minutes to create and find it (cpp code) and 4.84 GiB (ryzen 5 5600x)  golang 2.47 GIB
+	// 100000000, takes 15:33 minutes to create and find it (cpp code) and 4.84 GiB (rpi cortex A72) golang 2.47 GIB
 
-
-    // 10000000, takes 00:21 minutes to create and find it (cpp code) and 499 MIB (ryzen 5 5600x)  golang 210 MIB
-    // 10000000, takes 01:18 minutes to create and find it (cpp code) and 499 MIB (rpi cortex A72) golang 211 MIB
+	// 10000000, takes 00:21 minutes to create and find it (cpp code) and 499 MIB (ryzen 5 5600x)  golang 210 MIB
+	// 10000000, takes 01:18 minutes to create and find it (cpp code) and 499 MIB (rpi cortex A72) golang 211 MIB
 	inputs := []int{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000}
 	for _, ip := range inputs[1:] {
 		fmt.Printf("Start test with: %d numbers\n", ip)
