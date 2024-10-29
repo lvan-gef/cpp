@@ -115,7 +115,8 @@ func main() {
 	}
 
 	fmt.Printf("Using span executable: %s\n", spanPath)
-	inputs := []int{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000}
+    // 100000000, takes 04:30 minutes to create and find it (cpp code) and 4.84 GiB (ryzen 5 5600x)
+	inputs := []int{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000}
 	for _, ip := range inputs[1:] {
 		fmt.Printf("Start test with: %d numbers\n", ip)
 
