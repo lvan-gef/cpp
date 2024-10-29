@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   Span.cpp                                           :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/10/29 18:44:22 by lvan-gef      #+#    #+#                 */
+/*   Updated: 2024/10/29 18:44:37 by lvan-gef      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/Span.hpp"
 
-Span::Span(unsigned int N) : size(N) {};
+Span::Span(unsigned int N) : size(N){};
 
-Span::Span(const Span &rhs)
-    : data(rhs.data), size(rhs.size) {}
+Span::Span(const Span &rhs) : data(rhs.data), size(rhs.size) {}
 
 Span &Span::operator=(const Span &rhs) {
     if (this != &rhs) {
@@ -14,8 +25,7 @@ Span &Span::operator=(const Span &rhs) {
     return *this;
 }
 
-Span::Span(Span &&rhs) noexcept
-    : data(std::move(rhs.data)), size(rhs.size) {}
+Span::Span(Span &&rhs) noexcept : data(std::move(rhs.data)), size(rhs.size) {}
 
 Span &Span::operator=(Span &&rhs) noexcept {
     if (this != &rhs) {

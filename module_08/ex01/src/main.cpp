@@ -1,5 +1,14 @@
-#include "../tester/include/tester.hpp"
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   main.cpp                                           :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/10/29 18:44:22 by lvan-gef      #+#    #+#                 */
+/*   Updated: 2024/10/29 18:45:45 by lvan-gef      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../include/Span.hpp"
 
@@ -44,18 +53,6 @@ static void subject_test() {
 }
 
 int main(int argc, char **argv) {
-    if (argc != 2) {
-        std::cerr << "Expect 1 argument got: " << argc << std::endl;
-        return 1;
-    }
-    int amount = std::atoi(argv[1]);
-    std::vector<int> rv = randomVector(amount);
-    Span x = Span(rv.begin(), rv.end());
-    x.printer();
-    unsigned int shortes = x.shortestSpan();
-    unsigned int longest = x.longestSpan();
-    std::cout << shortes << std::endl;
-    std::cout << longest << std::endl;
     subject_test();
     (void)argc;
     (void)argv;
