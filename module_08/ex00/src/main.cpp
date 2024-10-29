@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/28 17:38:27 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/28 17:42:04 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/10/29 18:48:35 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void simple_test() {
         bigVector.push_back(index);
     }
 
-    std::cout << bigVector.back() << '\n';
     try {
         easyfind(bigVector, 99999);
     } catch (std::invalid_argument &e) {
