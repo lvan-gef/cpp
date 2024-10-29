@@ -34,4 +34,4 @@ lint:
 	@echo "Running linter..."
 	golangci-lint run
 
-.PHONY: build run clean fmt vet lint deps help
+.PHONY: build run clean fmt vet lint
