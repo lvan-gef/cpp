@@ -38,5 +38,4 @@ class Span {
     unsigned int size;
 };
 
-std::vector<int> randomVector(unsigned int N);
 #endif // !SPAN_HPP

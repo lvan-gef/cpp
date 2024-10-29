@@ -15,7 +15,7 @@ build:
 
 run:
 	@echo "Running..."
-	go run ./cmd/main.go ../../span
+	go run ./cmd/main.go ../../test
 
 clean:
 	@echo "Cleaning build cache..."
