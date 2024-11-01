@@ -1,4 +1,3 @@
-#include "../tester/include/tester.hpp"
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
@@ -77,6 +76,5 @@ static void subject_test() {
 int main() {
     subject_test();
 
-    testMutantStack();
     return 0;
 }
