@@ -133,6 +133,16 @@ MutantStack<T, Container>::end() const {
 }
 
 template <typename T, class Container>
+MutantStack<T, Container>::operator Container&() {
+    return _data;
+}
+
+template <typename T, class Container>
+MutantStack<T, Container>::operator const Container&() const {
+    return _data;
+}
+
+template <typename T, class Container>
 void swap(MutantStack<T, Container> &lhs,
           MutantStack<T, Container> &rhs) noexcept {
     lhs.swap(rhs);

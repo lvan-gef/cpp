@@ -48,8 +48,8 @@ class MutantStack {
     const_iterator begin() const;
     const_iterator end() const;
 
-    operator Container &() { return _data; }
-    operator const Container &() const { return _data; }
+    operator Container &();
+    operator const Container &() const;
 
     ~MutantStack() = default;
 
