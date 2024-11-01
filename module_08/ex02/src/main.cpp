@@ -1,7 +1,19 @@
-#include "../tester/include/tester.hpp"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   main.cpp                                           :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/11/01 17:57:20 by lvan-gef      #+#    #+#                 */
+/*   Updated: 2024/11/01 17:57:35 by lvan-gef      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/MutantStack.hpp"
-#include <stack>
+#include "../tester/include/tester.hpp"
 #include <cassert>
+#include <stack>
 
 static void subject_test() {
     MutantStack<int> mstack;
@@ -58,7 +70,8 @@ static void subject_test() {
     s.push(1);
     assert(s.size() == 6 && "s should have 6 element inside it");
     assert(s.top() == 1 && "s top should be 1");
-    assert(mstack.size() == 5 && "mstack should still have 5 elements inside it");
+    assert(mstack.size() == 5 &&
+           "mstack should still have 5 elements inside it");
 }
 
 int main() {

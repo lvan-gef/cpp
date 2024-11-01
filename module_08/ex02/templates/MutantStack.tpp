@@ -1,9 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   MutantStack.tpp                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/11/01 17:56:12 by lvan-gef      #+#    #+#                 */
+/*   Updated: 2024/11/01 17:56:21 by lvan-gef      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MUTANTSTACK_TPP
 #define MUTANTSTACK_TPP
 
 template <typename T, typename Container>
-MutantStack<T, Container>::MutantStack()
-    {}
+MutantStack<T, Container>::MutantStack() {}
 
 template <typename T, typename Container>
 MutantStack<T, Container>::MutantStack(const MutantStack &rhs)
@@ -137,12 +148,12 @@ MutantStack<T, Container>::end() const {
 }
 
 template <typename T, class Container>
-MutantStack<T, Container>::operator Container&() {
+MutantStack<T, Container>::operator Container &() {
     return _data;
 }
 
 template <typename T, class Container>
-MutantStack<T, Container>::operator const Container&() const {
+MutantStack<T, Container>::operator const Container &() const {
     return _data;
 }
 
@@ -152,9 +163,7 @@ void swap(MutantStack<T, Container> &lhs,
     lhs.swap(rhs);
 }
 
-
 template <typename T, typename Container>
-MutantStack<T, Container>::~MutantStack()
-    {}
+MutantStack<T, Container>::~MutantStack() {}
 
 #endif // !MUTANTSTACK_HPP

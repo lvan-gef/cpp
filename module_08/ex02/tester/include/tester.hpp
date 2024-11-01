@@ -16,24 +16,24 @@
 #include "../../include/MutantStack.hpp"
 
 #include <cassert>
-#include <stack>
-#include <vector>
 #include <list>
 #include <set>
+#include <stack>
+#include <vector>
 
 // Complex type for testing
 struct ComplexType {
     std::vector<int> data;
     std::string name;
 
-    ComplexType(const std::string& n = "", std::initializer_list<int> d = {})
+    ComplexType(const std::string &n = "", std::initializer_list<int> d = {})
         : data(d), name(n) {}
 
-    bool operator==(const ComplexType& rhs) const {
+    bool operator==(const ComplexType &rhs) const {
         return data == rhs.data && name == rhs.name;
     }
 
-    bool operator<(const ComplexType& rhs) const {
+    bool operator<(const ComplexType &rhs) const {
         return name < rhs.name || (name == rhs.name && data < rhs.data);
     }
 };

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   subject_test.cpp                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/11/01 17:58:59 by lvan-gef      #+#    #+#                 */
+/*   Updated: 2024/11/01 17:58:59 by lvan-gef      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../include/tester.hpp"
 
 void testSubject() {
@@ -57,7 +69,8 @@ void testSubject() {
     s.push(1);
     assert(s.size() == 6 && "s should have 6 element inside it");
     assert(s.top() == 1 && "s top should be 1");
-    assert(mstack.size() == 5 && "mstack should still have 5 elements inside it");
+    assert(mstack.size() == 5 &&
+           "mstack should still have 5 elements inside it");
 
     std::cout << "End Subject Test" << '\n' << '\n';
 }
