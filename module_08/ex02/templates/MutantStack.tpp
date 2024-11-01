@@ -112,24 +112,30 @@ bool MutantStack<T, Container>::operator>=(
 template <typename T, class Container>
 typename MutantStack<T, Container>::iterator
 MutantStack<T, Container>::begin() {
-    return _data.begin();
+    return _data.rbegin();
 }
 
 template <typename T, class Container>
 typename MutantStack<T, Container>::iterator MutantStack<T, Container>::end() {
-    return _data.end();
+    return _data.rend();
 }
 
 template <typename T, class Container>
 typename MutantStack<T, Container>::const_iterator
 MutantStack<T, Container>::begin() const {
-    return _data.begin();
+    return _data.rbegin();
 }
 
 template <typename T, class Container>
 typename MutantStack<T, Container>::const_iterator
 MutantStack<T, Container>::end() const {
-    return _data.end();
+    return _data.rend();
+}
+
+template <typename T, class Container>
+void swap(MutantStack<T, Container> &lhs,
+          MutantStack<T, Container> &rhs) noexcept {
+    lhs.swap(rhs);
 }
 
 #endif // !MUTANTSTACK_HPP

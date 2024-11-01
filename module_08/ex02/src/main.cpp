@@ -1,4 +1,5 @@
 #include "../include/MutantStack.hpp"
+#include <stack>
 #include <cassert>
 
 static void subject_test() {
@@ -31,22 +32,36 @@ static void subject_test() {
     assert(mstack.size() == 5 && "Stack should have 5 element inside it");
     assert(mstack.top() == 0 && "Stack top should be 0");
 
-    MutantStack<int>::iterator it = mstack.begin();
-    assert(*it == 5 && "it begin should be 5");
+    auto it = mstack.begin();
+    assert(*it == 0 && "it begin should be 0");
+
     ++it;
-    assert(*it == 3 && "it begin should be 3");
+    assert(*it == 737 && "it begin should be 737");
+
     --it;
+    assert(*it == 0 && "it begin should be 0");
+
+    ++it;
+    assert(*it == 737 && "it begin should be 737");
+
+    ++it;
     assert(*it == 5 && "it begin should be 5");
 
-    MutantStack<int>::iterator ite = mstack.end();
-    while (it != ite) {
-        std::cout << *it << std::endl;
-        ++ite;
-    }
-    // std::stack<int> s(mstack);
+    ++it;
+    assert(*it == 3 && "it begin should be 3");
+
+    ++it;
+    assert(*it == 5 && "it begin should be 5");
+
+    std::stack<int> s(mstack);
+    s.push(1);
+    assert(s.size() == 6 && "s should have 6 element inside it");
+    assert(s.top() == 1 && "s top should be 1");
+    assert(mstack.size() == 5 && "mstack should still have 5 elements inside it");
 }
 
 int main() {
     subject_test();
+
     return 0;
 }

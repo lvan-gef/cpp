@@ -13,8 +13,8 @@ class MutantStack {
     using size_type = typename Container::size_type;
     using reference = typename Container::reference;
     using const_reference = typename Container::const_reference;
-    using iterator = typename Container::iterator;
-    using const_iterator = typename Container::const_iterator;
+    using iterator = typename Container::reverse_iterator;
+    using const_iterator = typename Container::const_reverse_iterator;
 
     MutantStack() = default;
 
@@ -48,12 +48,9 @@ class MutantStack {
     const_iterator begin() const;
     const_iterator end() const;
 
-    // ??  std::swap(std::stack)
+    operator Container &() { return _data; }
+    operator const Container &() const { return _data; }
 
-    // helper classes
-    //  std::uses_allocator<std::stack>
-
-    // subject iterator
     ~MutantStack() = default;
 
   private:
