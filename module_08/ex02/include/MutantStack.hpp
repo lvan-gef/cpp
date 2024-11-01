@@ -16,7 +16,7 @@ class MutantStack {
     using iterator = typename Container::reverse_iterator;
     using const_iterator = typename Container::const_reverse_iterator;
 
-    MutantStack() = default;
+    MutantStack();
 
     MutantStack(const MutantStack &rhs);
     MutantStack &operator=(const MutantStack &rhs);
@@ -51,7 +51,7 @@ class MutantStack {
     operator Container &();
     operator const Container &() const;
 
-    ~MutantStack() = default;
+    ~MutantStack();
 
   private:
     std::deque<T> _data;

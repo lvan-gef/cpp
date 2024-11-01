@@ -2,6 +2,10 @@
 #define MUTANTSTACK_TPP
 
 template <typename T, typename Container>
+MutantStack<T, Container>::MutantStack()
+    {}
+
+template <typename T, typename Container>
 MutantStack<T, Container>::MutantStack(const MutantStack &rhs)
     : _data(rhs._data) {}
 
@@ -147,5 +151,10 @@ void swap(MutantStack<T, Container> &lhs,
           MutantStack<T, Container> &rhs) noexcept {
     lhs.swap(rhs);
 }
+
+
+template <typename T, typename Container>
+MutantStack<T, Container>::~MutantStack()
+    {}
 
 #endif // !MUTANTSTACK_HPP
