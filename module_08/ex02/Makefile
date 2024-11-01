@@ -12,7 +12,7 @@ OBJDIR = obj/
 
 SRCFILES = main.cpp
 # TESTFILES = $(NAME)_test.cpp
-TESTFILES = basic_test.cpp complex_type_test.cpp mutantStack_test.cpp subject_test.cpp
+TESTFILES = basic_test.cpp comparison_test.cpp complextype_test.cpp constructors_test.cpp containers_test.cpp emplace_test.cpp iterators_test.cpp mutantStack_test.cpp subject_test.cpp swap_test.cpp
 
 SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)
 TESTOBJ = $(TESTFILES:%.cpp=$(OBJDIR)%.o)
