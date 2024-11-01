@@ -48,8 +48,7 @@ $(TESTNAME): clean $(TESTOBJ) $(SRCOBJ)
 	$(CC) $(GFLAGS) -MMD -MP $(SRCOBJ) $(TESTOBJ) $(HEADERS) -g3 -I tester/include -o $(TESTNAME)
 	@rm -rf $(OBJDIR)
 	@$(CLEAR_COMMAND)
-	# valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(TESTNAME)
-	./$(TESTNAME)
+	valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --read-var-info=yes --track-fds=yes --trace-children=yes ./$(TESTNAME)
 
 $(OBJDIR)%.o: $(TESTDIR)%.cpp
 	@if [ "$<" = "$(TESTDIR)$(NAME)_test.cpp" ]; then \
@@ -68,5 +67,9 @@ fclean: clean
 
 re: fclean all
 
+fmt:
+	@echo "Format code"
+	@find . -type f -name "*.*pp" -print0 | xargs -0 clang-format -i
+
 -include $(DEPS)
-.PHONY: all clean fclean re test run
+.PHONY: all clean fclean re test run fmt
