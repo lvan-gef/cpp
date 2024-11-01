@@ -30,12 +30,16 @@ void testEmplace() {
     assert(og.top().data == expect1 && "og top data should be: {1, 2, 3}");
 
     ms.emplace("test", std::initializer_list<int>{1, 2, 3});
-    assert(ms.top().name == "test" && "ms Emplace top element name should be: 'test'");
-    assert(ms.top().data == expect && "ms Emplace top data should be: {1, 2, 3}");
+    assert(ms.top().name == "test" &&
+           "ms Emplace top element name should be: 'test'");
+    assert(ms.top().data == expect &&
+           "ms Emplace top data should be: {1, 2, 3}");
 
     og.emplace("test", std::initializer_list<int>{1, 2, 3});
-    assert(og.top().name == "test" && "og Emplace top element name should be: 'test'");
-    assert(og.top().data == expect && "og Emplace top data should be: {1, 2, 3}");
+    assert(og.top().name == "test" &&
+           "og Emplace top element name should be: 'test'");
+    assert(og.top().data == expect &&
+           "og Emplace top data should be: {1, 2, 3}");
 
     std::cout << "Start Emplace Test" << '\n' << '\n';
 }

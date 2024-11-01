@@ -31,7 +31,8 @@ void testIterators() {
     const MutantStack<int> &cms = ms;
     expected = 4;
     for (int cm : cms) {
-        assert(cm == expected && "Const Iter did not give the rigth element back");
+        assert(cm == expected &&
+               "Const Iter did not give the rigth element back");
         expected--;
     }
 

@@ -23,13 +23,15 @@ void testConstructorsAndAssignment() {
     // Copy constructor
     MutantStack<int> ms2(ms1);
     assert(ms2.size() == ms1.size() && "ms1 and ms2 should have 2 elements");
-    assert(ms2.top() == ms1.top() && "ms1 and ms2 top element should be value 2");
+    assert(ms2.top() == ms1.top() &&
+           "ms1 and ms2 top element should be value 2");
 
     // Assignment operator
     MutantStack<int> ms3;
     ms3 = ms1;
     assert(ms3.size() == ms1.size() && "ms1 and ms3 should have 2 elements");
-    assert(ms3.top() == ms1.top() && "ms1 and ms3 top element should be value 2");
+    assert(ms3.top() == ms1.top() &&
+           "ms1 and ms3 top element should be value 2");
 
     // Move constructor
     MutantStack<int> ms4(std::move(ms1));
