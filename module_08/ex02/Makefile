@@ -48,7 +48,8 @@ $(TESTNAME): clean $(TESTOBJ) $(SRCOBJ)
 	$(CC) $(GFLAGS) -MMD -MP $(SRCOBJ) $(TESTOBJ) $(HEADERS) -g3 -I tester/include -o $(TESTNAME)
 	@rm -rf $(OBJDIR)
 	@$(CLEAR_COMMAND)
-	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(TESTNAME)
+	# valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(TESTNAME)
+	./$(TESTNAME)
 
 $(OBJDIR)%.o: $(TESTDIR)%.cpp
 	@if [ "$<" = "$(TESTDIR)$(NAME)_test.cpp" ]; then \

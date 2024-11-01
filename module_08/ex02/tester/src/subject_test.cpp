@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/01 17:58:59 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/11/01 17:58:59 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/01 23:18:57 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void testSubject() {
     std::cout << "Start Subject Test" << '\n';
 
     MutantStack<int> mstack;
+    assert(mstack.size() == 0 && "mstack size should be 0");
+
     mstack.push(5);
     assert(mstack.size() == 1 && "Stack should have 1 element inside it");
     assert(mstack.top() == 5 && "Stack top should be 5");
@@ -69,8 +71,10 @@ void testSubject() {
     s.push(1);
     assert(s.size() == 6 && "s should have 6 element inside it");
     assert(s.top() == 1 && "s top should be 1");
+
     assert(mstack.size() == 5 &&
            "mstack should still have 5 elements inside it");
+    assert(mstack.top() == 0 && "mstack top should be 1");
 
     std::cout << "End Subject Test" << '\n' << '\n';
 }

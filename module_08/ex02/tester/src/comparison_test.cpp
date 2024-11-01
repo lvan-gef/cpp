@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/01 17:58:33 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/11/01 23:10:29 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 00:12:52 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,23 @@ void testComparisonOperators() {
     ms2.push(3);
 
     assert(ms1 != ms2 && "ms1 should not be eq to ms2");
+
     assert(ms1 < ms2 && "ms1 should be less then ms2");
-    assert(ms1 <= ms2 && "ms1 should be less or eq to ms2");
+    assert(ms1 <= ms2 && "ms1 should be less then ms2");
+    ms2.pop();
+    ms2.push(2);
+    assert(ms1 <= ms2 && "ms1 should be eq to ms2");
+
+    ms2.pop();
+    ms2.push(3);
     assert(ms2 > ms1 && "ms2 should be more then ms1");
-    assert(ms2 >= ms1 && "ms2 should be more or eq to ms1");
+    assert(ms2 >= ms1 && "ms2 should be more then ms1");
+    ms2.pop();
+    ms2.push(2);
+    assert(ms2 >= ms1 && "ms2 should be eq to ms1");
 
     ms2 = ms1;
     assert(ms1 == ms2 && "ms1 should be eq bs2");
-    assert(ms1 <= ms2 && "ms1 should be less then or eq to ms2");
-    assert(ms1 >= ms2 && "ms1 should be more then or eq to ms2");
 
     std::cout << "Start Comparison Test" << '\n' << '\n';
 }
