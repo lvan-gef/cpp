@@ -1,3 +1,4 @@
+#include "../tester/include/tester.hpp"
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
@@ -11,7 +12,6 @@
 /* ************************************************************************** */
 
 #include "../include/MutantStack.hpp"
-#include "../tester/include/tester.hpp"
 #include <cassert>
 #include <stack>
 

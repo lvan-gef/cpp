@@ -4,14 +4,13 @@ BUILD_MODE = build
 
 CC = c++
 
-GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11 -g3
+GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11
 
 SRCDIR = src/
 TESTDIR = tester/src/
 OBJDIR = obj/
 
 SRCFILES = main.cpp
-# TESTFILES = $(NAME)_test.cpp
 TESTFILES = basic_test.cpp comparison_test.cpp complextype_test.cpp constructors_test.cpp containers_test.cpp emplace_test.cpp iterators_test.cpp mutantStack_test.cpp subject_test.cpp swap_test.cpp
 
 SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)
@@ -46,11 +45,10 @@ run: all
 
 test: BUILD_MODE = test
 $(TESTNAME): clean $(TESTOBJ) $(SRCOBJ)
-	$(CC) $(GFLAGS) -MMD -MP $(SRCOBJ) $(TESTOBJ) $(HEADERS) -I tester/include -o $(TESTNAME)
+	$(CC) $(GFLAGS) -MMD -MP $(SRCOBJ) $(TESTOBJ) $(HEADERS) -g3 -I tester/include -o $(TESTNAME)
 	@rm -rf $(OBJDIR)
 	@$(CLEAR_COMMAND)
-	## valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./test
-	./$(TESTNAME)
+	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(TESTNAME)
 
 $(OBJDIR)%.o: $(TESTDIR)%.cpp
 	@if [ "$<" = "$(TESTDIR)$(NAME)_test.cpp" ]; then \
@@ -58,7 +56,7 @@ $(OBJDIR)%.o: $(TESTDIR)%.cpp
 	fi
 
 	@mkdir -p ${OBJDIR}
-	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -I tester/include -o $@ $<
+	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -g3 -I tester/include -o $@ $<
 
 clean:
 	@rm -rf $(OBJDIR)
