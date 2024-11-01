@@ -1,6 +1,7 @@
 #include "../include/tester.hpp"
 
 void testConstructorsAndAssignment() {
+    std::cout << "Start constructor Test" << '\n';
 
     // Default constructor
     MutantStack<int> ms1;
@@ -28,4 +29,6 @@ void testConstructorsAndAssignment() {
     ms5 = std::move(ms4);
     assert(ms5.size() == 2);
     assert(ms5.top() == 2);
+
+    std::cout << "End constructor Test" << '\n' << '\n';
 }

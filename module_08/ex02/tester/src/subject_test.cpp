@@ -1,6 +1,8 @@
 #include "../include/tester.hpp"
 
 void testSubject() {
+    std::cout << "Start Subject Test" << '\n';
+
     MutantStack<int> mstack;
     mstack.push(5);
     assert(mstack.size() == 1 && "Stack should have 1 element inside it");
@@ -56,4 +58,6 @@ void testSubject() {
     assert(s.size() == 6 && "s should have 6 element inside it");
     assert(s.top() == 1 && "s top should be 1");
     assert(mstack.size() == 5 && "mstack should still have 5 elements inside it");
+
+    std::cout << "End Subject Test" << '\n' << '\n';
 }
