@@ -62,6 +62,7 @@ clean:
 	@rm -rf $(OBJDIR)
 
 fclean: clean
+	@./tester/swap_test.sh build;
 	@rm -f $(NAME)
 	@rm -f $(TESTNAME)
 
