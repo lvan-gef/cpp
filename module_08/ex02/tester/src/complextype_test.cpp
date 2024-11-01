@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/01 17:58:33 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/11/02 00:36:48 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 00:41:04 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ static void vectorTest() {
     assert(og_vec.size() == 1 && "og_vec should be size 1");
     assert(og_vec.top() == v1 && "og_vec should be {1, 2, 3}");
 
-    assert(ms_vec.size() == og_vec.size() && "Own and Og should be the same size: 1");
+    assert(ms_vec.size() == og_vec.size() &&
+           "Own and Og should be the same size: 1");
     assert(ms_vec.top() == og_vec.top() &&
            "Own and Og should be the seem: {1, 2, 3}");
 
