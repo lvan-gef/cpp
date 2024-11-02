@@ -44,7 +44,8 @@ test: BUILD_MODE = test
 $(TESTNAME): clean $(TESTOBJ) $(SRCOBJ)
 	$(CC) $(GFLAGS) -MMD -MP $(SRCOBJ) $(TESTOBJ) $(HEADERS) -g3 -I tester/include -o $(TESTNAME)
 	@rm -rf $(OBJDIR)
-	$(MAKE) -C tester/extern run
+	@$(CLEAR_COMMAND)
+	@$(MAKE) -C tester/extern run
 
 $(OBJDIR)%.o: $(TESTDIR)%.cpp
 	@if [ "$<" = "$(TESTDIR)$(NAME)_test.cpp" ]; then \
