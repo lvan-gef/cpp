@@ -10,7 +10,7 @@ add_test_code() {
 
     # Add include if it's not there
     if ! grep -q '#include "../tester/include/tester.hpp"' "$file"; then
-        sed -i '1i\#include "../tester/include/tester.hpp"\n' "$file"
+        sed -i '1i\#include "../tester/include/tester.hpp"' "$file"
     fi
 
     # Add test code in main if it's not there
@@ -25,35 +25,27 @@ add_test_code() {
             print ""
             print "    int amount = std::atoi(argv[1]);"
             print ""
-            print "    auto start = std::chrono::high_resolution_clock::now();"
             print "    std::vector<int> rv = randomVector(amount);"
+            print ""
+            print "    auto start = std::chrono::high_resolution_clock::now();"
+            print "    Span x = Span(rv.begin(), rv.end());"
             print "    auto end = std::chrono::high_resolution_clock::now();"
             print "    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);"
-            print "    std::cout << \"Create random data<\" << amount << \"> duration: \" << duration.count() << \" milliseconds\" << '\\n';"
-            print ""
-            print "    start = std::chrono::high_resolution_clock::now();"
-            print "    Span x = Span(rv.begin(), rv.end());"
-            print "    end = std::chrono::high_resolution_clock::now();"
-            print "    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);"
-            print "    std::cout << \"Add           data<\" << amount << \"> duration: \" << duration.count() << \" milliseconds\" << '\\n';"
-            print ""
-            print "    start = std::chrono::high_resolution_clock::now();"
-            print "    x.printer();"
-            print "    end = std::chrono::high_resolution_clock::now();"
-            print "    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);"
-            print "    std::cout << \"Print         data<\" << amount << \"> duration: \" << duration.count() << \" milliseconds\" << '\\n';"
+            print "    std::cout << \"Add           data<\" << amount << \"> duration: \" << duration.count() << \" milliseconds\" << std::endl;"
             print ""
             print "    start = std::chrono::high_resolution_clock::now();"
             print "    unsigned int shortes = x.shortestSpan();"
             print "    end = std::chrono::high_resolution_clock::now();"
             print "    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);"
-            print "    std::cout << \"Shortes       span<\" << amount << \"> duration: \" << duration.count() << \" milliseconds\" << '\\n';"
+            print "    std::cout << \"Shortes       span<\" << amount << \"> duration: \" << duration.count() << \" milliseconds\" << std::endl;"
+            print "    std::cout << shortes << std::endl;"
             print ""
             print "    start = std::chrono::high_resolution_clock::now();"
             print "    unsigned int longest = x.longestSpan();"
             print "    end = std::chrono::high_resolution_clock::now();"
             print "    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);"
-            print "    std::cout << \"Longest       span<\" << amount << \"> duration: \" << duration.count() << \" milliseconds\" << \\'\\n\\';"
+            print "    std::cout << \"Longest       span<\" << amount << \"> duration: \" << duration.count() << \" milliseconds\" << std::endl;"
+            print "    std::cout << longest << std::endl;"
             next
         }
         { print }' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"

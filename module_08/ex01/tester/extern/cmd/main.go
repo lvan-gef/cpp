@@ -7,27 +7,88 @@ import (
 	"math"
 	"os"
 	"os/exec"
-	"sort"
+	"runtime"
 	"strconv"
 	"strings"
+	"sync"
 )
 
-func findShortestSpan(sortedData []int) uint64 {
-	if len(sortedData) < 2 {
-		return math.MaxUint64
+func findSpans(data []int) (int64, int64) {
+	if len(data) < 2 {
+		return math.MaxInt64, 0
 	}
 
-	shortestSpan := uint64(math.MaxUint64)
+	numWorkers := runtime.NumCPU()
 
-	// Since the data is sorted, the shortest span must be between some adjacent numbers
-	for i := 1; i < len(sortedData); i++ {
-		span := uint64(sortedData[i] - sortedData[i-1]) // No abs needed since data is sorted
-		if span < shortestSpan {
-			shortestSpan = span
+	dataLen := len(data)
+	minChunkSize := 1000
+	chunkSize := dataLen / numWorkers
+	if chunkSize < minChunkSize {
+		chunkSize = minChunkSize
+		numWorkers = (dataLen + minChunkSize - 1) / minChunkSize
+	}
+
+	type result struct {
+		min, max int64
+	}
+	results := make(chan result, numWorkers)
+
+	var wg sync.WaitGroup
+
+	for i := 0; i < numWorkers; i++ {
+		wg.Add(1)
+		start := i * chunkSize
+		end := start + chunkSize
+		if end > dataLen {
+			end = dataLen
+		}
+
+		go func(start, end int) {
+			defer wg.Done()
+
+			localMin := int64(math.MaxInt64)
+			localMax := int64(math.MinInt64)
+
+			for i := start; i < end; i++ {
+				val1 := data[i]
+				for j := i + 1; j < dataLen; j++ {
+					diff := val1 - data[j]
+					if diff < 0 {
+						diff = -diff
+					}
+
+					span := int64(diff)
+
+					if span < localMin {
+						localMin = span
+					} else if span > localMax {
+						localMax = span
+					}
+				}
+			}
+
+			results <- result{localMin, localMax}
+		}(start, end)
+	}
+
+	go func() {
+		wg.Wait()
+		close(results)
+	}()
+
+	shortestSpan := int64(math.MaxInt64)
+	longestSpan := int64(math.MinInt64)
+
+	for r := range results {
+		if r.min < shortestSpan {
+			shortestSpan = r.min
+		}
+		if r.max > longestSpan {
+			longestSpan = r.max
 		}
 	}
 
-	return shortestSpan
+	return shortestSpan, longestSpan
 }
 
 func run(spanPath string, many int) error {
@@ -62,33 +123,32 @@ func run(spanPath string, many int) error {
 		data = append(data, num)
 	}
 
-	if !sort.IntsAreSorted(data) {
-		return fmt.Errorf("data is not sorted")
-	}
-
 	outScanner := bufio.NewScanner(stdout)
 	var outputLines []string
 	for outScanner.Scan() {
-        txt := outScanner.Text();
-        if strings.Contains(txt, "duration") {
-            fmt.Printf("%s\n", txt)
-            continue
-        }
+		txt := outScanner.Text()
+		if strings.Contains(txt, "duration") {
+			fmt.Printf("%s\n", txt)
+			continue
+		}
 
-		outputLines = append(outputLines, "    " + txt)
+		outputLines = append(outputLines, "    "+txt)
 	}
 
 	if err := cmd.Wait(); err != nil {
 		return fmt.Errorf("command failed: %v", err)
 	}
 
-	shortestSpan := findShortestSpan(data)
+    fmt.Printf("Go is verifying if the result is correct. This can take a long time.\n")
+	shortestSpan, longestSpan := findSpans(data)
 
-	if shortestSpan == math.MaxUint64 {
-		return fmt.Errorf("shortest_span == unsigned int max so something went wrong")
+	if shortestSpan == math.MaxInt64 {
+		return fmt.Errorf("shortest_span == int64 max so something went wrong")
 	}
 
-	longestSpan := uint64(data[len(data)-1] - data[0])
+	if longestSpan < 0 {
+		return fmt.Errorf("longest_span < 0 so something went wrong")
+	}
 
 	expectedOutput := fmt.Sprintf("    %d\n    %d\n", shortestSpan, longestSpan)
 	actualOutput := strings.Join(outputLines, "\n") + "\n"
@@ -104,9 +164,8 @@ func run(spanPath string, many int) error {
 			fmt.Fprintf(f, "%d\n", num)
 		}
 
-        fmt.Fprintf(f, "%s\n", expectedOutput)
-        fmt.Fprintf(f, "%s\n", actualOutput)
-
+		fmt.Fprintf(f, "%s\n", expectedOutput)
+		fmt.Fprintf(f, "%s\n", actualOutput)
 
 		return fmt.Errorf("\nexpected:\n%sgot:\n%s", expectedOutput, actualOutput)
 	}
@@ -116,6 +175,7 @@ func run(spanPath string, many int) error {
 
 func main() {
 	spanPath := "./span"
+
 	if len(os.Args) > 1 {
 		spanPath = os.Args[1]
 	}
@@ -125,18 +185,15 @@ func main() {
 	}
 
 	fmt.Printf("Using span executable: %s\n\n", spanPath)
-	// 100000000, takes 04:30 minutes to create and find it (cpp code) and 4.84 GiB (ryzen 5 5600x)  golang 2.47 GIB
-	// 100000000, takes 15:33 minutes to create and find it (cpp code) and 4.84 GiB (rpi cortex A72) golang 2.47 GIB
 
-    // 10000000, takes 00:21 minutes to create and find it (cpp code) and 499 MIB (ryzen 5 5600x)  golang 210 MIB
-    // 10000000, takes 00:38 minutes to create and find it (cpp code) and 498 MIB (intel i5-7500)  golang 217 MIB
-    // 10000000, takes 01:18 minutes to create and find it (cpp code) and 499 MIB (rpi cortex A72) golang 211 MIB
-	inputs := []int{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000}
+    // 10_000_000 takes to long
+	// inputs := []int{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000}
+	inputs := []int{1, 10, 100, 1000, 10000, 100000, 1000000}
 	for _, ip := range inputs[1:] {
 		if err := run(spanPath, ip); err != nil {
 			log.Fatalf("Failed test with %d numbers: %v", ip, err)
 		}
 
-        fmt.Printf("\n");
+		fmt.Printf("\n")
 	}
 }

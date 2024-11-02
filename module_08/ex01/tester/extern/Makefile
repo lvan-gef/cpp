@@ -9,11 +9,11 @@ GOFILES=$(wildcard ./cmd/*.go)
 MAKEFLAGS += --silent
 
 build:
-	go build -o $(GOBIN)/$(BINARY_NAME) ./cmd/main.go
+	GOAMD64=v3 CGO_ENABLED=0 go build -ldflags="-w -s" -gcflags="-B -l=4" -o $(GOBIN)/$(BINARY_NAME) ./cmd/main.go
 	@echo "Binary built! You can find it in $(GOBIN)/$(BINARY_NAME)"
 
-run:
-	go run ./cmd/main.go ../../test
+run: build
+	./bin/spanTest ../../test
 
 clean:
 	@echo "Cleaning build cache..."
