@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/28 17:42:40 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/11/02 01:32:19 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 20:11:18 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ void testEdgeCases() {
 }
 
 void runAllTests() {
-    std::cout << "Starting easyfind template tests\n" << std::endl;
+    std::cout << "Starting easyfind template tests\n" << '\n';
 
     testVector();
     testList();
@@ -107,17 +107,17 @@ void runAllTests() {
     testSet();
     testEdgeCases();
 
-    std::cout << "\nAll tests completed successfully!" << std::endl;
+    std::cout << "\nAll tests completed successfully!" << '\n';
 }
 
 int testEasyFind() {
     try {
         runAllTests();
     } catch (const std::exception &e) {
-        std::cerr << "Test suite failed: " << e.what() << std::endl;
+        std::cerr << "Test suite failed: " << e.what() << '\n';
         return 1;
     } catch (...) {
-        std::cerr << "Test suite failed with unknown exception" << std::endl;
+        std::cerr << "Test suite failed with unknown exception" << '\n';
         return 1;
     }
     return 0;

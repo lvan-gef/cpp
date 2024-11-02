@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/28 17:38:37 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/28 17:39:57 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 20:10:37 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,4 @@ void easyfind(T array, int target) {
     throw std::invalid_argument("target not found in data set\n");
 }
 
-#endif // !EASYFIND_HPP
+#endif // !EASYFIND_TPP
