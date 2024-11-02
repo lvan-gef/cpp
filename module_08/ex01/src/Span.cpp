@@ -6,13 +6,13 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/29 18:44:22 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/11/02 18:39:50 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 20:15:53 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/Span.hpp"
 
-Span::Span(unsigned int N) : size(N){};
+Span::Span(unsigned int N) : size(N) {};
 
 Span::Span(const Span &rhs) : data(rhs.data), size(rhs.size) {}
 

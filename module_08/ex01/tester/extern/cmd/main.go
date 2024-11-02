@@ -139,7 +139,7 @@ func run(spanPath string, many int) error {
 		return fmt.Errorf("command failed: %v", err)
 	}
 
-    fmt.Printf("Go is verifying if the result is correct. This can take a long time.\n")
+	fmt.Printf("Go is verifying if the result is correct. This can take a long time.\n")
 	shortestSpan, longestSpan := findSpans(data)
 
 	if shortestSpan == math.MaxInt64 {
@@ -186,7 +186,7 @@ func main() {
 
 	fmt.Printf("Using span executable: %s\n\n", spanPath)
 
-    // 10_000_000 takes to long
+	// 10_000_000 takes to long
 	// inputs := []int{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000}
 	inputs := []int{1, 10, 100, 1000, 10000, 100000, 1000000}
 	for _, ip := range inputs[1:] {

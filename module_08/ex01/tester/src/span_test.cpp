@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/29 18:44:52 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/11/02 18:39:28 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 20:15:53 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,15 +34,20 @@ std::vector<int> randomVector(unsigned int N) {
     }
 
     auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Create random data<" << N << "> duration: " << duration.count() << " milliseconds" << std::endl;
-
+    auto duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Create random data<" << N
+              << "> duration: " << duration.count() << " milliseconds"
+              << std::endl;
 
     start = std::chrono::high_resolution_clock::now();
     printer(tmp);
     end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Print         data<" << N << "> duration: " << duration.count() << " milliseconds" << std::endl;
+    duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Print         data<" << N
+              << "> duration: " << duration.count() << " milliseconds"
+              << std::endl;
 
     return tmp;
 }

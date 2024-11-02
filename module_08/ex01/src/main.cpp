@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Updated: 2024/11/02 18:39:28 by lvan-gef      ########   odam.nl         */
-/*   Updated: 2024/11/02 18:42:43 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 20:15:53 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static void check_fail(Span sp) {
 
 static void subject_test(bool isPrint) {
     if (isPrint == true) {
-    std::cout << "Start subject test" << '\n';
+        std::cout << "Start subject test" << '\n';
     }
 
     Span sp = Span(6);
@@ -63,7 +63,7 @@ static void subject_test(bool isPrint) {
     assert(sp.longestSpan() == 14 && "Expect that longestSpan is 14");
 
     if (isPrint == true) {
-    std::cout << "Pass subject test" << '\n';
+        std::cout << "Pass subject test" << '\n';
     }
 }
 
