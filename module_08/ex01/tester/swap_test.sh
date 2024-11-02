@@ -22,14 +22,19 @@ add_test_code() {
             print "        std::cerr << \"Expect 1 argument got: \" << argc << std::endl;"
             print "        return 1;"
             print "    }"
+            print ""
             print "    int amount = std::atoi(argv[1]);"
+            print ""
             print "    std::vector<int> rv = randomVector(amount);"
             print "    Span x = Span(rv.begin(), rv.end());"
             print "    x.printer();"
+            print ""
             print "    unsigned int shortes = x.shortestSpan();"
             print "    unsigned int longest = x.longestSpan();"
+            print ""
             print "    std::cout << shortes << std::endl;"
             print "    std::cout << longest << std::endl;"
+            print ""
             next
         }
         { print }' "$file" > "${file}.tmp" && mv "${file}.tmp" "$file"
@@ -66,9 +71,11 @@ fi
 case "$1" in
     "test")
         add_test_code "$src_path"
+        sed -i s/subject_test\(true\)/subject_test\(false\)/g "$src_path"
         ;;
     "build")
         remove_test_code "$src_path"
+        sed -i s/subject_test\(false\)/subject_test\(true\)/g "$src_path"
         ;;
     *)
         exit 1
