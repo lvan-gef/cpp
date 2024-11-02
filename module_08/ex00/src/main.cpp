@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/28 17:38:27 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/29 18:48:35 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 01:34:49 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,6 @@ void simple_test() {
 
 int main() {
     simple_test();
+
     return 0;
 }

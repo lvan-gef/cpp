@@ -6,105 +6,106 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/28 17:42:40 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/28 17:42:43 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 01:32:19 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/tester.hpp"
 
-// Helper function to run a test case and report results
-template <typename T>
-void runTest(T container, int target, bool shouldSucceed) {
-    try {
-        easyfind(container, target);
-        if (shouldSucceed) {
-            std::cout << "✓ Test passed: Found target " << target << std::endl;
-        } else {
-            std::cout << "✗ Test failed: Expected exception but found target"
-                      << std::endl;
-            assert(false);
-        }
-    } catch (const std::invalid_argument &e) {
-        if (!shouldSucceed) {
-            std::cout
-                << "✓ Test passed: Correctly throw exception for missing target"
-                << std::endl;
-        } else {
-            std::cout << "✗ Test failed: Unexpected exception - " << e.what()
-                      << std::endl;
-            assert(false);
-        }
-    } catch (...) {
-        std::cout << "✗ Test failed: Unexpected exception type" << std::endl;
-        assert(false);
-    }
-}
+void testVector() {
+    std::cout << "Running test: " << "vector" << '\n';
 
-// Test suite
-void runAllTests() {
-    std::cout << "Starting easyfind template tests\n" << std::endl;
-
-    // Test with vector
-    std::cout << "Running test: " << "vector" << std::endl;
     std::vector<int> vec = {1, 2, 3, 4, 5};
     runTest(vec, 3, true);
     runTest(vec, 10, false);
     runTest(vec, 1, true);
     runTest(vec, 5, true);
 
-    // Test with list
-    std::cout << "Running test: " << "list" << std::endl;
+    std::cout << "Pass test: " << "vector" << '\n' << '\n';
+}
+
+void testList() {
+    std::cout << "Running test: " << "list" << '\n';
+
     std::list<int> lst = {10, 20, 30, 40, 50};
     runTest(lst, 30, true);
     runTest(lst, 25, false);
     runTest(lst, 10, true);
     runTest(lst, 50, true);
 
-    // Test with deque
-    std::cout << "Running test: " << "deque" << std::endl;
+    std::cout << "Pass test: " << "list" << '\n' << '\n';
+}
+
+void testDeque() {
+    std::cout << "Running test: " << "deque" << '\n';
+
     std::deque<int> deq = {100, 200, 300};
     runTest(deq, 200, true);
     runTest(deq, 150, false);
     runTest(deq, 100, true);
     runTest(deq, 300, true);
 
-    // Test with set
-    std::cout << "Running test: " << "set" << std::endl;
+    std::cout << "Pass test: " << "deque" << '\n' << '\n';
+}
+
+void testSet() {
+    std::cout << "Running test: " << "set" << '\n';
+
     std::set<int> set = {1, 3, 5, 7, 9};
     runTest(set, 5, true);
     runTest(set, 4, false);
     runTest(set, 1, true);
     runTest(set, 9, true);
 
-    // Test edge cases
-    std::cout << "Running test: " << "empty vector" << std::endl;
+    std::cout << "Pass test: " << "set" << '\n' << '\n';
+}
+
+void testEdgeCases() {
+    std::cout << "Running test: " << "empty vector" << '\n';
     std::vector<int> empty;
     runTest(empty, 1, false);
+    std::cout << "Pass test: " << "empty vector" << '\n' << '\n';
 
-    std::cout << "Running test: " << "empty list" << std::endl;
+    std::cout << "Running test: " << "empty list" << '\n';
     std::list<int> emptyList;
     runTest(emptyList, 1, false);
+    std::cout << "Pass test: " << "empty list" << '\n' << '\n';
 
-    std::cout << "Running test: " << "empty deque" << std::endl;
+    std::cout << "Running test: " << "empty deque" << '\n';
     std::deque<int> emptyDeque;
     runTest(emptyDeque, 1, false);
+    std::cout << "Pass test: " << "empty deque" << '\n' << '\n';
 
-    std::cout << "Running test: " << "empty set" << std::endl;
+    std::cout << "Running test: " << "empty set" << '\n';
     std::set<int> emptySet;
     runTest(emptyDeque, 1, false);
+    std::cout << "Pass test: " << "empty set" << '\n' << '\n';
 
-    std::cout << "Running test: " << "single element" << std::endl;
+    std::cout << "Running test: " << "single element" << '\n';
     std::vector<int> single = {42};
     runTest(single, 42, true);
     runTest(single, 43, false);
+    std::cout << "Pass test: " << "single element" << '\n' << '\n';
 
-    std::cout << "Running test: " << "duplicate elements" << std::endl;
+    std::cout << "Running test: " << "duplicate elements" << '\n';
     std::vector<int> duplicates = {1, 2, 2, 2, 3};
     runTest(duplicates, 2, true);
+    std::cout << "Pass test: " << "duplicate elements" << '\n' << '\n';
 
-    std::cout << "Running test: " << "negative elements" << std::endl;
+    std::cout << "Running test: " << "negative elements" << '\n';
     std::vector<int> negatives = {-3, -2, -1, 0, 1};
     runTest(negatives, -2, true);
+    std::cout << "Pass test: " << "negative elements" << '\n' << '\n';
+}
+
+void runAllTests() {
+    std::cout << "Starting easyfind template tests\n" << std::endl;
+
+    testVector();
+    testList();
+    testDeque();
+    testSet();
+    testEdgeCases();
 
     std::cout << "\nAll tests completed successfully!" << std::endl;
 }
