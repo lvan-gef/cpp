@@ -69,7 +69,13 @@ func run(spanPath string, many int) error {
 	outScanner := bufio.NewScanner(stdout)
 	var outputLines []string
 	for outScanner.Scan() {
-		outputLines = append(outputLines, outScanner.Text())
+        txt := outScanner.Text();
+        if strings.Contains(txt, "duration") {
+            fmt.Printf("%s\n", txt)
+            continue
+        }
+
+		outputLines = append(outputLines, "    " + txt)
 	}
 
 	if err := cmd.Wait(); err != nil {
@@ -84,7 +90,7 @@ func run(spanPath string, many int) error {
 
 	longestSpan := uint64(data[len(data)-1] - data[0])
 
-	expectedOutput := fmt.Sprintf("%d\n%d\n", shortestSpan, longestSpan)
+	expectedOutput := fmt.Sprintf("    %d\n    %d\n", shortestSpan, longestSpan)
 	actualOutput := strings.Join(outputLines, "\n") + "\n"
 
 	if expectedOutput != actualOutput {
@@ -98,7 +104,11 @@ func run(spanPath string, many int) error {
 			fmt.Fprintf(f, "%d\n", num)
 		}
 
-		return fmt.Errorf("output mismatch\nexpected:\n%sgot:\n%s", expectedOutput, actualOutput)
+        fmt.Fprintf(f, "%s\n", expectedOutput)
+        fmt.Fprintf(f, "%s\n", actualOutput)
+
+
+		return fmt.Errorf("\nexpected:\n%sgot:\n%s", expectedOutput, actualOutput)
 	}
 
 	return nil
@@ -114,21 +124,19 @@ func main() {
 		log.Fatalf("Span executable not found at: %s", spanPath)
 	}
 
-	fmt.Printf("Using span executable: %s\n", spanPath)
+	fmt.Printf("Using span executable: %s\n\n", spanPath)
 	// 100000000, takes 04:30 minutes to create and find it (cpp code) and 4.84 GiB (ryzen 5 5600x)  golang 2.47 GIB
 	// 100000000, takes 15:33 minutes to create and find it (cpp code) and 4.84 GiB (rpi cortex A72) golang 2.47 GIB
 
-	// 10000000, takes 00:21 minutes to create and find it (cpp code) and 499 MIB (ryzen 5 5600x)  golang 210 MIB
+    // 10000000, takes 00:21 minutes to create and find it (cpp code) and 499 MIB (ryzen 5 5600x)  golang 210 MIB
     // 10000000, takes 00:38 minutes to create and find it (cpp code) and 498 MIB (intel i5-7500)  golang 217 MIB
-	// 10000000, takes 01:18 minutes to create and find it (cpp code) and 499 MIB (rpi cortex A72) golang 211 MIB
+    // 10000000, takes 01:18 minutes to create and find it (cpp code) and 499 MIB (rpi cortex A72) golang 211 MIB
 	inputs := []int{1, 10, 100, 1000, 10000, 100000, 1000000, 10000000}
 	for _, ip := range inputs[1:] {
-		fmt.Printf("Start test with: %d numbers\n", ip)
-
 		if err := run(spanPath, ip); err != nil {
 			log.Fatalf("Failed test with %d numbers: %v", ip, err)
 		}
 
-		fmt.Printf("Pass test with : %d numbers\n", ip)
+        fmt.Printf("\n");
 	}
 }

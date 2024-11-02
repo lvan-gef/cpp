@@ -9,12 +9,10 @@ GOFILES=$(wildcard ./cmd/*.go)
 MAKEFLAGS += --silent
 
 build:
-	@echo "Building..."
 	go build -o $(GOBIN)/$(BINARY_NAME) ./cmd/main.go
 	@echo "Binary built! You can find it in $(GOBIN)/$(BINARY_NAME)"
 
 run:
-	@echo "Running..."
 	go run ./cmd/main.go ../../test
 
 clean:
