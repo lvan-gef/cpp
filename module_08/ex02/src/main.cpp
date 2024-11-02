@@ -1,3 +1,4 @@
+#include "../tester/include/tester.hpp"
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
@@ -6,7 +7,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/11/01 17:57:20 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/11/01 17:57:35 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 20:29:44 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +16,7 @@
 #include <stack>
 
 static void subject_test() {
+    std::cout << "Start subject test" << '\n';
     MutantStack<int> mstack;
     mstack.push(5);
     assert(mstack.size() == 1 && "Stack should have 1 element inside it");
@@ -71,10 +73,13 @@ static void subject_test() {
     assert(s.top() == 1 && "s top should be 1");
     assert(mstack.size() == 5 &&
            "mstack should still have 5 elements inside it");
+
+    std::cout << "Pass subject test" << '\n' << '\n';
 }
 
 int main() {
     subject_test();
 
+    testMutantStack();
     return 0;
 }
