@@ -2,6 +2,7 @@
 
 
 
+
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
@@ -79,12 +80,35 @@ int main(int argc, char **argv) {
 
     int amount = std::atoi(argv[1]);
 
+    auto start = std::chrono::high_resolution_clock::now();
     std::vector<int> rv = randomVector(amount);
-    Span x = Span(rv.begin(), rv.end());
-    x.printer();
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Create random data<" << amount << "> duration: " << duration.count() << " milliseconds" << '\n';
 
+    start = std::chrono::high_resolution_clock::now();
+    Span x = Span(rv.begin(), rv.end());
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Add           data<" << amount << "> duration: " << duration.count() << " milliseconds" << '\n';
+
+    start = std::chrono::high_resolution_clock::now();
+    x.printer();
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Print         data<" << amount << "> duration: " << duration.count() << " milliseconds" << '\n';
+
+    start = std::chrono::high_resolution_clock::now();
     unsigned int shortes = x.shortestSpan();
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Shortes       span<" << amount << "> duration: " << duration.count() << " milliseconds" << '\n';
+
+    start = std::chrono::high_resolution_clock::now();
     unsigned int longest = x.longestSpan();
+    end = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+    std::cout << "Longest       span<" << amount << "> duration: " << duration.count() << " milliseconds" << '\n';
 
     std::cout << shortes << std::endl;
     std::cout << longest << std::endl;
