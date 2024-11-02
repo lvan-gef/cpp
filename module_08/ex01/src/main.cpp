@@ -1,19 +1,12 @@
-#include "../tester/include/tester.hpp"
-
-
-
-
-
-
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        ::::::::            */
+/*   main.cpp                                           :+:    :+:            */
 /*   main.cpp                                           :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2024/10/29 18:44:22 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/11/02 02:12:39 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 18:39:28 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 18:42:43 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,48 +68,7 @@ static void subject_test(bool isPrint) {
 }
 
 int main(int argc, char **argv) {
-    if (argc != 2) {
-        std::cerr << "Expect 1 argument got: " << argc << std::endl;
-        return 1;
-    }
-
-    int amount = std::atoi(argv[1]);
-
-    auto start = std::chrono::high_resolution_clock::now();
-    std::vector<int> rv = randomVector(amount);
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Create random data<" << amount << "> duration: " << duration.count() << " milliseconds" << 
-;
-
-    start = std::chrono::high_resolution_clock::now();
-    Span x = Span(rv.begin(), rv.end());
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Add           data<" << amount << "> duration: " << duration.count() << " milliseconds" << 
-;
-
-    start = std::chrono::high_resolution_clock::now();
-    x.printer();
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Print         data<" << amount << "> duration: " << duration.count() << " milliseconds" << 
-;
-
-    start = std::chrono::high_resolution_clock::now();
-    unsigned int shortes = x.shortestSpan();
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Shortes       span<" << amount << "> duration: " << duration.count() << " milliseconds" << 
-;
-
-    start = std::chrono::high_resolution_clock::now();
-    unsigned int longest = x.longestSpan();
-    end = std::chrono::high_resolution_clock::now();
-    duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-    std::cout << "Longest       span<" << amount << "> duration: " << duration.count() << " milliseconds" << \
-;
-    subject_test(false);
+    subject_test(true);
 
     (void)argc;
     (void)argv;

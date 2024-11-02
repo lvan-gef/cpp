@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/29 18:44:07 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/29 18:44:10 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 19:55:07 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,6 @@ class Span {
     void addNumber(int x);
     unsigned int shortestSpan() const;
     unsigned int longestSpan() const;
-    void printer();
 
     ~Span();
 

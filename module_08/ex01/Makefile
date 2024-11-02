@@ -55,8 +55,12 @@ $(OBJDIR)%.o: $(TESTDIR)%.cpp
 	@mkdir -p ${OBJDIR}
 	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -g3 -o $@ $<
 
+clean:
+	@rm -rf $(OBJDIR)
+
 fclean: clean
 	@./tester/swap_test.sh build;
+	@$(MAKE) -C tester/extern clean
 	@rm -f $(NAME)
 	@rm -f $(TESTNAME)
 
@@ -64,6 +68,7 @@ re: fclean all
 
 fmt:
 	@echo "Format code"
+	@$(MAKE) -C tester/extern fmt
 	@find . -type f -name "*.*pp" -print0 | xargs -0 clang-format -i
 
 -include $(DEPS)

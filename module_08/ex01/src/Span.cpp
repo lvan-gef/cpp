@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/29 18:44:22 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/10/29 18:44:37 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 18:39:50 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,6 @@ unsigned int Span::longestSpan() const {
     auto last = static_cast<long long>(*data.rbegin());
 
     return static_cast<unsigned int>(std::abs(last - first));
-}
-
-void Span::printer() {
-    for (int nbr : data) {
-        std::cerr << nbr << '\n';
-    }
 }
 
 Span::~Span() {}
