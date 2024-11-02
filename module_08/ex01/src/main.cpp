@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Updated: 2024/11/02 18:39:28 by lvan-gef      ########   odam.nl         */
-/*   Updated: 2024/11/02 20:15:53 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/02 20:22:11 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ static void subject_test(bool isPrint) {
 
 int main(int argc, char **argv) {
     subject_test(true);
+
 
     (void)argc;
     (void)argv;
