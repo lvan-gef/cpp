@@ -4,7 +4,7 @@ BUILD_MODE = build
 
 CC = c++
 
-GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11 -g3
+GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11
 
 SRCDIR = src/
 TESTDIR = tester/src/
@@ -19,6 +19,11 @@ DEPS = $(SRCOBJ:.o=.d)
 
 HEADERS = -I include
 
+ifeq ($(OS),Windows_NT)
+    CLEAR_COMMAND = cls
+else
+    CLEAR_COMMAND = clear
+endif
 
 all: $(NAME)
 
@@ -37,7 +42,7 @@ $(OBJDIR)%.o: $(SRCDIR)%.cpp
 
 test: BUILD_MODE = test
 $(TESTNAME): clean $(TESTOBJ) $(SRCOBJ)
-	$(CC) $(GFLAGS) -MMD -MP $(SRCOBJ) $(TESTOBJ) $(HEADERS) -I tester/include -o $(TESTNAME)
+	$(CC) $(GFLAGS) -MMD -MP $(SRCOBJ) $(TESTOBJ) $(HEADERS) -g3 -I tester/include -o $(TESTNAME)
 	@rm -rf $(OBJDIR)
 	$(MAKE) -C tester/extern run
 
@@ -47,16 +52,18 @@ $(OBJDIR)%.o: $(TESTDIR)%.cpp
 	fi
 
 	@mkdir -p ${OBJDIR}
-	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -o $@ $<
-
-clean:
-	@rm -rf $(OBJDIR)
+	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -g3 -o $@ $<
 
 fclean: clean
+	@./tester/swap_test.sh build;
 	@rm -f $(NAME)
 	@rm -f $(TESTNAME)
 
 re: fclean all
+
+fmt:
+	@echo "Format code"
+	@find . -type f -name "*.*pp" -print0 | xargs -0 clang-format -i
 
 -include $(DEPS)
 .PHONY: all clean fclean re test
