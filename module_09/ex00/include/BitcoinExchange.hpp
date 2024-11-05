@@ -2,6 +2,7 @@
 #define BITCOINEXCHANGE_HPP
 
 #include <algorithm>
+#include <climits>
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
@@ -12,8 +13,6 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-#include <climits>
-#include <string>
 
 #include "./FileHandler.hpp"
 #include "./Utils.hpp"
@@ -54,7 +53,7 @@ class BitcoinExchange {
     ExchangeDay _getExchangeData(std::string &line, std::string &seperator);
     void _validateDate(std::string &line);
     void _checkDB(ExchangeDay ed);
-    std::pair<std::string, double> _findClosest(const std::string& target_date);
+    std::pair<std::string, double> _findClosest(const std::string &target_date);
 };
 
 #endif // !BITCOINEXCHANGE_HPP

@@ -24,13 +24,13 @@ class FileHandler {
 
     std::string getFilename() const;
     class FileEOF : public std::runtime_error {
-    public:
-        explicit FileEOF(const std::string& msg);
+      public:
+        explicit FileEOF(const std::string &msg);
     };
 
     class FileError : public std::runtime_error {
-    public:
-        explicit FileError(const std::string& msg);
+      public:
+        explicit FileError(const std::string &msg);
     };
 
     ~FileHandler();

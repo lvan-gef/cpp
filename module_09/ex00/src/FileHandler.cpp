@@ -8,7 +8,8 @@ FileHandler::FileHandler(std::string fname)
     _file.open(_filename);
 
     if (!_file.is_open()) {
-        throw FileHandler::FileError("File: '" + _filename + "' can't be opened");
+        throw FileHandler::FileError("File: '" + _filename +
+                                     "' can't be opened");
     }
 }
 
@@ -49,7 +50,6 @@ std::string FileHandler::gnl() {
 bool FileHandler::isEof() const {
     return _file.eof();
 }
-
 
 std::string FileHandler::getFilename() const {
     return _filename;
