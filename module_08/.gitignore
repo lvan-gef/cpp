@@ -1,5 +1,4 @@
 .DS_Store
-../.DS_Store
 .cache/
 obj/
 span
@@ -10,3 +9,4 @@ error_list.txt
 bin/
 mutantStack
 vgcore.*
+infer-out/
