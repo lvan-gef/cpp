@@ -4,13 +4,13 @@ BUILD_MODE = build
 
 CC = c++
 
-GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11
+GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11 -g3
 
 SRCDIR = src/
 TESTDIR = tester/src/
 OBJDIR = obj/
 
-SRCFILES = BitcoinExchange.cpp FileHandler.cpp main.cpp
+SRCFILES = BitcoinExchange.cpp FileHandler.cpp main.cpp Utils.cpp
 TESTFILES = basic_test.cpp comparison_test.cpp complextype_test.cpp constructors_test.cpp containers_test.cpp emplace_test.cpp iterators_test.cpp mutantStack_test.cpp subject_test.cpp swap_test.cpp
 
 SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)

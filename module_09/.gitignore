@@ -1,1 +1,6 @@
 obj/
+infer-out/
+.cache/
+vgcore.*
+btc
+compile_commands.json

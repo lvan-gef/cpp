@@ -1,37 +1,69 @@
 #include "../include/FileHandler.hpp"
-#include <stdexcept>
 
-FileHandler::FileHandler(std::string fname) : _filename(std::move(fname)) {}
+FileHandler::FileHandler() : _file(""), _filename(""), _isReading(false) {
+}
 
-ExchangeData FileHandler::gnl() {
-    ExchangeData ed;
+FileHandler::FileHandler(std::string fname)
+    : _filename(std::move(fname)), _isReading(false) {
+    _file.open(_filename);
+
     if (!_file.is_open()) {
-        throw std::runtime_error("File is not open...");
+        throw FileHandler::FileError("File: '" + _filename + "' can't be opened");
+    }
+}
+
+FileHandler::FileHandler(FileHandler &&rhs) noexcept
+    : _filename(std::move(rhs._filename)), _isReading(rhs._isReading) {
+    _file.swap(rhs._file);
+}
+
+FileHandler &FileHandler::operator=(FileHandler &&rhs) noexcept {
+    if (this != &rhs) {
+        _filename = std::move(rhs._filename);
+        _file.swap(rhs._file);
+        _isReading = rhs._isReading;
+    }
+
+    return *this;
+}
+
+std::string FileHandler::gnl() {
+    if (_file.is_open() != true) {
+        throw FileHandler::FileError("File: '" + _filename +
+                                     "' is not open...");
     }
 
     std::string line;
-    std::vector<std::string> data;
-
-    if (std::getline(_file, line, ',')) {
-        data.push_back(line);
-        if (data.size() != 2) {
-            throw std::out_of_range("Invalid format, must be ',' seperated");
+    if (!std::getline(_file, line)) {
+        if (_file.eof()) {
+            throw FileHandler::FileEOF("File: '" + _filename + "' is eof");
         }
-        ed.date = data[0];
-        ed.value = 1.1;
-    } else {
-        throw std::runtime_error("Failed to get a new line");
+
+        throw FileHandler::FileError("File: '" + _filename +
+                                     "' failed to get a new line");
     }
 
-    return ed;
+    return line;
 }
 
 bool FileHandler::isEof() const {
     return _file.eof();
 }
 
+
+std::string FileHandler::getFilename() const {
+    return _filename;
+}
+
 FileHandler::~FileHandler() {
     if (_file.is_open()) {
         _file.close();
     }
+}
+
+FileHandler::FileEOF::FileEOF(const std::string &msg)
+    : std::runtime_error(msg) {
+}
+FileHandler::FileError::FileError(const std::string &msg)
+    : std::runtime_error(msg) {
 }
