@@ -156,12 +156,12 @@ ExchangeDay BitcoinExchange::_getExchangeData(std::string &line,
 
     try {
         ed.value = std::stod(tokens[1]);
-        if (ed.value > INT_MAX or ed.value < _maxValue) {
-            throw BitcoinExchange::BE("value must be 0.0 and less then " +
+        if (ed.value > _maxValue) {
+            throw BitcoinExchange::BE(ed.date + " value must be more then 0.0 and less then " +
                                       std::to_string(_maxValue) + "  got: '" +
                                       std::to_string(ed.value) + "'");
         } else if (ed.value < 0) {
-            throw BitcoinExchange::BE("value must be 0.0 or more got: '" +
+            throw BitcoinExchange::BE("value must be more then 0.0 got: '" +
                                       std::to_string(ed.value) + "'");
         }
     } catch (std::invalid_argument &e) {
@@ -256,7 +256,7 @@ void BitcoinExchange::_checkDB(const ExchangeDay &ed) {
     } catch (const std::out_of_range &) {
         if (_fd.isEof() == true) {
             const auto &last = *_db.crbegin();
-            std::cout << ed.date << " ==> " << ed.value << " = "
+            std::cout << ed.date << " => " << ed.value << " = "
                       << last.second * ed.value << '\n';
             return;
         }
@@ -276,12 +276,11 @@ void BitcoinExchange::_checkDB(const ExchangeDay &ed) {
 
                 if (dbED.date > ed.date) {
                     std::pair<std::string, double> last = _findClosest(ed.date);
-                    std::cout << ed.date << " " << last.first << " ==> "
+                    std::cout << ed.date << " => "
                               << ed.value << " = " << last.second * ed.value
                               << '\n';
                     return;
                 }
-
             } catch (FileHandler::FileError &) {
                 throw;
             } catch (BitcoinExchange::BE &) {
@@ -292,9 +291,13 @@ void BitcoinExchange::_checkDB(const ExchangeDay &ed) {
         }
     }
 
-    std::pair<std::string, double> last = _findClosest(ed.date);
-    std::cout << ed.date << " " << last.first << " => " << ed.value << " = "
-              << last.second * ed.value << '\n';
+    try {
+        std::pair<std::string, double> last = _findClosest(ed.date);
+        std::cout << ed.date << " " << last.first << " => " << ed.value << " = "
+                << last.second * ed.value << '\n';
+    } catch (BitcoinExchange::BE &) {
+        throw;
+    }
 }
 
 std::pair<std::string, double>
@@ -302,10 +305,14 @@ BitcoinExchange::_findClosest(const std::string &target_date) {
     auto it = _db.upper_bound(target_date);
 
     if (it == _db.begin()) {
+        if (target_date < it->first) {
+            throw BitcoinExchange::BE("Date lower then the lowest date in the data set");
+        }
         return *it;
     }
 
     --it;
+
     return *it;
 }
 
