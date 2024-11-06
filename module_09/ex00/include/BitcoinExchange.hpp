@@ -8,7 +8,6 @@
 #include <fstream>
 #include <iostream>
 #include <regex>
-#include <set>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -47,12 +46,13 @@ class BitcoinExchange {
     std::map<std::string, double> _db;
     std::string _dbSeperator;
     std::string _targetSeperator;
+    int _maxValue;
 
     void _setSeperator(FileHandler &ft, FileHandler &fd);
     bool _startsWith(const std::string &str);
     ExchangeDay _getExchangeData(std::string &line, std::string &seperator);
     void _validateDate(std::string &line);
-    void _checkDB(ExchangeDay ed);
+    void _checkDB(const ExchangeDay &ed);
     std::pair<std::string, double> _findClosest(const std::string &target_date);
 };
 
