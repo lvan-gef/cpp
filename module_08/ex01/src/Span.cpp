@@ -6,7 +6,7 @@
 /*   By: lvan-gef <lvan-gef@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/10/29 18:44:22 by lvan-gef      #+#    #+#                 */
-/*   Updated: 2024/11/02 20:15:53 by lvan-gef      ########   odam.nl         */
+/*   Updated: 2024/11/06 18:02:10 by lvan-gef      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,7 @@ unsigned int Span::shortestSpan() const {
     auto next = std::next(it);
 
     while (next != data.end()) {
-        long long diff =
-            static_cast<long long>(*next) - static_cast<long long>(*it);
-        auto current_span = static_cast<unsigned int>(std::abs(diff));
-        min_span = std::min(min_span, current_span);
+        min_span = std::min(min_span, static_cast<unsigned int>(*next - *it));
         it = next;
         ++next;
     }
@@ -73,7 +70,7 @@ unsigned int Span::longestSpan() const {
     auto first = static_cast<long long>(*data.begin());
     auto last = static_cast<long long>(*data.rbegin());
 
-    return static_cast<unsigned int>(std::abs(last - first));
+    return static_cast<unsigned int>(last - first);
 }
 
 Span::~Span() {}
