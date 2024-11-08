@@ -54,8 +54,8 @@ class BitcoinExchange {
 
     std::string _getSeperator(FileHandler &fh);
     bool _startsWith(const std::string &str);
-    ExchangeDay _getExchangeData(std::string &line, std::string &seperator);
-    void _validateDate(std::string &line);
+    ExchangeDay _getExchangeData(const std::string &line, const std::string &separator);
+    void _validateDate(const std::string &line);
     void _checkDB(const ExchangeDay &ed);
     void _loadDB();
     float _findClosest(const std::string &target_date);

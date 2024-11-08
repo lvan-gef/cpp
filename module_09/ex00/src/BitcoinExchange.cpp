@@ -118,36 +118,47 @@ std::string BitcoinExchange::_getSeperator(FileHandler &fh) {
     return *it;
 }
 
-ExchangeDay BitcoinExchange::_getExchangeData(std::string &line,
-                                              std::string &seperator) {
+ExchangeDay BitcoinExchange::_getExchangeData(const std::string &line, const std::string &separator) {
     std::vector<std::string> tokens;
-    std::istringstream lineStream(line);
-    std::string token;
+    tokens.reserve(2);
 
-    while (std::getline(lineStream, token, seperator[0])) {
-        token.erase(0, token.find_first_not_of(" \t"));
-        token.erase(token.find_last_not_of(" \t") + 1);
-        tokens.push_back(token);
+    size_t pos = 0;
+    size_t prev = 0;
+
+    while ((pos = line.find(separator[0], prev)) != std::string::npos) {
+        if (pos > prev) {
+            size_t start = line.find_first_not_of(" \t", prev);
+            size_t end = line.find_last_not_of(" \t", pos - 1);
+            if (start != std::string::npos && end != std::string::npos) {
+                tokens.emplace_back(line.substr(start, end - start + 1));
+            }
+        }
+        prev = pos + 1;
+    }
+
+    // Get last token
+    size_t start = line.find_first_not_of(" \t", prev);
+    size_t end = line.find_last_not_of(" \t");
+    if (start != std::string::npos && end != std::string::npos) {
+        tokens.emplace_back(line.substr(start, end - start + 1));
     }
 
     if (tokens.size() != 2) {
         throw BitcoinExchange::BE(
             "Invalid format for input: '" + line + "', expected 2 '" +
-            seperator +
-            "' separated values, got: " + std::to_string(tokens.size()));
+            separator + "' separated values, got: " + std::to_string(tokens.size()));
     }
 
     ExchangeDay ed;
     try {
-        trim(tokens[0]);
         _validateDate(tokens[0]);
-        ed.date = tokens[0];
+        ed.date = std::move(tokens[0]);
     } catch (BitcoinExchange::BE &) {
         throw;
     }
 
     try {
-        ed.value = std::stod(tokens[1]);
+        ed.value = std::stof(tokens[1]);
         if (ed.value > _maxValue) {
             throw BitcoinExchange::BE(
                 ed.date + " value must be more then 0.0 and less then " +
@@ -155,12 +166,12 @@ ExchangeDay BitcoinExchange::_getExchangeData(std::string &line,
                 std::to_string(ed.value) + "'");
         } else if (ed.value < 0) {
             throw BitcoinExchange::BE("value must be more then 0.0 got: '" +
-                                      std::to_string(ed.value) + "'");
+                                     std::to_string(ed.value) + "'");
         }
     } catch (std::invalid_argument &e) {
         throw BitcoinExchange::BE("value: '" + tokens[1] +
-                                  "' is not a valid float... (" + e.what() +
-                                  ")");
+                                 "' is not a valid float... (" + e.what() +
+                                 ")");
     } catch (std::out_of_range &) {
         throw BitcoinExchange::BE("Invalid float (out of range) for value");
     }
@@ -168,8 +179,8 @@ ExchangeDay BitcoinExchange::_getExchangeData(std::string &line,
     return ed;
 }
 
-void BitcoinExchange::_validateDate(std::string &line) {
-    std::regex date_pattern(
+void BitcoinExchange::_validateDate(const std::string &line) {
+    static const std::regex date_pattern(
         "^\\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\\d|3[01])");
 
     if (!std::regex_search(line, date_pattern)) {
@@ -177,67 +188,37 @@ void BitcoinExchange::_validateDate(std::string &line) {
             "Did not found the date at the begining of the string");
     }
 
+    // Direct character access instead of substr
     int year = 0;
     try {
-        year = std::stoi(line.substr(0, 4));
-    } catch (std::invalid_argument &) {
-        throw BitcoinExchange::BE("Invalid int for year");
-    } catch (std::out_of_range &) {
-        throw BitcoinExchange::BE("Invalid int (out of range) for year");
+        year = (line[0] - '0') * 1000 + (line[1] - '0') * 100 +
+               (line[2] - '0') * 10 + (line[3] - '0');
     } catch (...) {
-        throw std::runtime_error(
-            "Unknown error occurred while validate the data");
+        throw BitcoinExchange::BE("Invalid year format");
     }
 
-    int month = 0;
-    try {
-        month = std::stoi(line.substr(5, 2));
-    } catch (std::invalid_argument &) {
-        throw BitcoinExchange::BE("Invalid int for month");
-    } catch (std::out_of_range &) {
-        throw BitcoinExchange::BE("Invalid int (out of range) for month");
-    } catch (...) {
-        throw std::runtime_error(
-            "Unknown error occurred while validate the data");
-    }
-
-    int day = 0;
-    try {
-        day = std::stoi(line.substr(8, 2));
-    } catch (std::invalid_argument &) {
-        throw BitcoinExchange::BE("Invalid int for day");
-    } catch (std::out_of_range &) {
-        throw BitcoinExchange::BE("Invalid int (out of range) for day");
-    } catch (...) {
-        throw std::runtime_error(
-            "Unknown error occurred while validate the data");
-    }
-
+    int month = (line[5] - '0') * 10 + (line[6] - '0');
     if (month < 1 || month > 12) {
         throw BitcoinExchange::BE(
             "Invalid month should be between 1 and 12 got: '" +
             std::to_string(month) + "'");
     }
 
+    int day = (line[8] - '0') * 10 + (line[9] - '0');
     if (day < 1 || day > 31) {
         throw BitcoinExchange::BE(
             "Invalid day should be between 1 and 31 got: '" +
             std::to_string(day) + "'");
     }
 
-    const std::vector<int> daysInMonth = {31, 28, 31, 30, 31, 30,
-                                          31, 31, 30, 31, 30, 31};
+    static const std::vector<int> daysInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     if (month == 2) {
-        bool isLeapYear =
-            (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+        bool isLeapYear = (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
         if (day > (isLeapYear ? 29 : 28)) {
-            throw BitcoinExchange::BE("The year: '" + std::to_string(year) +
-                                      "' is not a leap year");
+            throw BitcoinExchange::BE("Invalid day for February");
         }
     } else if (day > daysInMonth[month - 1]) {
-        throw BitcoinExchange::BE("The day: '" + std::to_string(day) +
-                                  "' is not a valid day in month: '" +
-                                  std::to_string(month) + "'");
+        throw BitcoinExchange::BE("Invalid day for given month");
     }
 }
 
