@@ -8,6 +8,8 @@ import subprocess
 
 import create_database as cs
 
+DATE_FORMAT = '%Y-%m-%d'
+
 
 # when we hit a assert in compare test and real
 def save_state(py_out: list[str], btc_out: list[str], file: str):
@@ -18,9 +20,9 @@ def save_state(py_out: list[str], btc_out: list[str], file: str):
         f.write('\n'.join(btc_out))
 
 
-def get_closest_previous_date(date_dict, target_date_str, date_format='%Y-%m-%d'):
-    target_date = datetime.datetime.strptime(str(target_date_str), date_format)
-    date_objects = [(datetime.datetime.strptime(str(date_str), date_format), date_str)
+def get_closest_previous_date(date_dict, target_date_str):
+    target_date = datetime.datetime.strptime(str(target_date_str), DATE_FORMAT)
+    date_objects = [(datetime.datetime.strptime(str(date_str), DATE_FORMAT), date_str)
                     for date_str in date_dict.keys()]
     date_objects.sort(reverse=True)
 
@@ -50,7 +52,7 @@ def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str) -> 
             continue
 
         input_data[0] = datetime.datetime.strptime(
-            input_data[0], '%Y-%m-%d').date()
+            input_data[0], DATE_FORMAT).date()
         if np.float32(input_data[1]) > np.float32(1000):
             stderr.append('Error: to large a number.')
             continue
@@ -70,7 +72,7 @@ def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str) -> 
             continue
 
         stdout.append(
-            f'{input_data[0]} => {np.float32(input_data[1])} = {np.float32(input_data[1]) * np.float32(db[prev_date]):.2f}')
+            f'{input_data[0]} => {np.float32(input_data[1]):.2f} = {np.float32(input_data[1]) * np.float32(db[prev_date]):.2f}')
 
     print(f'Run btc with argument: {path}')
     result = subprocess.run(
@@ -96,6 +98,38 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str):
         save_state(py_out=py_std, btc_out=btc_std, file='stdout')
         exit(1)
 
+    # assert alle dates are the same
+    for py_line, btc_line in zip(py_std, btc_std):
+        py_split = [x for x in py_line.split() if x]
+        btc_split = [x for x in btc_line.split() if x]
+
+        # assert we have data in from the btc program
+        try:
+            assert len(btc_split) > 0
+        except AssertionError:
+            print('The output of btc have a empty line in it')
+            exit(1)
+
+        # assert date's
+        try:
+            assert py_split[0] == btc_split[0]
+        except AssertionError:
+            print(f'Expect date: {py_split[0]} got: {btc_split[0]}')
+            exit(1)
+
+        # assert result
+        try:
+            lookup_date = datetime.datetime.strptime(py_split[0], DATE_FORMAT).date()
+            np.testing.assert_almost_equal(
+                np.float32(py_split[-1]),
+                np.float32(btc_split[-1]),
+                decimal=2)
+        except AssertionError:
+            print(py_line, btc_line)
+            print(
+                f'For date: {py_split[0]}, expect value: {np.float32(py_split[-1])} got: {np.float32(btc_split[-1])}')
+            exit(1)
+
     # assert that we have the same amount of messages on stderr
     try:
         assert len(py_err) == len(btc_err)
@@ -107,7 +141,11 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str):
 
 if __name__ == '__main__':
     # laod codam's csv
-    db = cs.load_test_db(path=Path('../db/data.csv'), delim=',')
+    db = cs.load_test_db2(path=Path('db/all_bitcoin.csv'), delim=',')
+    for key in db.keys():
+        if key.year == 2011 and key.month == 1:
+            print(key, db[key])
+    exit()
 
     print('Start subject tester')
     tester(db=db, target_path=Path('db/input.txt'), delim='|')

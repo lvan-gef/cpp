@@ -6,18 +6,12 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    BitcoinExchange be;
     try {
-        be = BitcoinExchange("db/data.csv");
+        BitcoinExchange be("db/data.csv");
+        be.getResult(argv[1]);
     } catch (FileHandler::FileError &e) {
         std::cerr << e.what() << '\n';
         return 2;
-    }
-
-    try {
-        be.getResult(argv[1]);
-    } catch (BitcoinExchange::BE &e) {
-        std::cerr << e.what() << '\n';
     }
 
     return 0;

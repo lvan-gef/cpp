@@ -18,12 +18,11 @@
 
 struct ExchangeDay {
     std::string date;
-    double value;
+    float value;
 };
 
 class BitcoinExchange {
   public:
-    BitcoinExchange();
     explicit BitcoinExchange(const std::string &file);
 
     BitcoinExchange(const BitcoinExchange &rhs) = delete;
@@ -39,21 +38,27 @@ class BitcoinExchange {
         explicit BE(const std::string &msg);
     };
 
+    class OutOfRange : public std::runtime_error {
+      public:
+        explicit OutOfRange(const std::string &msg);
+    };
+
     ~BitcoinExchange();
 
   private:
     FileHandler _fd;
-    std::map<std::string, double> _db;
+    std::map<std::string, float> _db;
     std::string _dbSeperator;
     std::string _targetSeperator;
     int _maxValue;
 
-    void _setSeperator(FileHandler &ft, FileHandler &fd);
+    std::string _getSeperator(FileHandler &fh);
     bool _startsWith(const std::string &str);
     ExchangeDay _getExchangeData(std::string &line, std::string &seperator);
     void _validateDate(std::string &line);
     void _checkDB(const ExchangeDay &ed);
-    std::pair<std::string, double> _findClosest(const std::string &target_date);
+    void _loadDB();
+    float _findClosest(const std::string &target_date);
 };
 
 #endif // !BITCOINEXCHANGE_HPP
