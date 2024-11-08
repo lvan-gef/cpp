@@ -1,7 +1,0 @@
-Start all_bitcoin tester
-
-DEBUG for date 2010-07-17:
-Input value: 0.05
-Database has date? False
-Previous date: 2010-07-15
-Previous date value: 0.0

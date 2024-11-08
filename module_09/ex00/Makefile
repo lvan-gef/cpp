@@ -1,20 +1,18 @@
+SHELL := /bin/bash
+
 NAME = btc
-TESTNAME = test
-BUILD_MODE = build
+VENV_PATH="tester/.venv"
 
 CC = c++
 
 GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11 -g3
 
 SRCDIR = src/
-TESTDIR = tester/src/
 OBJDIR = obj/
 
 SRCFILES = BitcoinExchange.cpp FileHandler.cpp main.cpp Utils.cpp
-TESTFILES = basic_test.cpp comparison_test.cpp complextype_test.cpp constructors_test.cpp containers_test.cpp emplace_test.cpp iterators_test.cpp mutantStack_test.cpp subject_test.cpp swap_test.cpp
 
 SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)
-TESTOBJ = $(TESTFILES:%.cpp=$(OBJDIR)%.o)
 DEPS = $(SRCOBJ:.o=.d)
 
 HEADERS = -I include
@@ -31,38 +29,30 @@ $(NAME): $(SRCOBJ)
 	$(CC) $(GFLAGS) $(SRCOBJ) $(HEADERS) -o $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.cpp
-	# @if [ "$(BUILD_MODE)" = "build" ]; then \
-	# 	if [ "$<" = "$(SRCDIR)main.cpp" ]; then \
-	# 		./tester/swap_test.sh build; \
-	# 	fi \
-	# fi
-
 	@mkdir -p ${OBJDIR}
 	$(CC) $(GFLAGS) $(HEADERS) -MMD -MP -c -o $@ $<
 
 run: all
-	./$(NAME)
-
-test: BUILD_MODE = test
-$(TESTNAME): clean $(TESTOBJ) $(SRCOBJ)
-	$(CC) $(GFLAGS) -MMD -MP $(SRCOBJ) $(TESTOBJ) $(HEADERS) -g3 -I tester/include -o $(TESTNAME)
-	@rm -rf $(OBJDIR)
 	@$(CLEAR_COMMAND)
-	valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --read-var-info=yes --track-fds=yes --trace-children=yes ./$(TESTNAME)
+	./$(NAME) db/input.txt
 
-$(OBJDIR)%.o: $(TESTDIR)%.cpp
-	# @if [ "$<" = "$(TESTDIR)$(NAME)_test.cpp" ]; then \
-	# 	./tester/swap_test.sh test; \
-	# fi
+test: all
+	@if [ ! -d "$VENV_PATH" ]; then \
+		cd tester; \
+		python3 -m venv .venv; \
+		source .venv/bin/activate; \
+		pip install -r requirements.txt; \
+		deactivate; \
+		cd ..; \
+	fi
 
-	@mkdir -p ${OBJDIR}
-	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -g3 -I tester/include -o $@ $<
+	@$(CLEAR_COMMAND)
+	tester/.venv/bin/python tester/bitcoin_tester.py $(NAME)
 
 clean:
 	@rm -rf $(OBJDIR)
 
 fclean: clean
-	# @./tester/swap_test.sh build;
 	@rm -f $(NAME)
 	@rm -f $(TESTNAME)
 

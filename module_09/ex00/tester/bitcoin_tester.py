@@ -1,18 +1,32 @@
 #! /usr/bin/env python3
 
+import argparse
 import csv
 from pathlib import Path
 import datetime
 import numpy as np
 import subprocess
+from typing import Optional
 
 import create_database as cs
+import invalid_dates as id
+
 
 DATE_FORMAT = '%Y-%m-%d'
+TESTER_PATH = Path().cwd().joinpath('tester')
+TESTER_DB_PATH = TESTER_PATH.joinpath('db')
+CODAM_CSV_PATH = TESTER_DB_PATH.joinpath('data.csv')
+CODAM_INPUT_PATH = TESTER_DB_PATH.joinpath('input.txt')
+ALL_BITCOIN_PATH = TESTER_DB_PATH.joinpath('all_bitcoin.csv')
+INVALID_DATES_PATH = TESTER_DB_PATH.joinpath('invalid_dates.csv')
 
 
-# when we hit a assert in compare test and real
-def save_state(py_out: list[str], btc_out: list[str], file: str):
+def save_state(py_out: list[str], btc_out: list[str], file: str) -> None:
+    """
+    Save the state of the python's expected output.
+    And the state of the btc's output.
+    """
+
     with open(f'py_{file}.txt', 'w') as f:
         f.write('\n'.join(py_out))
 
@@ -20,10 +34,15 @@ def save_state(py_out: list[str], btc_out: list[str], file: str):
         f.write('\n'.join(btc_out))
 
 
-def get_closest_previous_date(date_dict, target_date_str):
+def get_closest_previous_date(date_dict: dict[datetime.date, np.float32], target_date_str: str) -> Optional[str]:
+    """
+    If date is not in dict search for the closest date that is lower then the one we looking for
+    """
+
     target_date = datetime.datetime.strptime(str(target_date_str), DATE_FORMAT)
-    date_objects = [(datetime.datetime.strptime(str(date_str), DATE_FORMAT), date_str)
-                    for date_str in date_dict.keys()]
+    date_objects = [
+        (datetime.datetime.strptime(str(date_str), DATE_FORMAT), date_str)
+        for date_str in date_dict.keys()]
     date_objects.sort(reverse=True)
 
     for date_obj, original_str in date_objects:
@@ -34,6 +53,10 @@ def get_closest_previous_date(date_dict, target_date_str):
 
 
 def gen_data(path: Path, delim: str = '|'):
+    """
+    Read csv file and yield a line back
+    """
+
     with open(path, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=delim)
         for index, row in enumerate(reader):
@@ -42,7 +65,15 @@ def gen_data(path: Path, delim: str = '|'):
             yield [x.strip() for x in row]
 
 
-def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str) -> tuple[list[str], list[str], list[str], list[str]]:
+def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str, btc: Path) -> tuple[list[str], list[str], list[str], list[str]]:
+    """
+    Python will create 2 lists, one for stdout and one for stderr.
+    What is on stdout is the valid output we expect, stderr is for all the errors.
+    Then the btc program get called and we capture his stdout and stderr.
+    And create also 2 lists, stdout should be the output that the program make and stderr for the errors
+    It also assert that the returncode of the btc program is 0
+    """
+
     stdout = []
     stderr = []
 
@@ -51,8 +82,13 @@ def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str) -> 
             stderr.append(f'Error: bad input => {input_data[0]}')
             continue
 
+        if not id.validate_date(input_data[0]):
+            stderr.append(f'Error: bad input => {input_data[0]}')
+            continue
+
         input_data[0] = datetime.datetime.strptime(
             input_data[0], DATE_FORMAT).date()
+
         if np.float32(input_data[1]) > np.float32(1000):
             stderr.append('Error: to large a number.')
             continue
@@ -74,9 +110,9 @@ def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str) -> 
         stdout.append(
             f'{input_data[0]} => {np.float32(input_data[1]):.2f} = {np.float32(input_data[1]) * np.float32(db[prev_date]):.2f}')
 
-    print(f'Run btc with argument: {path}')
+    print(f'Run {btc} with argument: {path}')
     result = subprocess.run(
-        f'../btc {path}', shell=True, capture_output=True, text=True)
+        f'{btc} {path}', shell=True, capture_output=True, text=True)
     try:
         assert result.returncode == 0
     except AssertionError:
@@ -86,9 +122,13 @@ def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str) -> 
     return [x.strip() for x in stdout if x], [x.strip() for x in stderr if x], [x.strip() for x in result.stdout.split('\n') if x], [x.strip() for x in result.stderr.split('\n') if x]
 
 
-def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str):
+def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str, btc: Path):
+    """
+    Compare the expected output (of python) with the btc output.
+    """
+
     py_std, py_err, btc_std, btc_err = get_results(
-        db=db, path=target_path, delim=delim)
+        db=db, path=target_path, delim=delim, btc=btc)
 
     # assert that we have the same amount of messages on stdout
     try:
@@ -119,7 +159,8 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str):
 
         # assert result
         try:
-            lookup_date = datetime.datetime.strptime(py_split[0], DATE_FORMAT).date()
+            lookup_date = datetime.datetime.strptime(
+                py_split[0], DATE_FORMAT).date()
             np.testing.assert_almost_equal(
                 np.float32(py_split[-1]),
                 np.float32(btc_split[-1]),
@@ -138,19 +179,39 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str):
         save_state(py_out=py_err, btc_out=btc_err, file='stderr')
         exit(1)
 
+    # assert that all messages starts with error
+    for msg in btc_err:
+        try:
+            assert msg.lower().startswith('error')
+        except AssertionError:
+            print(
+                f'Expect that message on stderr startswith error, got: {msg}')
+            exit(1)
+
 
 if __name__ == '__main__':
-    # laod codam's csv
-    db = cs.load_test_db2(path=Path('db/all_bitcoin.csv'), delim=',')
-    for key in db.keys():
-        if key.year == 2011 and key.month == 1:
-            print(key, db[key])
-    exit()
+    parser = argparse.ArgumentParser(
+                    prog='btc tester',
+                    description='A simple tester for Codam cpp 09 ex00',
+                    epilog='Good luck with it')
+    parser.add_argument('filename', help='The path to the btc exe')
+    args = parser.parse_args()
+    btc_path = Path(args.filename).resolve()
+    if not btc_path.exists():
+        print(f'Could not find the exe: {btc_path}')
+        exit(1)
+    print(btc_path)
+
+    db = cs.load_test_db2(path=CODAM_CSV_PATH, delim=',')
 
     print('Start subject tester')
-    tester(db=db, target_path=Path('db/input.txt'), delim='|')
+    tester(db=db, target_path=CODAM_INPUT_PATH, delim='|', btc=btc_path)
     print('Pass subject tester')
 
     print('Start all_bitcoin tester')
-    tester(db=db, target_path=Path('db/all_bitcoin.csv'), delim=',')
+    tester(db=db, target_path=ALL_BITCOIN_PATH, delim=',', btc=btc_path)
     print('Pass all_bitcoin tester')
+
+    print('Start invalid date test')
+    tester(db=db, target_path=INVALID_DATES_PATH, delim='|', btc=btc_path)
+    print('Pass invalid date test')

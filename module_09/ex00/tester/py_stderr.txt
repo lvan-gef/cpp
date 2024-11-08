@@ -1,5 +1,0 @@
-Error: not a positive number.
-Error: bad input => 2001-42-42
-Error: to large a number.
-Error: to large a number.
-Error: date is lower then what is in the database.
