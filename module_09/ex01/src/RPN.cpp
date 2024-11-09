@@ -84,7 +84,14 @@ void RPN::result() {
         }
     }
 
-    std::cout << _data.top() << '\n';
+    if (_data.size() != 1) {
+        std::cerr << "Error: expect 1 value on the stack got: " << _data.size() << '\n';
+        std::cerr << "top: " << _data.top() << " then pop" << '\n';
+        _data.pop();
+        std::cerr << "next top: " << _data.top() << '\n';
+    } else {
+        std::cout << _data.top() << '\n';
+    }
 }
 
 RPN::~RPN() {

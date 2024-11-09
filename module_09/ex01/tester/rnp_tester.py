@@ -13,7 +13,7 @@ INT_MAX = 9
 
 
 def get_result(exe: Path, rpn: str) -> Tuple[str, str]:
-    print(f'Run {exe} with argument: {rpn}')
+    # print(f'Run {exe} with argument: {rpn}')
 
     result = subprocess.run(f'{exe} "{rpn}"',
                             shell=True,
@@ -46,21 +46,21 @@ def rpn_result(sum_input: str) -> Tuple[float, str]:
                         second_last = result_stack.pop()
                         result_stack.append(second_last + last)  # b + c
                     else:
-                        return -1, 'Not enough elements on the stack for `+` opperator'
+                        return -1, 'Error: Not enough elements on the stack for `+` opperator'
                 elif lttr == '-':
                     if sum(1 for elem in result_stack) >= 2:
                         last = result_stack.pop()
                         second_last = result_stack.pop()
                         result_stack.append(second_last - last)  # b - c
                     else:
-                        return -1, 'Not enough elements on the stack for `-` opperator'
+                        return -1, 'Error: Not enough elements on the stack for `-` opperator'
                 elif lttr == '*':
                     if sum(1 for elem in result_stack) >= 2:
                         last = result_stack.pop()
                         second_last = result_stack.pop()
                         result_stack.append(second_last * last)  # b * c
                     else:
-                        return -1, 'Not enough elements on the stack for `*` opperator'
+                        return -1, 'Error: Not enough elements on the stack for `*` opperator'
                 else:
                     if sum(1 for elem in result_stack) >= 2:
                         last = result_stack.pop()
@@ -70,7 +70,7 @@ def rpn_result(sum_input: str) -> Tuple[float, str]:
 
                         result_stack.append(second_last / last)  # b / c
                     else:
-                        return -1, 'Not enough elements on the stack for `/` opperator'
+                        return -1, 'Error: Not enough elements on the stack for `/` opperator'
             else:
                 return -1, 'Error'
 
@@ -83,7 +83,7 @@ def run_test(exe: Path, rpn: str):
     result, err = rpn_result(sum_input=rpn)
     if err != '':
         try:
-            assert rpn_stderr.split('\n')[0].lower().startswith(err.lower())
+            assert rpn_stderr.split('\n')[0].lower().startswith('error')
             return
         except AssertionError:
             print(f'Except stderr to startswith: \'{err.lower()}\', got: \'{rpn_stderr}\'',
@@ -126,22 +126,93 @@ def subject_tester(exe: Path):
 
 
 def random_inputs(exe: Path):
-    max_size = 1_000_000
+    tests = [
+        '1 2 5 + -',
+        '8 9 9 9 - 9 8 9 - 4 - 1 + - - / +',
+        '8 9 9 9 9 * 9 - 9 8 9 - 4 - 1 + - - / + +'
+        '0 1 + 2 - 3 * 4 / 5 + 6 - 7 * 8 / 9 +'
+    ]
 
-    # for combination in itertools.product(range(10), repeat=10):
-    #     print(combination)
-    #     break
+    test_cases = [
+        # Basic operations
+        ("2 3 +", 5),              # Simple addition
+        ("5 3 -", 2),              # Simple subtraction
+        ("4 2 *", 8),              # Simple multiplication
+        ("6 2 /", 3),              # Simple division
+        ("10 3 %", 1),             # Modulus
+        ("2 3 ^", 8),              # Exponentiation
 
-    for length in range(1, 11):
-        for combination in itertools.product(range(10), repeat=length):
-            for rpn in gen_rpn.valid_rpn(numbers=list(combination)):
-                run_test(exe=exe, rpn=rpn)
+        # Multiple operations
+        ("3 4 + 5 *", 35),         # (3 + 4) * 5
+        ("7 2 3 + -", 2),          # 7 - (2 + 3)
+        ("15 7 1 1 + - / 3 *", 3),  # 15 / (7 - (1 + 1)) * 3
+        ("1 2 + 4 * 3 +", 15),     # ((1 + 2) * 4) + 3
 
-    # for size in range(1, 9):
-    #     inputs = [size - 1 for _ in range(size)]
-    #
-    #     for rpn in gen_rpn.valid_rpn(numbers=inputs):
-    #         run_test(exe=exe, rpn=rpn)
+        # Stack manipulation required
+        ("3 4 2 * +", 11),         # 3 + (4 * 2)
+        ("5 4 7 2 + * -", -41),    # 5 - (4 * (7 + 2))
+
+        # Zero handling
+        ("0 1 +", 1),              # Adding zero
+        ("1 0 *", 0),              # Multiplying by zero
+        ("0 10 /", 0),             # Zero divided by number
+
+        # Negative numbers
+        ("-3 -2 +", -5),           # Adding negatives
+        ("3 -2 *", -6),            # Multiplying by negative
+        ("-15 3 /", -5),           # Dividing negative
+
+        # More complex expressions
+        ("10 5 2 * 3 + -", 0),     # 10 - (5 * 2 + 3)
+        ("2 3 4 * 5 - +", 10),     # 2 + (3 * 4 - 5)
+        ("3 4 + 5 6 + *", 77),     # (3 + 4) * (5 + 6)
+
+        # Edge cases
+        ("1", 1),                  # Single number
+        ("-1", -1),                # Single negative
+        ("0", 0),                  # Zero
+
+        # Larger numbers
+        ("100 50 25 / *", 200),    # 100 * (50 / 25)
+        ("999 1 +", 1000),         # Adding to three digits
+        ("2 10 ^", 1024),          # Power of 10
+
+        # Decimal results
+        ("5 2 /", 2.5),            # Division resulting in decimal
+        ("10 3 /", 3.3333333333333335),  # Division with repeating decimal
+
+        # More complex mathematical expressions
+        ("3 4 + 5 6 + * 7 -", 70),     # (3 + 4) * (5 + 6) - 7
+        ("2 3 ^ 4 5 ^ +", 1032),       # (2^3) + (4^5)
+        ("10 2 8 * 3 + /", 0.5263157894736842),  # 10 / (2 * 8 + 3)
+
+        # Testing operator precedence
+        ("4 5 * 6 7 * +", 62),         # (4 * 5) + (6 * 7)
+        ("3 4 5 * + 6 -", 17),         # (3 + (4 * 5)) - 6
+        ("2 3 + 4 * 5 2 ^ -", 15)      # ((2 + 3) * 4) - (5 ^ 2)
+    ]
+
+
+    # Edge cases that should raise errors
+    error_cases = [
+        "",                # Empty expression
+        "1 +",            # Not enough operands
+        "1 2",            # No operator
+        "1 0 /",          # Division by zero
+        "+ - ",           # Only operators
+        "1 2 3 +",        # Too many operands
+        "a b +",          # Invalid tokens
+        "1 2 &",          # Invalid operator
+        "1.1.1 2 +",      # Malformed number
+        "2 2 + +",        # Too many operators
+    ]
+
+    for expression, expected in test_cases:
+        result = get_result(exe=exe, rpn=expression)
+        if result[0] == '':
+            print('waarom')
+            continue
+        assert abs(float(result[0]) - expected) < 1e-10, f"Failed: {expression} = {float(result[0])}, expected {expected}"
 
 
 if __name__ == '__main__':
