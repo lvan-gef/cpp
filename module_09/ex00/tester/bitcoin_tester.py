@@ -4,9 +4,10 @@ import argparse
 import csv
 from pathlib import Path
 import datetime
-import numpy as np
 import subprocess
 from typing import Optional
+
+import numpy as np
 
 import create_database as cs
 import invalid_dates as id
@@ -42,7 +43,9 @@ def get_closest_previous_date(date_dict: dict[datetime.date, np.float32], target
     target_date = datetime.datetime.strptime(str(target_date_str), DATE_FORMAT)
     date_objects = [
         (datetime.datetime.strptime(str(date_str), DATE_FORMAT), date_str)
-        for date_str in date_dict.keys()]
+        for date_str in date_dict.keys()
+    ]
+
     date_objects.sort(reverse=True)
 
     for date_obj, original_str in date_objects:
@@ -60,9 +63,9 @@ def gen_data(path: Path, delim: str = '|'):
     with open(path, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=delim)
         for index, row in enumerate(reader):
-            if index == 0:
+            if index == 0:  # csv header
                 continue
-            yield [x.strip() for x in row]
+            yield [word.strip() for word in row]
 
 
 def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str, btc: Path) -> tuple[list[str], list[str], list[str], list[str]]:
@@ -119,7 +122,7 @@ def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str, btc
         print(f'Expect returncode to be 0 got: {result.returncode}')
         exit(1)
 
-    return [x.strip() for x in stdout if x], [x.strip() for x in stderr if x], [x.strip() for x in result.stdout.split('\n') if x], [x.strip() for x in result.stderr.split('\n') if x]
+    return [line.strip() for line in stdout if line], [line.strip() for line in stderr if line], [line.strip() for line in result.stdout.split('\n') if line], [line.strip() for line in result.stderr.split('\n') if line]
 
 
 def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str, btc: Path):
@@ -140,8 +143,8 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str, b
 
     # assert alle dates are the same
     for py_line, btc_line in zip(py_std, btc_std):
-        py_split = [x for x in py_line.split() if x]
-        btc_split = [x for x in btc_line.split() if x]
+        py_split = [line for line in py_line.split() if line]
+        btc_split = [line for line in btc_line.split() if line]
 
         # assert we have data in from the btc program
         try:
@@ -154,19 +157,16 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str, b
         try:
             assert py_split[0] == btc_split[0]
         except AssertionError:
-            print(f'Expect date: {py_split[0]} got: {btc_split[0]}')
+            print(f'Expect date: {py_split[0] + datetime.timedelta(days=1)} got: {btc_split[0]}')
             exit(1)
 
         # assert result
         try:
-            lookup_date = datetime.datetime.strptime(
-                py_split[0], DATE_FORMAT).date()
             np.testing.assert_almost_equal(
                 np.float32(py_split[-1]),
                 np.float32(btc_split[-1]),
                 decimal=2)
         except AssertionError:
-            print(py_line, btc_line)
             print(
                 f'For date: {py_split[0]}, expect value: {np.float32(py_split[-1])} got: {np.float32(btc_split[-1])}')
             exit(1)
@@ -200,7 +200,6 @@ if __name__ == '__main__':
     if not btc_path.exists():
         print(f'Could not find the exe: {btc_path}')
         exit(1)
-    print(btc_path)
 
     db = cs.load_test_db2(path=CODAM_CSV_PATH, delim=',')
 
