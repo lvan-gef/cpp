@@ -1,8 +1,6 @@
 #include "../include/RPN.hpp"
 
-RPN::RPN(int argc, char **argv) {
-
-    std::cout << "Default constructor for RPN is called" << '\n';
+RPN::RPN(char **argv) : _input(argv[1]) {
 }
 
 RPN::RPN(const RPN &rhs) {
@@ -31,6 +29,63 @@ RPN &RPN::operator=(RPN &&rhs) noexcept {
     return *this;
 }
 
+void RPN::result() {
+    for (char c : _input) {
+        if (std::isdigit(c)) {
+            _data.push(std::stof(std::string(1, c)));
+         } else if (std::iswspace(c)) {
+            continue;
+        } else {
+            if (_data.size() < 2) {
+                std::cerr << "Error: not enough elements on stack" << '\n';
+                return;
+            }
+            if (c == '*') {
+                float last = _data.top();
+                _data.pop();
+
+                float second_last = _data.top();
+                _data.pop();
+
+                _data.emplace(second_last * last);
+            } else if (c == '/') {
+                float last = _data.top();
+                _data.pop();
+
+                float second_last = _data.top();
+                _data.pop();
+
+                if (last == 0.0) {
+                    std::cerr << "Error: div by zero";
+                    return;
+                }
+
+                _data.emplace(second_last / last);
+            } else if (c == '+') {
+                float last = _data.top();
+                _data.pop();
+
+                float second_last = _data.top();
+                _data.pop();
+
+                _data.emplace(second_last + last);
+            } else if (c == '-') {
+                float last = _data.top();
+                _data.pop();
+
+                float second_last = _data.top();
+                _data.pop();
+
+                _data.emplace(second_last - last);
+            } else {
+                std::cerr << "Error" << '\n';
+                return;
+            }
+        }
+    }
+
+    std::cout << _data.top() << '\n';
+}
+
 RPN::~RPN() {
-    std::cout << "Default destructor for RPN is called" << '\n';
 }

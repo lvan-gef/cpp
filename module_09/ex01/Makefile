@@ -10,11 +10,9 @@ SRCDIR = src/
 TESTDIR = tester/src/
 OBJDIR = obj/
 
-SRCFILES = BitcoinExchange.cpp FileHandler.cpp main.cpp Utils.cpp
-TESTFILES = basic_test.cpp comparison_test.cpp complextype_test.cpp constructors_test.cpp containers_test.cpp emplace_test.cpp iterators_test.cpp mutantStack_test.cpp subject_test.cpp swap_test.cpp
+SRCFILES = main.cpp RPN.cpp
 
 SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)
-TESTOBJ = $(TESTFILES:%.cpp=$(OBJDIR)%.o)
 DEPS = $(SRCOBJ:.o=.d)
 
 HEADERS = -I include
@@ -31,12 +29,6 @@ $(NAME): $(SRCOBJ)
 	$(CC) $(GFLAGS) $(SRCOBJ) $(HEADERS) -o $(NAME)
 
 $(OBJDIR)%.o: $(SRCDIR)%.cpp
-	# @if [ "$(BUILD_MODE)" = "build" ]; then \
-	# 	if [ "$<" = "$(SRCDIR)main.cpp" ]; then \
-	# 		./tester/swap_test.sh build; \
-	# 	fi \
-	# fi
-
 	@mkdir -p ${OBJDIR}
 	$(CC) $(GFLAGS) $(HEADERS) -MMD -MP -c -o $@ $<
 
@@ -51,10 +43,6 @@ $(TESTNAME): clean $(TESTOBJ) $(SRCOBJ)
 	valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --read-var-info=yes --track-fds=yes --trace-children=yes ./$(TESTNAME)
 
 $(OBJDIR)%.o: $(TESTDIR)%.cpp
-	# @if [ "$<" = "$(TESTDIR)$(NAME)_test.cpp" ]; then \
-	# 	./tester/swap_test.sh test; \
-	# fi
-
 	@mkdir -p ${OBJDIR}
 	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -g3 -I tester/include -o $@ $<
 
