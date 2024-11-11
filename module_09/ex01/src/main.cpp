@@ -6,6 +6,8 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    RPN rpn(argv);  // make input std::string
-    rpn.result();
+    RPN rpn;  // make input std::string
+    rpn.result(argv[1]);
+
+    return 0;
 }

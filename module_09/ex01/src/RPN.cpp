@@ -1,98 +1,126 @@
 #include "../include/RPN.hpp"
 
-RPN::RPN(char **argv) : _input(argv[1]) {
+RPN::RPN() {
+    std::cout << std::fixed;
+    std::cout.precision(4);
 }
 
-RPN::RPN(const RPN &rhs) {
-    (void)rhs;
-    std::cout << "Default copy constructor for RPN is called" << '\n';
+RPN::RPN(const RPN &rhs) : _data(rhs._data) {
 }
 
 RPN &RPN::operator=(const RPN &rhs) {
-    std::cout << "Copy assigment constructor for RPN is called" << '\n';
     if (this != &rhs) {
+        _data = rhs._data;
     }
 
     return *this;
 }
 
-RPN::RPN(RPN &&rhs) noexcept {
-    (void)rhs;
-    std::cout << "Default move constructor for RPN is called" << '\n';
+RPN::RPN(RPN &&rhs) noexcept : _data(std::move(rhs._data)){
 }
 
 RPN &RPN::operator=(RPN &&rhs) noexcept {
-    std::cout << "Move assigment constructor for RPN is called" << '\n';
     if (this != &rhs) {
+        _data = std::move(rhs._data);
     }
 
     return *this;
 }
 
-void RPN::result() {
-    for (char c : _input) {
-        if (std::isdigit(c)) {
-            _data.push(std::stof(std::string(1, c)));
-         } else if (std::iswspace(c)) {
-            continue;
-        } else {
-            if (_data.size() < 2) {
-                std::cerr << "Error: not enough elements on stack" << '\n';
+void RPN::result(const std::string &arg) {
+    auto current = arg.begin();
+    auto next = arg.begin();
+    const auto end = arg.end();
+
+    while (next != end) {
+        next = std::find(current, end, ' ');
+        size_t dis = std::distance(current, next);
+
+        if (dis > 2) {
+            std::cerr << "Error: Invalid input" << '\n';
+            return;
+        } else if (dis == 2) {
+            try {
+                _addNbr(std::string(current, next));
+            } catch (RPN::Error &e) {
+                std::cerr << e.what() << '\n';
                 return;
             }
-            if (c == '*') {
-                float last = _data.top();
-                _data.pop();
-
-                float second_last = _data.top();
-                _data.pop();
-
-                _data.emplace(second_last * last);
-            } else if (c == '/') {
-                float last = _data.top();
-                _data.pop();
-
-                float second_last = _data.top();
-                _data.pop();
-
-                if (last == 0.0) {
-                    std::cerr << "Error: div by zero";
+        } else {
+            if (_isOperator(*current)) {
+                try {
+                    _calc(*current);
+                } catch (RPN::Error &e) {
+                    std::cerr << e.what() << '\n';
                     return;
                 }
-
-                _data.emplace(second_last / last);
-            } else if (c == '+') {
-                float last = _data.top();
-                _data.pop();
-
-                float second_last = _data.top();
-                _data.pop();
-
-                _data.emplace(second_last + last);
-            } else if (c == '-') {
-                float last = _data.top();
-                _data.pop();
-
-                float second_last = _data.top();
-                _data.pop();
-
-                _data.emplace(second_last - last);
             } else {
-                std::cerr << "Error" << '\n';
-                return;
+                try {
+                    _addNbr(std::string(current, next));
+                } catch (RPN::Error &e) {
+                    std::cerr << e.what() << '\n';
+                    return;
+                }
             }
+        }
+
+        if (next != end) {
+            current = next + 1;
         }
     }
 
     if (_data.size() != 1) {
-        std::cerr << "Error: expect 1 value on the stack got: " << _data.size() << '\n';
-        std::cerr << "top: " << _data.top() << " then pop" << '\n';
-        _data.pop();
-        std::cerr << "next top: " << _data.top() << '\n';
-    } else {
-        std::cout << _data.top() << '\n';
+        std::cerr << "Error: Expect 1 element on stack got: " << _data.size();
+        return;
     }
+
+    std::cout << _data.top() << '\n';
 }
 
 RPN::~RPN() {
+}
+
+// private
+constexpr bool RPN::_isOperator(char c) noexcept {
+    return c == '+' || c == '-' || c == '*' || c == '/';
+}
+
+void RPN::_calc(char op) {
+    const float lastElem = _data.top();
+    _data.pop();
+
+    const float secondLastElem = _data.top();
+    _data.pop();
+
+    switch (op) {
+        case '+':
+            _data.push(secondLastElem + lastElem);
+            return;
+        case '-':
+            _data.push(secondLastElem - lastElem);
+            return;
+        case '*':
+            _data.push(secondLastElem * lastElem);
+            return;
+        case '/':
+            _data.push(secondLastElem / lastElem);
+            return;
+        default:
+            throw RPN::Error("Error: invalid operator");
+    }
+}
+
+void RPN::_addNbr(const std::string &arg) {
+    try {
+        _data.emplace(std::stof(arg));
+    } catch (std::invalid_argument &) {
+        throw RPN::Error("Error: invalid input not a int");
+    } catch (std::out_of_range &) {
+        throw RPN::Error("Error: int did under or overflowed");
+    } catch (...) {
+        throw RPN::Error("Error: Unkown error");
+    }
+}
+
+RPN::Error::Error(const std::string &msg) : std::runtime_error(msg) {
 }
