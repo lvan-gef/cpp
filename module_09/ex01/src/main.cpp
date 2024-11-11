@@ -7,7 +7,12 @@ int main(int argc, char **argv) {
     }
 
     RPN rpn;  // make input std::string
-    rpn.result(argv[1]);
+    try {
+        rpn.result(argv[1]);
+    } catch (RPN::Error &e) {
+        std::cerr << e.what() << '\n';
+        return 1;
+    }
 
     return 0;
 }

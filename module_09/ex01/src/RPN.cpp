@@ -43,8 +43,7 @@ void RPN::result(const std::string &arg) {
             try {
                 _addNbr(std::string(current, next));
             } catch (RPN::Error &e) {
-                std::cerr << e.what() << '\n';
-                return;
+                throw;
             }
         } else {
             if (_isOperator(*current)) {
@@ -86,6 +85,10 @@ constexpr bool RPN::_isOperator(char c) noexcept {
 }
 
 void RPN::_calc(char op) {
+    if (_data.size() < 2) {
+        throw RPN::Error("Not enough elements on the stack");
+    }
+
     const float lastElem = _data.top();
     _data.pop();
 
@@ -103,6 +106,10 @@ void RPN::_calc(char op) {
             _data.push(secondLastElem * lastElem);
             return;
         case '/':
+            if (lastElem == 0) {
+                throw RPN::Error("div by zero");
+            }
+
             _data.push(secondLastElem / lastElem);
             return;
         default:
