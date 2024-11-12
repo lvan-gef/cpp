@@ -18,7 +18,7 @@ class FileHandler {
     FileHandler(FileHandler &&rhs) noexcept;
     FileHandler &operator=(FileHandler &&rhs) noexcept;
 
-    std::string gnl();
+    void gnl(std::string &buffer);
     bool isEof() const;
 
     std::string getFilename() const;

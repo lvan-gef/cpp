@@ -28,23 +28,39 @@ FileHandler &FileHandler::operator=(FileHandler &&rhs) noexcept {
     return *this;
 }
 
-std::string FileHandler::gnl() {
+// std::string FileHandler::gnl() {
+//     if (_file.is_open() != true) {
+//         throw FileHandler::FileError("File: '" + _filename +
+//                                      "' is not open...");
+//     }
+//
+//     std::string line;
+//     if (!std::getline(_file, line)) {
+//         if (_file.eof()) {
+//             throw FileHandler::FileEOF("File: '" + _filename + "' is eof");
+//         }
+//
+//         throw FileHandler::FileError("File: '" + _filename +
+//                                      "' failed to get a new line");
+//     }
+//
+//     return line;
+// }
+
+
+void FileHandler::gnl(std::string &buffer) {
     if (_file.is_open() != true) {
         throw FileHandler::FileError("File: '" + _filename +
                                      "' is not open...");
     }
 
-    std::string line;
-    if (!std::getline(_file, line)) {
+    buffer.clear();
+    if (!std::getline(_file, buffer)) {
         if (_file.eof()) {
-            throw FileHandler::FileEOF("File: '" + _filename + "' is eof");
+            throw FileHandler::FileEOF("");
         }
-
-        throw FileHandler::FileError("File: '" + _filename +
-                                     "' failed to get a new line");
+        throw FileHandler::FileError("Failed to read line");
     }
-
-    return line;
 }
 
 bool FileHandler::isEof() const {

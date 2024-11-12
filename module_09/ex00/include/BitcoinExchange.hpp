@@ -19,8 +19,15 @@
 struct ExchangeDay {
     std::string date;
     float value;
-};
 
+    ExchangeDay() = default;
+
+    ExchangeDay(const ExchangeDay &) = delete;
+    ExchangeDay &operator=(const ExchangeDay &) = delete;
+
+    ExchangeDay(ExchangeDay &&rhs) noexcept;
+    ExchangeDay &operator=(ExchangeDay &&rhs) noexcept;
+};
 class BitcoinExchange {
   public:
     explicit BitcoinExchange(const std::string &file);
@@ -38,11 +45,6 @@ class BitcoinExchange {
         explicit BE(const std::string &msg);
     };
 
-    class OutOfRange : public std::runtime_error {
-      public:
-        explicit OutOfRange(const std::string &msg);
-    };
-
     ~BitcoinExchange();
 
   private:
@@ -52,10 +54,15 @@ class BitcoinExchange {
     std::string _targetSeperator;
     int _maxValue;
 
+    std::string _lineBuffer;
+    std::vector<std::string> _tokenBuffer;
+    std::ostringstream _errorBuffer;
+
     std::string _getSeperator(FileHandler &fh);
     bool _startsWith(const std::string &str);
-    ExchangeDay _getExchangeData(const std::string &line, const std::string &separator);
-    void _validateDate(const std::string &line);
+    ExchangeDay _getExchangeData(std::string line,
+                                 const std::string &separator);
+    void _validateDate(std::string &line);
     void _checkDB(const ExchangeDay &ed);
     void _loadDB();
     float _findClosest(const std::string &target_date);
