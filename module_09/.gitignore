@@ -1,7 +1,9 @@
 obj/
 infer-out/
 .cache/
-vgcore.*
 btc
 compile_commands.json
-ex00/tester/tester/
+__pycache__/
+vgcore*
+RPN
+.venv
