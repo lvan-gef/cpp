@@ -1,13 +1,13 @@
+SHELL := /bin/bash
+
 NAME = RPN
-TESTNAME = test
-BUILD_MODE = build
+VENV_PATH="tester/.venv"
 
 CC = c++
 
 GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11 -g3
 
 SRCDIR = src/
-TESTDIR = tester/src/
 OBJDIR = obj/
 
 SRCFILES = main.cpp RPN.cpp
@@ -33,26 +33,29 @@ $(OBJDIR)%.o: $(SRCDIR)%.cpp
 	$(CC) $(GFLAGS) $(HEADERS) -MMD -MP -c -o $@ $<
 
 run: all
-	./$(NAME)
-
-test: BUILD_MODE = test
-$(TESTNAME): clean $(TESTOBJ) $(SRCOBJ)
-	$(CC) $(GFLAGS) -MMD -MP $(SRCOBJ) $(TESTOBJ) $(HEADERS) -g3 -I tester/include -o $(TESTNAME)
-	@rm -rf $(OBJDIR)
 	@$(CLEAR_COMMAND)
-	valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --track-origins=yes --read-var-info=yes --track-fds=yes --trace-children=yes ./$(TESTNAME)
+	./$(NAME) db/input.txt
 
-$(OBJDIR)%.o: $(TESTDIR)%.cpp
-	@mkdir -p ${OBJDIR}
-	$(CC) $(HEADERS) -MMD -MP -c $(GFLAGS) -g3 -I tester/include -o $@ $<
+test: all
+	@if [ ! -d "$VENV_PATH" ]; then \
+		cd tester; \
+		python3 -m venv .venv; \
+		source .venv/bin/activate; \
+		pip install -r requirements.txt; \
+		deactivate; \
+		cd ..; \
+	fi
+
+	@$(CLEAR_COMMAND)
+	$(VENV_PATH)/bin/python tester/rpn_tester.py $(NAME)
 
 clean:
 	@rm -rf $(OBJDIR)
 
 fclean: clean
-	# @./tester/swap_test.sh build;
 	@rm -f $(NAME)
 	@rm -f $(TESTNAME)
+	@rm -f $(VENV_PATH)
 
 re: fclean all
 
@@ -62,3 +65,4 @@ fmt:
 
 -include $(DEPS)
 .PHONY: all clean fclean re test run fmt
+
