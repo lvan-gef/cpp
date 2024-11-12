@@ -1,3 +1,4 @@
+import argparse
 import subprocess
 import sys
 from typing import List, Generator, Tuple
@@ -172,4 +173,15 @@ def run_tests(exe: Path):
 
 
 if __name__ == '__main__':
-    run_tests(exe=Path('../RPN'))
+    parser = argparse.ArgumentParser(
+                    prog='rpn tester',
+                    description='A simple tester for Codam cpp 09 ex01',
+                    epilog='Good luck with it')
+    parser.add_argument('filename', help='The path to the rpn exe')
+    args = parser.parse_args()
+    rpn_path = Path(args.filename).resolve()
+    if not rpn_path.exists():
+        print(f'Could not find the exe: {rpn_path}')
+        exit(1)
+
+    run_tests(exe=rpn_path)
