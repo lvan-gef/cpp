@@ -55,7 +55,7 @@ clean:
 fclean: clean
 	@rm -f $(NAME)
 	@rm -f $(TESTNAME)
-	@rm -f $(VENV_PATH)
+	@rm -rf $(VENV_PATH)
 
 re: fclean all
 
