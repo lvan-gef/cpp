@@ -52,7 +52,7 @@ def gen_valid_input() -> Generator[Tuple[str, np.float32], None, None]:
 
     # Multiple operations
     print('    Start multiple operations test')
-    for x in range(3, 25):
+    for x in range(3, 500):
         yield gen_rpn.multi_op_tester(x)
     print('    Pass multiple operations test\n')
 
