@@ -5,7 +5,7 @@ VENV_PATH="tester/.venv"
 
 CC = c++
 
-GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11 -g3
+GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11
 
 SRCDIR = src/
 OBJDIR = obj/
@@ -36,6 +36,7 @@ run: all
 	@$(CLEAR_COMMAND)
 	./$(NAME) db/input.txt
 
+test: GFLAGS += -g3
 test: all
 	@if [ ! -d "$VENV_PATH" ]; then \
 		cd tester; \
