@@ -16,7 +16,7 @@ RPN &RPN::operator=(const RPN &rhs) {
     return *this;
 }
 
-RPN::RPN(RPN &&rhs) noexcept : _data(std::move(rhs._data)){
+RPN::RPN(RPN &&rhs) noexcept : _data(std::move(rhs._data)) {
 }
 
 RPN &RPN::operator=(RPN &&rhs) noexcept {
@@ -41,7 +41,8 @@ void RPN::result(const std::string &arg) {
         } else if (dis == 2) {
             try {
                 if (*current != '-') {
-                    throw RPN::Error("Error: input to high. Must be lower then 10");
+                    throw RPN::Error(
+                        "Error: input to high. Must be lower then 10");
                 }
                 _addNbr(std::string(current, next));
             } catch (RPN::Error &e) {
@@ -69,7 +70,8 @@ void RPN::result(const std::string &arg) {
     }
 
     if (_data.size() != 1) {
-        throw RPN::Error("Error: Expect 1 element on stack got: " + std::to_string(_data.size()));
+        throw RPN::Error("Error: Expect 1 element on stack got: " +
+                         std::to_string(_data.size()));
     }
 
     std::cout << _data.top() << '\n';
