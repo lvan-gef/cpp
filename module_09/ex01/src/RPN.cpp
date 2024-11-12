@@ -37,10 +37,12 @@ void RPN::result(const std::string &arg) {
         size_t dis = std::distance(current, next);
 
         if (dis > 2) {
-            std::cerr << "Error: Invalid input" << '\n';
-            return;
+            throw RPN::Error("Error: Invalid input");
         } else if (dis == 2) {
             try {
+                if (*current != '-') {
+                    throw RPN::Error("Error: input to high. Must be lower then 10");
+                }
                 _addNbr(std::string(current, next));
             } catch (RPN::Error &e) {
                 throw;
@@ -50,15 +52,13 @@ void RPN::result(const std::string &arg) {
                 try {
                     _calc(*current);
                 } catch (RPN::Error &e) {
-                    std::cerr << e.what() << '\n';
-                    return;
+                    throw;
                 }
             } else {
                 try {
                     _addNbr(std::string(current, next));
                 } catch (RPN::Error &e) {
-                    std::cerr << e.what() << '\n';
-                    return;
+                    throw;
                 }
             }
         }
@@ -69,8 +69,7 @@ void RPN::result(const std::string &arg) {
     }
 
     if (_data.size() != 1) {
-        std::cerr << "Error: Expect 1 element on stack got: " << _data.size();
-        return;
+        throw RPN::Error("Error: Expect 1 element on stack got: " + std::to_string(_data.size()));
     }
 
     std::cout << _data.top() << '\n';
@@ -86,7 +85,7 @@ constexpr bool RPN::_isOperator(char c) noexcept {
 
 void RPN::_calc(char op) {
     if (_data.size() < 2) {
-        throw RPN::Error("Not enough elements on the stack");
+        throw RPN::Error("Error: Not enough elements on the stack");
     }
 
     const float lastElem = _data.top();
@@ -107,7 +106,7 @@ void RPN::_calc(char op) {
             return;
         case '/':
             if (lastElem == 0) {
-                throw RPN::Error("div by zero");
+                throw RPN::Error("Error: div by zero");
             }
 
             _data.push(secondLastElem / lastElem);
