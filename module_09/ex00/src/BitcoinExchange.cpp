@@ -58,7 +58,8 @@ void BitcoinExchange::getResult(const std::string &file) {
             ft.gnl(_lineBuffer);
             targetED = _getExchangeData(_lineBuffer, _targetSeperator);
             if (targetED.value > _maxValue) {
-                std::cerr << "Error: value should be '" << _maxValue << "' got: '" << targetED.value << "'" << '\n';
+                std::cerr << "Error: value should be '" << _maxValue
+                          << "' got: '" << targetED.value << "'" << '\n';
                 continue;
             }
             _checkDB(targetED);
@@ -76,7 +77,7 @@ BitcoinExchange::~BitcoinExchange() {
 }
 
 // private methods
-bool BitcoinExchange::_startsWith(const std::string &str) {
+bool BitcoinExchange::_startsWith(const std::string &str) noexcept{
     uint8_t startSize = 4;
 
     if (str.length() <= startSize) {
@@ -90,8 +91,7 @@ bool BitcoinExchange::_startsWith(const std::string &str) {
     return true;
 }
 
-std::string BitcoinExchange::_getSeperator(FileHandler &fh) {
-    const int headerSize = 5;
+char BitcoinExchange::_getSeperator(FileHandler &fh) {
     const uint8_t startSize = 4;
     _errorBuffer.str("");
 
@@ -106,36 +106,39 @@ std::string BitcoinExchange::_getSeperator(FileHandler &fh) {
 
     if (_startsWith(_lineBuffer) != true) {
         _errorBuffer << "First line of '" << fh.getFilename()
-            << "' must start with: 'date'";
+                     << "' must start with: 'date'";
+        throw BitcoinExchange::BE(_errorBuffer.str());
+    }
+
+    if (_lineBuffer.length() <= startSize) {
+        _errorBuffer << "Invalid header format in '" << fh.getFilename() << "'";
         throw BitcoinExchange::BE(_errorBuffer.str());
     }
 
     char nextChar = _lineBuffer[startSize];
-    if (nextChar == ' ' && _lineBuffer.length() >= headerSize) {
+
+    if (nextChar == ' ' && _lineBuffer.length() > (startSize + 1)) {
         nextChar = _lineBuffer[startSize + 1];
     }
 
-    std::vector<std::string> validSeparators = {",", ";", "\t", "|", " "};
-    auto it = std::find_if(validSeparators.begin(), validSeparators.end(),
-                           [nextChar](const std::string &sep) {
-                               return !sep.empty() && sep[0] == nextChar;
-                           });
-    if (it == validSeparators.end()) {
-        _errorBuffer << "Could not found a valid separator '" << fh.getFilename() << "'";
-        throw BitcoinExchange::BE(_errorBuffer.str());
+    const std::string validSeparators = ",|";
+    if (validSeparators.find(nextChar) != std::string::npos) {
+        return nextChar;
     }
 
-    return *it;
+    _errorBuffer << "Could not found a valid separator '" << fh.getFilename()
+                 << "'";
+    throw BitcoinExchange::BE(_errorBuffer.str());
 }
 
 ExchangeDay BitcoinExchange::_getExchangeData(const std::string &line,
-                                              const std::string &separator) {
+                                              const char separator) {
     _tokenBuffer.clear();
     _errorBuffer.str("");
     size_t prev = 0;
     size_t pos = 0;
 
-    while ((pos = line.find(separator[0], prev)) != std::string::npos) {
+    while ((pos = line.find(separator, prev)) != std::string::npos) {
         if (pos > prev) {
             _tokenBuffer.push_back(line.substr(prev, pos - prev));
         }
@@ -161,13 +164,13 @@ ExchangeDay BitcoinExchange::_getExchangeData(const std::string &line,
     try {
         ed.value = std::stof(_tokenBuffer[1]);
         if (ed.value < 0) {
-            _errorBuffer << "value must be more then 0.0 got: '"
-                << ed.value << "'";
+            _errorBuffer << "value must be more then 0.0 got: '" << ed.value
+                         << "'";
             throw BitcoinExchange::BE(_errorBuffer.str());
         }
     } catch (std::invalid_argument &e) {
-        _errorBuffer << "value: '" << _tokenBuffer[1] << "' is not a valid float... ("
-            << e.what() << ")";
+        _errorBuffer << "value: '" << _tokenBuffer[1]
+                     << "' is not a valid float... (" << e.what() << ")";
         throw BitcoinExchange::BE(_errorBuffer.str());
     } catch (std::out_of_range &) {
         throw BitcoinExchange::BE("Invalid float (out of range) for value");
@@ -183,7 +186,6 @@ void BitcoinExchange::_validateDate(const std::string &line) {
         throw BitcoinExchange::BE("Invalid line format");
     }
 
-
     int year = 0;
     int month = 0;
     int day = 0;
@@ -196,12 +198,14 @@ void BitcoinExchange::_validateDate(const std::string &line) {
     }
 
     if (month < 1 || month > 12) {
-        _errorBuffer << "Invalid month should be between 1 and 12 got: '" << month << "'";
+        _errorBuffer << "Invalid month should be between 1 and 12 got: '"
+                     << month << "'";
         throw BitcoinExchange::BE(_errorBuffer.str());
     }
 
     if (day < 1 || day > 31) {
-        _errorBuffer << "Invalid day should be between 1 and 31 got: '" << day << "'";
+        _errorBuffer << "Invalid day should be between 1 and 31 got: '" << day
+                     << "'";
         throw BitcoinExchange::BE(_errorBuffer.str());
     }
 

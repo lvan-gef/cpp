@@ -19,7 +19,7 @@ class FileHandler {
     void gnl(std::string &buffer);
     bool isEof() const;
 
-    std::string getFilename() const;
+    const std::string &getFilename() const;
     class FileEOF : public std::runtime_error {
       public:
         explicit FileEOF(const std::string &msg);

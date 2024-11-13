@@ -46,7 +46,7 @@ bool FileHandler::isEof() const {
     return _file.eof();
 }
 
-std::string FileHandler::getFilename() const {
+const std::string &FileHandler::getFilename() const {
     return _filename;
 }
 

@@ -40,18 +40,18 @@ class BitcoinExchange {
   private:
     FileHandler _fd;
     std::map<std::string, float> _db;
-    std::string _dbSeperator;
-    std::string _targetSeperator;
+    char _dbSeperator;
+    char _targetSeperator;
     float _maxValue;
 
     std::string _lineBuffer;
     std::vector<std::string> _tokenBuffer;
     std::ostringstream _errorBuffer;
 
-    std::string _getSeperator(FileHandler &fh);
-    bool _startsWith(const std::string &str);
+    char _getSeperator(FileHandler &fh);
+    bool _startsWith(const std::string &str) noexcept;
     ExchangeDay _getExchangeData(const std::string &line,
-                                 const std::string &separator);
+                                 const char separator);
     void _validateDate(const std::string &line);
     void _checkDB(const ExchangeDay &ed);
     void _loadDB();
