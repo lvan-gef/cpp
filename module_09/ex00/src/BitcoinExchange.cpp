@@ -56,8 +56,11 @@ void BitcoinExchange::getResult(const std::string &file) {
         try {
             _lineBuffer.clear();
             ft.gnl(_lineBuffer);
-            targetED =
-                _getExchangeData(_lineBuffer, _targetSeperator);
+            targetED = _getExchangeData(_lineBuffer, _targetSeperator);
+            if (targetED.value > _maxValue) {
+                std::cerr << "Error: value should be '" << _maxValue << "' got: '" << targetED.value << "'" << '\n';
+                continue;
+            }
             _checkDB(targetED);
         } catch (FileHandler::FileError &) {
             throw;
@@ -173,22 +176,23 @@ ExchangeDay BitcoinExchange::_getExchangeData(const std::string &line,
     return ed;
 }
 
-void BitcoinExchange::_validateDate(std::string &line) {
+void BitcoinExchange::_validateDate(const std::string &line) {
     _errorBuffer.str("");
+
     if (line.length() != 10 || line[4] != '-' || line[7] != '-') {
         throw BitcoinExchange::BE("Invalid line format");
     }
 
 
-    int year;
-    int month;
-    int day;
+    int year = 0;
+    int month = 0;
+    int day = 0;
     try {
         year = std::stoi(line.substr(0, 4));
         month = std::stoi(line.substr(5, 2));
         day = std::stoi(line.substr(8, 2));
     } catch (...) {
-        throw BitcoinExchange::BE("Invalid date not all numbers");
+        throw BitcoinExchange::BE("Invalid date, not all entry's are numbers");
     }
 
     if (month < 1 || month > 12) {

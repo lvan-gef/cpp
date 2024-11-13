@@ -2,12 +2,9 @@
 #define BITCOINEXCHANGE_HPP
 
 #include <algorithm>
-#include <climits>
 #include <cstdint>
-#include <cstdlib>
-#include <fstream>
 #include <iostream>
-#include <regex>
+#include <map>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -45,7 +42,7 @@ class BitcoinExchange {
     std::map<std::string, float> _db;
     std::string _dbSeperator;
     std::string _targetSeperator;
-    int _maxValue;
+    float _maxValue;
 
     std::string _lineBuffer;
     std::vector<std::string> _tokenBuffer;
@@ -55,7 +52,7 @@ class BitcoinExchange {
     bool _startsWith(const std::string &str);
     ExchangeDay _getExchangeData(const std::string &line,
                                  const std::string &separator);
-    void _validateDate(std::string &line);
+    void _validateDate(const std::string &line);
     void _checkDB(const ExchangeDay &ed);
     void _loadDB();
     float _findClosest(const std::string &target_date);
