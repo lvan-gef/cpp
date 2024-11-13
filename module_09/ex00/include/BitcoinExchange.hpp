@@ -19,15 +19,8 @@
 struct ExchangeDay {
     std::string date;
     float value;
-
-    ExchangeDay() = default;
-
-    ExchangeDay(const ExchangeDay &) = delete;
-    ExchangeDay &operator=(const ExchangeDay &) = delete;
-
-    ExchangeDay(ExchangeDay &&rhs) noexcept;
-    ExchangeDay &operator=(ExchangeDay &&rhs) noexcept;
 };
+
 class BitcoinExchange {
   public:
     explicit BitcoinExchange(const std::string &file);
@@ -60,7 +53,7 @@ class BitcoinExchange {
 
     std::string _getSeperator(FileHandler &fh);
     bool _startsWith(const std::string &str);
-    ExchangeDay _getExchangeData(std::string line,
+    ExchangeDay _getExchangeData(const std::string &line,
                                  const std::string &separator);
     void _validateDate(std::string &line);
     void _checkDB(const ExchangeDay &ed);

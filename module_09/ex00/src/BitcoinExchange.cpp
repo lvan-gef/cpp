@@ -1,17 +1,5 @@
 #include "../include/BitcoinExchange.hpp"
 
-ExchangeDay::ExchangeDay(ExchangeDay &&other) noexcept
-    : date(std::move(other.date)), value(other.value) {
-}
-
-ExchangeDay &ExchangeDay::operator=(ExchangeDay &&other) noexcept {
-    if (this != &other) {
-        date = std::move(other.date);
-        value = other.value;
-    }
-    return *this;
-}
-
 BitcoinExchange::BitcoinExchange(const std::string &file)
     : _fd(file), _maxValue(1000) {
     std::cout << std::fixed;
@@ -69,7 +57,7 @@ void BitcoinExchange::getResult(const std::string &file) {
             _lineBuffer.clear();
             ft.gnl(_lineBuffer);
             targetED =
-                _getExchangeData(std::move(_lineBuffer), _targetSeperator);
+                _getExchangeData(_lineBuffer, _targetSeperator);
             _checkDB(targetED);
         } catch (FileHandler::FileError &) {
             throw;
@@ -137,74 +125,8 @@ std::string BitcoinExchange::_getSeperator(FileHandler &fh) {
     return *it;
 }
 
-// ExchangeDay BitcoinExchange::_getExchangeData(std::string line,
-//                                               const std::string &separator) {
-//     _tokenBuffer.clear();
-//     _errorBuffer.str("");
-//     size_t prev = 0;
-//     size_t pos = 0;
-//
-//     while ((pos = line.find(separator[0], prev)) != std::string::npos) {
-//         if (pos > prev) {
-//             _tokenBuffer.push_back(line.substr(prev, pos - prev));
-//         }
-//         prev = pos + 1;
-//     }
-//     _tokenBuffer.push_back(line.substr(prev));
-//
-//     if (_tokenBuffer.size() != 2) {
-//         _errorBuffer << "Invalid format: expected 2 values, got "
-//                      << _tokenBuffer.size();
-//         throw BitcoinExchange::BE(_errorBuffer.str());
-//     }
-//
-//     ExchangeDay ed;
-//     try {
-//         _validateDate(_tokenBuffer[0]);
-//         ed.date = std::move(_tokenBuffer[0]); // Move instead of copy
-//         ed.value = std::stof(_tokenBuffer[1]);
-//
-//         if (ed.value < 0 || ed.value > _maxValue) {
-//             _errorBuffer << "Value out of range: " << ed.value;
-//             throw BitcoinExchange::BE(_errorBuffer.str());
-//         }
-//     } catch (const std::exception &e) {
-//         _errorBuffer << "Value parse error: " << e.what();
-//         throw BitcoinExchange::BE(_errorBuffer.str());
-//     }
-//
-//     return ed;
-// }
-
-ExchangeDay BitcoinExchange::_getExchangeData(std::string line,
+ExchangeDay BitcoinExchange::_getExchangeData(const std::string &line,
                                               const std::string &separator) {
-    // std::vector<std::string> tokens;
-    // tokens.reserve(2);
-    // size_t pos = 0;
-    // size_t prev = 0;
-    // _errorBuffer.str("");
-    //
-    // while ((pos = line.find(separator[0], prev)) != std::string::npos) {
-    //     if (pos > prev) {
-    //         size_t start = line.find_first_not_of(" \t", prev);
-    //         size_t end = line.find_last_not_of(" \t", pos - 1);
-    //         if (start != std::string::npos && end != std::string::npos) {
-    //             tokens.emplace_back(line.substr(start, end - start + 1));
-    //         }
-    //     }
-    //     prev = pos + 1;
-    // }
-    //
-    // size_t start = line.find_first_not_of(" \t", prev);
-    // size_t end = line.find_last_not_of(" \t");
-    // if (start != std::string::npos && end != std::string::npos) {
-    //     tokens.emplace_back(line.substr(start, end - start + 1));
-    // }
-    //
-    // if (tokens.size() != 2) {
-    //     _errorBuffer << "Invalid format for input: '" << line << "', expected 2 '" << separator << "' separated values, got: " << std::to_string(tokens.size());
-    //     throw BitcoinExchange::BE(_errorBuffer.str());
-    // }
     _tokenBuffer.clear();
     _errorBuffer.str("");
     size_t prev = 0;
@@ -226,6 +148,7 @@ ExchangeDay BitcoinExchange::_getExchangeData(std::string line,
 
     ExchangeDay ed;
     try {
+        trim(_tokenBuffer[0]);
         _validateDate(_tokenBuffer[0]);
         ed.date = std::move(_tokenBuffer[0]);
     } catch (BitcoinExchange::BE &) {
@@ -234,12 +157,7 @@ ExchangeDay BitcoinExchange::_getExchangeData(std::string line,
 
     try {
         ed.value = std::stof(_tokenBuffer[1]);
-        if (ed.value > _maxValue) {
-            _errorBuffer << ed.date << " value must be more then 0.0 and less then "
-                << _maxValue << "  got: '"
-                << ed.value << "'";
-            throw BitcoinExchange::BE(_errorBuffer.str());
-        } else if (ed.value < 0) {
+        if (ed.value < 0) {
             _errorBuffer << "value must be more then 0.0 got: '"
                 << ed.value << "'";
             throw BitcoinExchange::BE(_errorBuffer.str());
@@ -257,31 +175,29 @@ ExchangeDay BitcoinExchange::_getExchangeData(std::string line,
 
 void BitcoinExchange::_validateDate(std::string &line) {
     _errorBuffer.str("");
-    std::cout << line << '\n';
     if (line.length() != 10 || line[4] != '-' || line[7] != '-') {
         throw BitcoinExchange::BE("Invalid line format");
     }
 
-    int year = std::stoi(line.substr(0, 4));
-    int month = std::stoi(line.substr(5, 2));
-    int day = std::stoi(line.substr(8, 2));
 
+    int year;
+    int month;
+    int day;
     try {
-        year = (line[0] - '0') * 1000 + (line[1] - '0') * 100 +
-               (line[2] - '0') * 10 + (line[3] - '0');
+        year = std::stoi(line.substr(0, 4));
+        month = std::stoi(line.substr(5, 2));
+        day = std::stoi(line.substr(8, 2));
     } catch (...) {
-        throw BitcoinExchange::BE("Invalid year format");
+        throw BitcoinExchange::BE("Invalid date not all numbers");
     }
 
     if (month < 1 || month > 12) {
-        _errorBuffer << "Invalid month should be between 1 and 12 got: '"
-            << month << "'";
+        _errorBuffer << "Invalid month should be between 1 and 12 got: '" << month << "'";
         throw BitcoinExchange::BE(_errorBuffer.str());
     }
 
     if (day < 1 || day > 31) {
-        _errorBuffer << "Invalid day should be between 1 and 31 got: '"
-            << day << "'";
+        _errorBuffer << "Invalid day should be between 1 and 31 got: '" << day << "'";
         throw BitcoinExchange::BE(_errorBuffer.str());
     }
 
