@@ -2,8 +2,6 @@
 #define FILEHANDLER_HPP
 
 #include <fstream>
-#include <iostream>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 
@@ -37,7 +35,6 @@ class FileHandler {
   private:
     std::fstream _file;
     std::string _filename;
-    bool _isReading;
 };
 
 #endif // !FILEHANDLER_HPP
