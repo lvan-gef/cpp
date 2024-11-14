@@ -3,8 +3,7 @@
 FileHandler::FileHandler() : _file(""), _filename("") {
 }
 
-FileHandler::FileHandler(std::string fname)
-    : _filename(std::move(fname)) {
+FileHandler::FileHandler(std::string fname) : _filename(std::move(fname)) {
     _file.open(_filename);
 
     if (!_file.is_open()) {
