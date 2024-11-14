@@ -1,7 +1,7 @@
 #include "../include/BitcoinExchange.hpp"
 
 BitcoinExchange::BitcoinExchange(const std::string &file)
-    : _fd(file), _maxValue(1000) {
+    : _fd(file), _targetSeperator('|'), _maxValue(1000) {
     std::cout << std::fixed;
     std::cout.precision(2);
 
@@ -20,13 +20,16 @@ BitcoinExchange::BitcoinExchange(const std::string &file)
 }
 
 BitcoinExchange::BitcoinExchange(BitcoinExchange &&rhs) noexcept
-    : _fd(std::move(rhs._fd)), _maxValue(rhs._maxValue) {
+    : _fd(std::move(rhs._fd)), _dbSeperator(rhs._dbSeperator),
+      _targetSeperator(rhs._targetSeperator), _maxValue(rhs._maxValue) {
 }
 
 BitcoinExchange &BitcoinExchange::operator=(BitcoinExchange &&rhs) noexcept {
     if (this != &rhs) {
         _fd = std::move(rhs._fd);
         _maxValue = rhs._maxValue;
+        _targetSeperator = rhs._targetSeperator;
+        _dbSeperator = rhs._targetSeperator;
     }
 
     return *this;
@@ -41,7 +44,7 @@ void BitcoinExchange::getResult(const std::string &file) {
     } catch (FileHandler::FileError &e) {
         throw BitcoinExchange::BE(e.what());
     } catch (...) {
-        _errorBuffer << "getResult: FileHandler: Unknown error";
+        _errorBuffer << "getResult: Unknown error";
         throw BitcoinExchange::BE(_errorBuffer.str());
     }
 
@@ -58,8 +61,9 @@ void BitcoinExchange::getResult(const std::string &file) {
             ft.gnl(_lineBuffer);
             targetED = _getExchangeData(_lineBuffer, _targetSeperator);
             if (targetED.value > _maxValue) {
-                std::cerr << "Error: value should be '" << _maxValue
-                          << "' got: '" << targetED.value << "'" << '\n';
+                std::cerr << "Error: value should be less or eq to '"
+                          << _maxValue << "' got: '" << targetED.value << "'"
+                          << '\n';
                 continue;
             }
             _checkDB(targetED);
@@ -77,7 +81,7 @@ BitcoinExchange::~BitcoinExchange() {
 }
 
 // private methods
-bool BitcoinExchange::_startsWith(const std::string &str) noexcept{
+bool BitcoinExchange::_startsWith(const std::string &str) noexcept {
     uint8_t startSize = 4;
 
     if (str.length() <= startSize) {
@@ -102,6 +106,9 @@ char BitcoinExchange::_getSeperator(FileHandler &fh) {
         throw BitcoinExchange::BE(e.what());
     } catch (FileHandler::FileError &e) {
         throw BitcoinExchange::BE(e.what());
+    } catch (...) {
+        _errorBuffer << "Unknown error during _getSeperator";
+        throw BitcoinExchange::BE(_errorBuffer.str());
     }
 
     if (_startsWith(_lineBuffer) != true) {
@@ -110,13 +117,7 @@ char BitcoinExchange::_getSeperator(FileHandler &fh) {
         throw BitcoinExchange::BE(_errorBuffer.str());
     }
 
-    if (_lineBuffer.length() <= startSize) {
-        _errorBuffer << "Invalid header format in '" << fh.getFilename() << "'";
-        throw BitcoinExchange::BE(_errorBuffer.str());
-    }
-
     char nextChar = _lineBuffer[startSize];
-
     if (nextChar == ' ' && _lineBuffer.length() > (startSize + 1)) {
         nextChar = _lineBuffer[startSize + 1];
     }
@@ -183,12 +184,13 @@ void BitcoinExchange::_validateDate(const std::string &line) {
     _errorBuffer.str("");
 
     if (line.length() != 10 || line[4] != '-' || line[7] != '-') {
-        throw BitcoinExchange::BE("Invalid line format");
+        throw BitcoinExchange::BE("Invalid date format, should be 10 long");
     }
 
     int year = 0;
     int month = 0;
     int day = 0;
+
     try {
         year = std::stoi(line.substr(0, 4));
         month = std::stoi(line.substr(5, 2));
@@ -217,7 +219,7 @@ void BitcoinExchange::_validateDate(const std::string &line) {
         if (day > (isLeapYear ? 29 : 28)) {
             throw BitcoinExchange::BE("Invalid day for February");
         }
-    } else if (day > daysInMonth[month - 1]) {
+    } else if (day > daysInMonth[static_cast<size_t>(month - 1)]) {
         throw BitcoinExchange::BE("Invalid day for given month");
     }
 }
@@ -233,8 +235,12 @@ void BitcoinExchange::_loadDB() {
 
             ExchangeDay dbED = _getExchangeData(_lineBuffer, _dbSeperator);
             _db.emplace(std::move(dbED.date), dbED.value);
+        } catch (FileHandler::FileError &) {
+            throw;
+        } catch (BitcoinExchange::BE &) {
+            throw;
         } catch (...) {
-            continue;
+            throw;
         }
     }
 }
