@@ -5,7 +5,7 @@ import csv
 from pathlib import Path
 import datetime
 import subprocess
-from typing import Optional
+from typing import Optional, Generator, List
 
 import numpy as np
 
@@ -35,14 +35,13 @@ def save_state(py_out: list[str], btc_out: list[str], file: str) -> None:
         f.write('\n'.join(btc_out))
 
 
-def get_closest_previous_date(date_dict: dict[datetime.date, np.float32], target_date_str: str) -> Optional[str]:
+def get_closest_previous_date(date_dict: dict[datetime.date, np.float32], target_date: datetime.date) -> Optional[datetime.date]:
     """
     If date is not in dict search for the closest date that is lower then the one we looking for
     """
 
-    target_date = datetime.datetime.strptime(str(target_date_str), DATE_FORMAT)
     date_objects = [
-        (datetime.datetime.strptime(str(date_str), DATE_FORMAT), date_str)
+        (datetime.datetime.strptime(str(date_str), DATE_FORMAT).date(), date_str)
         for date_str in date_dict.keys()
     ]
 
@@ -55,7 +54,7 @@ def get_closest_previous_date(date_dict: dict[datetime.date, np.float32], target
     return None
 
 
-def gen_data(path: Path, delim: str = '|'):
+def gen_data(path: Path, delim: str = '|') -> Generator[List[str], None, None]:
     """
     Read csv file and yield a line back
     """
@@ -65,7 +64,7 @@ def gen_data(path: Path, delim: str = '|'):
         for index, row in enumerate(reader):
             if index == 0:  # csv header
                 continue
-            yield [word.strip() for word in row]
+            yield [x.strip() for x in row]
 
 
 def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str, btc: Path) -> tuple[list[str], list[str], list[str], list[str]]:
@@ -89,7 +88,7 @@ def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str, btc
             stderr.append(f'Error: bad input => {input_data[0]}')
             continue
 
-        input_data[0] = datetime.datetime.strptime(
+        input_date = datetime.datetime.strptime(
             input_data[0], DATE_FORMAT).date()
 
         if np.float32(input_data[1]) > np.float32(1000):
@@ -100,18 +99,18 @@ def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str, btc
             stderr.append('Error: not a positive number.')
             continue
 
-        if input_data[0] in db:
+        if input_date in db:
             stdout.append(
-                f'{input_data[0]} => {np.float32(input_data[1]):.2f} = {np.float32(input_data[1]) * np.float32(db[input_data[0]]):.2f}')
+                f'{input_date} => {np.float32(input_data[1]):.2f} = {np.float32(input_data[1]) * np.float32(db[input_date]):.2f}')
             continue
 
-        prev_date = get_closest_previous_date(db, input_data[0])
+        prev_date = get_closest_previous_date(db, input_date)
         if prev_date is None:
             stderr.append('Error: date is lower then what is in the database.')
             continue
 
         stdout.append(
-            f'{input_data[0]} => {np.float32(input_data[1]):.2f} = {np.float32(input_data[1]) * np.float32(db[prev_date]):.2f}')
+            f'{input_date} => {np.float32(input_data[1]):.2f} = {np.float32(input_data[1]) * np.float32(db[prev_date]):.2f}')
 
     print(f'Run {btc} with argument: {path}')
     result = subprocess.run(
@@ -154,10 +153,12 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str, b
             exit(1)
 
         # assert date's
+        py_date = datetime.datetime.strptime(py_split[0], DATE_FORMAT).date()
+        btc_date = datetime.datetime.strptime(btc_split[0], DATE_FORMAT).date()
         try:
-            assert py_split[0] == btc_split[0]
+            assert py_date == btc_date
         except AssertionError:
-            print(f'Expect date: {py_split[0] + datetime.timedelta(days=1)} got: {btc_split[0]}')
+            print(f'Expect date: {py_date + datetime.timedelta(days=1)} got: {btc_split[0]}')
             exit(1)
 
         # assert result
