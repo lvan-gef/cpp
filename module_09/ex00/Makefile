@@ -1,66 +1,98 @@
+# for the tester that we can use source
 SHELL := /bin/bash
 
 NAME = btc
-VENV_PATH="tester/.venv"
+NAME_DEBUG = $(NAME)_debug
 
-CC = c++
+# compiler + default flags
+CXX ?= c++
+BASE_FLAGS := -std=c++11
+WARNING_FLAGS := -Wall -Wextra -Werror -Wshadow -Wconversion -Wdouble-promotion -Wpedantic
+CXXFLAGS = $(BASE_FLAGS) $(WARNING_FLAGS)
+DEP_FLAGS := -MMD -MP
 
-GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11 -g3
+# build flags
+DEBUG_FLAGS := -g3 -DDEBUG
+RELEASE_FLAGS := -DNDEBUG
 
+# dirs
 SRCDIR = src/
 OBJDIR = obj/
+TESTDIR = tester/
 
+OBJDIR_RELEASE = $(OBJDIR)release/
+OBJDIR_DEBUG = $(OBJDIR)debug/
+VENV_DIR := $(TESTDIR).venv
+
+# files
 SRCFILES = BitcoinExchange.cpp FileHandler.cpp main.cpp Utils.cpp
+SRCS = $(addprefix $(SRCDIR), $(SRCFILES))
 
-SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)
-DEPS = $(SRCOBJ:.o=.d)
+# build dirs
+OBJS = $(SRCFILES:%.cpp=$(OBJDIR_RELEASE)%.o)
+OBJS_DEBUG = $(SRCFILES:%.cpp=$(OBJDIR_DEBUG)%.o)
 
+DEPS = $(OBJS:.o=.d)
+DEPS_DEBUG = $(OBJS_DEBUG:.o=.d)
+
+# include all headers
 HEADERS = -I include
 
-ifeq ($(OS),Windows_NT)
-    CLEAR_COMMAND = cls
-else
-    CLEAR_COMMAND = clear
-endif
-
+.PHONY: all
 all: $(NAME)
 
-$(NAME): $(SRCOBJ)
-	$(CC) $(GFLAGS) $(SRCOBJ) $(HEADERS) -o $(NAME)
+.PHONY: debug
+debug: $(NAME_DEBUG)
 
-$(OBJDIR)%.o: $(SRCDIR)%.cpp
-	@mkdir -p ${OBJDIR}
-	$(CC) $(GFLAGS) $(HEADERS) -MMD -MP -c -o $@ $<
-
-run: all
-	@$(CLEAR_COMMAND)
-	./$(NAME) db/input.txt
-
-test: all
-	@if [ ! -d "$VENV_PATH" ]; then \
-		cd tester; \
-		python3 -m venv .venv; \
-		source .venv/bin/activate; \
-		pip install -r requirements.txt; \
-		deactivate; \
+.PHONY: test
+test: $(NAME)
+	@if [ ! -d "$(VENV_DIR)" ]; then \
+		echo "Creating Python virtual environment..."; \
+		cd tester && \
+		python3 -m venv .venv && \
+		source .venv/bin/activate && \
+		pip install --upgrade pip && \
+		pip install -r requirements.txt && \
+		deactivate && \
 		cd ..; \
 	fi
+	$(VENV_PATH)/bin/python tester/bitcoin_tester.py $(NAME)
 
-	@$(CLEAR_COMMAND)
-	tester/.venv/bin/python tester/bitcoin_tester.py $(NAME)
-
-clean:
-	@rm -rf $(OBJDIR)
-
-fclean: clean
-	@rm -f $(NAME)
-	@rm -f $(TESTNAME)
-
-re: fclean all
-
+.PHONY: fmt
 fmt:
 	@echo "Format code"
 	@find . -type f -name "*.*pp" -print0 | xargs -0 clang-format -i
 
--include $(DEPS)
-.PHONY: all clean fclean re test run fmt
+.PHONY: clean
+clean:
+	rm -rf $(OBJDIR)
+
+.PHONY: fclean
+fclean: clean
+	rm -f $(NAME) $(NAME_DEBUG)
+	rm -rf $(VENV_DIR) $(TESTDIR)__pycache__
+
+.PHONY: re
+re: fclean all
+
+# compile release
+$(NAME): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(RELEASE_FLAGS) $^ $(HEADERS) -o $@
+
+# compile debug
+$(NAME_DEBUG): $(OBJS_DEBUG)
+	$(CXX) $(CXXFLAGS) $(DEBUG_FLAGS) $^ $(HEADERS) -o $@
+
+# create object files release
+$(OBJDIR_RELEASE)%.o: $(SRCDIR)%.cpp | $(OBJDIR_RELEASE)
+	$(CXX) $(CXXFLAGS) $(RELEASE_FLAGS) $(DEP_FLAGS) $(HEADERS) -c $< -o $@
+
+# create object files debug
+$(OBJDIR_DEBUG)%.o: $(SRCDIR)%.cpp | $(OBJDIR_DEBUG)
+	$(CXX) $(CXXFLAGS) $(DEBUG_FLAGS) $(DEP_FLAGS) $(HEADERS) -c $< -o $@
+
+# create obj and or sub folders
+$(OBJDIR_RELEASE) $(OBJDIR_DEBUG):
+	mkdir -p $@
+
+-include $(DEPS) $(DEPS_DEBUG)
