@@ -1,14 +1,15 @@
 # for the tester that we can use source
 SHELL := /bin/bash
 
-NAME = btc
-NAME_DEBUG = $(NAME)_debug
+NAME := btc
+NAME_DEBUG := $(NAME)_debug
+NAME_TEST := bitcoin_tester.py
 
 # compiler + default flags
 CXX ?= c++
 BASE_FLAGS := -std=c++11
-WARNING_FLAGS := -Wall -Wextra -Werror -Wshadow -Wconversion -Wdouble-promotion -Wpedantic
-CXXFLAGS = $(BASE_FLAGS) $(WARNING_FLAGS)
+WARNING_FLAGS := -Wall -Wextra -Werror -Wshadow -Wconversion -Wdouble-promotion -Wformat=2 -Woverloaded-virtual -Wpedantic
+CXXFLAGS := $(BASE_FLAGS) $(WARNING_FLAGS)
 DEP_FLAGS := -MMD -MP
 
 # build flags
@@ -16,36 +17,41 @@ DEBUG_FLAGS := -g3 -DDEBUG
 RELEASE_FLAGS := -DNDEBUG
 
 # dirs
-SRCDIR = src/
-OBJDIR = obj/
-TESTDIR = tester/
+SRCDIR := src/
+OBJDIR := obj/
+TESTDIR := tester/
 
-OBJDIR_RELEASE = $(OBJDIR)release/
-OBJDIR_DEBUG = $(OBJDIR)debug/
+OBJDIR_RELEASE := $(OBJDIR)release/
+OBJDIR_DEBUG := $(OBJDIR)debug/
 VENV_DIR := $(TESTDIR).venv
 
 # files
-SRCFILES = BitcoinExchange.cpp FileHandler.cpp main.cpp Utils.cpp
-SRCS = $(addprefix $(SRCDIR), $(SRCFILES))
+SRCFILES := BitcoinExchange.cpp FileHandler.cpp main.cpp Utils.cpp
+SRCS := $(addprefix $(SRCDIR), $(SRCFILES))
 
 # build dirs
-OBJS = $(SRCFILES:%.cpp=$(OBJDIR_RELEASE)%.o)
-OBJS_DEBUG = $(SRCFILES:%.cpp=$(OBJDIR_DEBUG)%.o)
+OBJS := $(SRCFILES:%.cpp=$(OBJDIR_RELEASE)%.o)
+OBJS_DEBUG := $(SRCFILES:%.cpp=$(OBJDIR_DEBUG)%.o)
 
-DEPS = $(OBJS:.o=.d)
-DEPS_DEBUG = $(OBJS_DEBUG:.o=.d)
+DEPS := $(OBJS:.o=.d)
+DEPS_DEBUG := $(OBJS_DEBUG:.o=.d)
 
 # include all headers
-HEADERS = -I include
+HEADERS := -I include
+
+# Colors for help message
+BLUE := \033[36m
+MARGENTA := \033[35m
+NC := \033[0m
 
 .PHONY: all
-all: $(NAME)
+all: $(NAME)  ## Build the release version (default)
 
 .PHONY: debug
-debug: $(NAME_DEBUG)
+debug: $(NAME_DEBUG)  ## Build the debug version
 
 .PHONY: test
-test: $(NAME)
+test: $(NAME)  ## Build the release and run tests agains it
 	@if [ ! -d "$(VENV_DIR)" ]; then \
 		echo "Creating Python virtual environment..."; \
 		cd tester && \
@@ -56,24 +62,31 @@ test: $(NAME)
 		deactivate && \
 		cd ..; \
 	fi
-	$(VENV_PATH)/bin/python tester/bitcoin_tester.py $(NAME)
+	$(VENV_PATH)/bin/python $(TESTDIR)$(NAME_TEST) $(NAME)
 
 .PHONY: fmt
-fmt:
+fmt:  ## Format code via clang-format
 	@echo "Format code"
 	@find . -type f -name "*.*pp" -print0 | xargs -0 clang-format -i
 
 .PHONY: clean
-clean:
+clean:  ## Clean object files
 	rm -rf $(OBJDIR)
 
 .PHONY: fclean
-fclean: clean
+fclean: clean  ## Clean all side effects
 	rm -f $(NAME) $(NAME_DEBUG)
 	rm -rf $(VENV_DIR) $(TESTDIR)__pycache__
 
-.PHONY: re
+.PHONY: re  ## Clean all and recompile
 re: fclean all
+
+.PHONY: help
+help:  ## Get help
+	@echo -e 'Usage: make ${BLUE}<target>${NC} ${MARGENTA}<options>${NC}'
+	@echo -e 'Available targets:'
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  ${BLUE}%-15s${NC} %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@echo -e '\n  ${MARGENTA}CXX=clang++${NC}     Set compiler (default $(CXX))'
 
 # compile release
 $(NAME): $(OBJS)
