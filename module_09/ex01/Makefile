@@ -1,70 +1,111 @@
+# for the tester that we can use source
 SHELL := /bin/bash
 
-NAME = RPN
-VENV_PATH="tester/.venv"
+NAME := RPN
+NAME_DEBUG := $(NAME)_debug
+NAME_TEST := rpn_tester.py
 
-CC = c++
+# compiler + default flags
+CXX ?= c++
+BASE_FLAGS := -std=c++11
+WARNING_FLAGS := -Wall -Wextra -Werror -Wshadow -Wconversion -Wdouble-promotion -Wformat=2 -Woverloaded-virtual -Wpedantic
+CXXFLAGS := $(BASE_FLAGS) $(WARNING_FLAGS)
+DEP_FLAGS := -MMD -MP
 
-GFLAGS = -Wall -Wextra -Werror -Wshadow -Wpedantic -std=c++11
+# build flags
+DEBUG_FLAGS := -g3 -DDEBUG
+RELEASE_FLAGS := -DNDEBUG
 
-SRCDIR = src/
-OBJDIR = obj/
+# dirs
+SRCDIR := src/
+OBJDIR := obj/
+TESTDIR := tester/
 
-SRCFILES = main.cpp RPN.cpp
+OBJDIR_RELEASE := $(OBJDIR)release/
+OBJDIR_DEBUG := $(OBJDIR)debug/
+VENV_DIR := $(TESTDIR).venv
 
-SRCOBJ = $(SRCFILES:%.cpp=$(OBJDIR)%.o)
-DEPS = $(SRCOBJ:.o=.d)
+# files
+SRCFILES := main.cpp RPN.cpp
+SRCS := $(addprefix $(SRCDIR), $(SRCFILES))
 
-HEADERS = -I include
+# build dirs
+OBJS := $(SRCFILES:%.cpp=$(OBJDIR_RELEASE)%.o)
+OBJS_DEBUG := $(SRCFILES:%.cpp=$(OBJDIR_DEBUG)%.o)
 
-ifeq ($(OS),Windows_NT)
-    CLEAR_COMMAND = cls
-else
-    CLEAR_COMMAND = clear
-endif
+DEPS := $(OBJS:.o=.d)
+DEPS_DEBUG := $(OBJS_DEBUG:.o=.d)
 
-all: $(NAME)
+# include all headers
+HEADERS := -I include
 
-$(NAME): $(SRCOBJ)
-	$(CC) $(GFLAGS) $(SRCOBJ) $(HEADERS) -o $(NAME)
+# Colors for help message
+BLUE := \033[36m
+MARGENTA := \033[35m
+NC := \033[0m
 
-$(OBJDIR)%.o: $(SRCDIR)%.cpp
-	@mkdir -p ${OBJDIR}
-	$(CC) $(GFLAGS) $(HEADERS) -MMD -MP -c -o $@ $<
+.PHONY: all
+all: $(NAME)  ## Build the release version (default)
 
-run: all
-	@$(CLEAR_COMMAND)
-	./$(NAME) db/input.txt
+.PHONY: debug
+debug: $(NAME_DEBUG)  ## Build the debug version
 
-test: GFLAGS += -g3
-test: all
-	@if [ ! -d "$VENV_PATH" ]; then \
-		cd tester; \
-		python3 -m venv .venv; \
-		source .venv/bin/activate; \
-		pip install --upgrade pip; \
-		pip install -r requirements.txt; \
-		deactivate; \
+.PHONY: test
+test: $(NAME)  ## Build the release and run tests agains it
+	@if [ ! -d "$(VENV_DIR)" ]; then \
+		echo "Creating Python virtual environment..."; \
+		cd tester && \
+		python3 -m venv .venv && \
+		source .venv/bin/activate && \
+		pip install --upgrade pip && \
+		pip install -r requirements.txt && \
+		deactivate && \
 		cd ..; \
 	fi
+	$(VENV_PATH)/bin/python $(TESTDIR)$(NAME_TEST) $(NAME)
 
-	@$(CLEAR_COMMAND)
-	$(VENV_PATH)/bin/python tester/rpn_tester.py $(NAME)
-
-clean:
-	@rm -rf $(OBJDIR)
-
-fclean: clean
-	@rm -f $(NAME)
-	@rm -f $(TESTNAME)
-	@rm -rf $(VENV_PATH)
-
-re: fclean all
-
-fmt:
+.PHONY: fmt
+fmt:  ## Format code via clang-format
 	@echo "Format code"
 	@find . -type f -name "*.*pp" -print0 | xargs -0 clang-format -i
 
--include $(DEPS)
-.PHONY: all clean fclean re test run fmt
+.PHONY: clean
+clean:  ## Clean object files
+	rm -rf $(OBJDIR)
 
+.PHONY: fclean
+fclean: clean  ## Clean all side effects
+	rm -f $(NAME) $(NAME_DEBUG)
+	rm -rf $(VENV_DIR) $(TESTDIR)__pycache__
+
+.PHONY: re  ## Clean all and recompile
+re: fclean all
+
+.PHONY: help
+help:  ## Get help
+	@echo -e 'Usage: make ${BLUE}<target>${NC} ${MARGENTA}<options>${NC}'
+	@echo -e 'Available targets:'
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  ${BLUE}%-15s${NC} %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@echo -e '\n  ${MARGENTA}CXX=clang++${NC}     Set compiler (default $(CXX))'
+
+# compile release
+$(NAME): $(OBJS)
+	$(CXX) $(CXXFLAGS) $(RELEASE_FLAGS) $^ $(HEADERS) -o $@
+
+# compile debug
+$(NAME_DEBUG): $(OBJS_DEBUG)
+	$(CXX) $(CXXFLAGS) $(DEBUG_FLAGS) $^ $(HEADERS) -o $@
+
+# create object files release
+$(OBJDIR_RELEASE)%.o: $(SRCDIR)%.cpp | $(OBJDIR_RELEASE)
+	$(CXX) $(CXXFLAGS) $(RELEASE_FLAGS) $(DEP_FLAGS) $(HEADERS) -c $< -o $@
+
+# create object files debug
+$(OBJDIR_DEBUG)%.o: $(SRCDIR)%.cpp | $(OBJDIR_DEBUG)
+	$(CXX) $(CXXFLAGS) $(DEBUG_FLAGS) $(DEP_FLAGS) $(HEADERS) -c $< -o $@
+
+# create obj and or sub folders
+$(OBJDIR_RELEASE) $(OBJDIR_DEBUG):
+	mkdir -p $@
+
+-include $(DEPS) $(DEPS_DEBUG)
