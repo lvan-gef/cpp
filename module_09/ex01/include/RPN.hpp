@@ -31,7 +31,7 @@ class RPN {
         explicit Error(const std::string &msg);
     };
 
-private:
+  private:
     std::stack<float> _data;
 
   private:
