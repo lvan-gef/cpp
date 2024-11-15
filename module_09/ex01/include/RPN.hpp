@@ -2,13 +2,8 @@
 #define RPN_HPP
 
 #include <algorithm>
-#include <cctype>
 #include <iostream>
-#include <iterator>
 #include <stack>
-#include <stdexcept>
-#include <string>
-#include <utility>
 
 class RPN {
   public:
