@@ -88,7 +88,7 @@ def test_invalid_input():
 
 
 def test_valid_input():
-    gen = _gen_nbr(start=INT_MIN, end=-1)
+    gen = _gen_nbr(start=0, end=INT_MAX)
 
     for size in SIZES:
         inputs = [
@@ -107,5 +107,3 @@ def test_valid_input():
 
 for x in test_invalid_input():
     pass
-
-print(SIZES[:23])
