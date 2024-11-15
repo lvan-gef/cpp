@@ -1,13 +1,10 @@
 #ifndef BITCOINEXCHANGE_HPP
 #define BITCOINEXCHANGE_HPP
 
-#include <algorithm>
 #include <cstdint>
 #include <iostream>
 #include <map>
 #include <sstream>
-#include <stdexcept>
-#include <string>
 #include <vector>
 
 #include "./FileHandler.hpp"
