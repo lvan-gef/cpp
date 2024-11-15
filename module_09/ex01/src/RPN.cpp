@@ -34,7 +34,7 @@ void RPN::result(const std::string &arg) {
 
     while (next != end) {
         next = std::find(current, end, ' ');
-        size_t dis = std::distance(current, next);
+        long dis = std::distance(current, next);
 
         if (dis > 2) {
             throw RPN::Error("Error: Invalid input");
