@@ -31,13 +31,13 @@ class RPN {
         explicit Error(const std::string &msg);
     };
 
+private:
+    std::stack<float> _data;
+
   private:
     static constexpr bool _isOperator(char c) noexcept;
     void _addNbr(const std::string &arg);
     void _calc(char op);
-
-  private:
-    std::stack<float> _data;
 };
 
 #endif // !RPN_HPP
