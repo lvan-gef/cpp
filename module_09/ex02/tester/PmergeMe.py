@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 
 import random
 from typing import Generator
@@ -42,50 +43,25 @@ def test_invalid_input():
             for _ in range(size)
         )
 
-    for size in SIZES[:24]:
-        for neg, r_str in zip(neg_nbr_gen, str_gen):
-            pass
+    # first char then number and vica versa
+    for index, size in enumerate(SIZES[:24]):
+        if index % 2 == 0:
+            yield f'{next(str_gen)} {' '.join(next(str_gen) if random.randint(1, 2) % 2 else str(next(neg_nbr_gen)) for _ in range(size - 1))}'
+        else:
+            yield f'{next(neg_nbr_gen)} {' '.join(next(str_gen) if random.randint(1, 2) % 2 else str(next(neg_nbr_gen)) for _ in range(size - 1))}'
 
+    # first valid numbers last one is invalid
+    for index, size in enumerate(SIZES[1:24]):
+        valid_inputs = [next(pos_nbr_gen) for _ in range(size - 1)]
+        valid_inputs.append(next(neg_nbr_gen))
+        yield ' '.join(str(x) for x in valid_inputs)
 
-    # # neg and chars
-    # for size in SIZES[1:24]:
-    #     if random.randint(0, 1) % 2:
-    #         yield ' '.join(
-    #             next(str_gen) if random.randint(0, 1) % 2 else str(next(neg_nbr_gen))
-    #             for _ in range(size)
-    #         )
-    #     else:
-    #         yield ' '.join(
-    #             str(next(neg_nbr_gen)) if random.randint(0, 1) % 2 else next(str_gen)
-    #             for _ in range(size)
-    #         )
-    #
-    # # pos and neg
-    # for size in SIZES[1:24]:
-    #     if random.randint(0, 1) % 2:
-    #         yield ' '.join(
-    #             str(next(pos_nbr_gen)) if random.randint(0, 1) % 2 else str(next(neg_nbr_gen))
-    #             for _ in range(size)
-    #         )
-    #     else:
-    #         yield ' '.join(
-    #             str(next(neg_nbr_gen)) if random.randint(0, 1) % 2 else str(next(pos_nbr_gen))
-    #             for _ in range(size)
-    #         )
-    #
-    # # pos and char
-    # for size in SIZES[1:24]:
-    #     if random.randint(0, 1) % 2:
-    #         yield ' '.join(
-    #             str(next(pos_nbr_gen)) if random.randint(0, 1) % 2 else next(str_gen)
-    #             for _ in range(size)
-    #         )
-    #     else:
-    #         yield ' '.join(
-    #             next(str_gen) if random.randint(0, 1) % 2 else str(next(pos_nbr_gen))
-    #             for _ in range(size)
-    #         )
+        valid_inputs.pop(-1)
+        valid_inputs.append(next(str_gen))
+        yield ' '.join(str(x) for x in valid_inputs)
 
+    yield ''
+    yield '   '
 
 def test_valid_input():
     gen = _gen_nbr(start=0, end=INT_MAX)
@@ -101,9 +77,12 @@ def test_valid_input():
         end = time.time()
 
         print('Duur:', end - start)
+        yield ' '.join(str(x) for x in inputs)
 
 
-# test_valid_input()
-
-for x in test_invalid_input():
+for valid in test_valid_input():
     pass
+
+for invalid in test_invalid_input():
+    pass
+    # print(x)
