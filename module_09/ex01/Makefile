@@ -6,7 +6,7 @@ NAME_DEBUG := $(NAME)_debug
 NAME_TEST := rpn_tester.py
 
 # compiler + default flags
-CXX ?= c++
+CXX := c++
 BASE_FLAGS := -std=c++11
 WARNING_FLAGS := -Wall -Wextra -Werror -Wshadow -Wconversion -Wdouble-promotion -Wformat=2 -Woverloaded-virtual -Wpedantic
 CXXFLAGS := $(BASE_FLAGS) $(WARNING_FLAGS)
@@ -62,7 +62,8 @@ test: $(NAME)  ## Build the release and run tests agains it
 		deactivate && \
 		cd ..; \
 	fi
-	$(VENV_PATH)/bin/python $(TESTDIR)$(NAME_TEST) $(NAME)
+
+	$(VENV_DIR)/bin/python3 $(TESTDIR)$(NAME_TEST) $(NAME)
 
 .PHONY: fmt
 fmt:  ## Format code via clang-format
@@ -86,7 +87,6 @@ help:  ## Get help
 	@echo -e 'Usage: make ${BLUE}<target>${NC} ${MARGENTA}<options>${NC}'
 	@echo -e 'Available targets:'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  ${BLUE}%-15s${NC} %s\n", $$1, $$2}' $(MAKEFILE_LIST)
-	@echo -e '\n  ${MARGENTA}CXX=clang++${NC}     Set compiler (default $(CXX))'
 
 # compile release
 $(NAME): $(OBJS)
