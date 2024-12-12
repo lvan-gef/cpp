@@ -6,7 +6,7 @@ NAME_DEBUG := $(NAME)_debug
 NAME_TEST := $(NAME)_tester.py
 
 # compiler + default flags
-CXX ?= c++
+CXX := c++
 BASE_FLAGS := -std=c++11
 WARNING_FLAGS := -Wall -Wextra -Werror -Wshadow -Wconversion -Wdouble-promotion -Wformat=2 -Woverloaded-virtual -Wpedantic
 CXXFLAGS := $(BASE_FLAGS) $(WARNING_FLAGS)
@@ -26,7 +26,7 @@ OBJDIR_DEBUG := $(OBJDIR)debug/
 VENV_DIR := $(TESTDIR).venv
 
 # files
-SRCFILES := main.cpp RPN.cpp
+SRCFILES := main.cpp PmergeMeArray.cpp PmergeMe.cpp PmergeMeDeque.cpp
 SRCS := $(addprefix $(SRCDIR), $(SRCFILES))
 
 # build dirs
@@ -86,7 +86,6 @@ help:  ## Get help
 	@echo -e 'Usage: make ${BLUE}<target>${NC} ${MARGENTA}<options>${NC}'
 	@echo -e 'Available targets:'
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  ${BLUE}%-15s${NC} %s\n", $$1, $$2}' $(MAKEFILE_LIST)
-	@echo -e '\n  ${MARGENTA}CXX=clang++${NC}     Set compiler (default $(CXX))'
 
 # compile release
 $(NAME): $(OBJS)
