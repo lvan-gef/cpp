@@ -6,6 +6,7 @@ from pathlib import Path
 import datetime
 import subprocess
 from typing import Optional, Generator, List
+import sys
 
 import numpy as np
 
@@ -118,7 +119,7 @@ def get_results(db: dict[datetime.date, np.float32], path: Path, delim: str, btc
     try:
         assert result.returncode == 0
     except AssertionError:
-        print(f'Expect returncode to be 0 got: {result.returncode}')
+        print(f'Expect returncode to be 0 got: {result.returncode}', file=sys.stderr)
         exit(1)
 
     return [line.strip() for line in stdout if line], [line.strip() for line in stderr if line], [line.strip() for line in result.stdout.split('\n') if line], [line.strip() for line in result.stderr.split('\n') if line]
@@ -129,14 +130,13 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str, b
     Compare the expected output (of python) with the btc output.
     """
 
-    py_std, py_err, btc_std, btc_err = get_results(
-        db=db, path=target_path, delim=delim, btc=btc)
+    py_std, py_err, btc_std, btc_err = get_results(db=db, path=target_path, delim=delim, btc=btc)
 
     # assert that we have the same amount of messages on stdout
     try:
         assert len(py_std) == len(btc_std)
     except AssertionError:
-        print(f'Expect: {len(py_std)} to stdout, got: {len(btc_std)}')
+        print(f'Expect: {len(py_std)} to stdout, got: {len(btc_std)}', file=sys.stderr)
         save_state(py_out=py_std, btc_out=btc_std, file='stdout')
         exit(1)
 
@@ -149,7 +149,7 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str, b
         try:
             assert len(btc_split) > 0
         except AssertionError:
-            print('The output of btc have a empty line in it')
+            print('The output of btc is empty', file=sys.stderr)
             exit(1)
 
         # assert date's
@@ -158,7 +158,7 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str, b
         try:
             assert py_date == btc_date
         except AssertionError:
-            print(f'Expect date: {py_date + datetime.timedelta(days=1)} got: {btc_split[0]}')
+            print(f'Expect date: {py_date + datetime.timedelta(days=1)} got: {btc_split[0]}', file=sys.stderr)
             exit(1)
 
         # assert result
@@ -169,14 +169,14 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str, b
                 decimal=2)
         except AssertionError:
             print(
-                f'For date: {py_split[0]}, expect value: {np.float32(py_split[-1])} got: {np.float32(btc_split[-1])}')
+                f'For date: {py_split[0]}, expect value: {np.float32(py_split[-1])} got: {np.float32(btc_split[-1])}', file=sys.stderr)
             exit(1)
 
     # assert that we have the same amount of messages on stderr
     try:
         assert len(py_err) == len(btc_err)
     except AssertionError:
-        print(f'Expect: {len(py_err)} to stderr, got: {len(btc_err)}')
+        print(f'Expect: {len(py_err)} to stderr, got: {len(btc_err)}', file=sys.stderr)
         save_state(py_out=py_err, btc_out=btc_err, file='stderr')
         exit(1)
 
@@ -186,7 +186,7 @@ def tester(db: dict[datetime.date, np.float32], target_path: Path, delim: str, b
             assert msg.lower().startswith('error')
         except AssertionError:
             print(
-                f'Expect that message on stderr startswith error, got: {msg}')
+                f'Expect that message on stderr startswith error, got: {msg}', file=sys.stderr)
             exit(1)
 
 

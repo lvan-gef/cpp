@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
     }
 
     try {
-        BitcoinExchange be("db/dataa.csv");
+        BitcoinExchange be("db/data.csv");
         be.getResult(argv[1]);
     } catch (FileHandler::FileError &e) {
         std::cerr << "Error: " << e.what() << '\n';
