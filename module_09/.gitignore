@@ -8,3 +8,7 @@ vgcore*
 RPN
 .venv
 *_debug
+btc_stdout.txt
+py_stdout.txt
+btc_stderr.txt
+py_stderr.txt
