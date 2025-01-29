@@ -13,7 +13,6 @@ BitcoinExchange::BitcoinExchange(const std::string &file)
         _dbSeperator = _getSeperator(_fd);
         _loadDB();
         _lineBuffer.reserve(100);
-        _tokenBuffer.resize(2);
     } catch (FileHandler::FileError &) {
         throw;
     } catch (FileHandler::FileEOF &) {
@@ -138,18 +137,18 @@ char BitcoinExchange::_getSeperator(FileHandler &fh) {
 
 ExchangeDay BitcoinExchange::_getExchangeData(const std::string &line,
                                               const char separator) {
-    _tokenBuffer.clear();
+    _tokenBuffer.empty();
     _errorBuffer.str("");
     size_t prev = 0;
     size_t pos = 0;
 
     while ((pos = line.find(separator, prev)) != std::string::npos) {
         if (pos > prev) {
-            _tokenBuffer.push_back(line.substr(prev, pos - prev));
+            _tokenBuffer[0] = line.substr(prev, pos - prev);
         }
         prev = pos + 1;
     }
-    _tokenBuffer.push_back(line.substr(prev));
+    _tokenBuffer[1] = line.substr(prev);
 
     if (_tokenBuffer.size() != 2) {
         _errorBuffer << "Invalid format: expected 2 values, got "
@@ -215,7 +214,7 @@ void BitcoinExchange::_validateDate(const std::string &line) {
         throw BitcoinExchange::BE(_errorBuffer.str());
     }
 
-    static const std::list<int> daysInMonth = {31, 28, 31, 30, 31, 30,
+    static const std::array<int, 12> daysInMonth = {31, 28, 31, 30, 31, 30,
                                                31, 31, 30, 31, 30, 31};
     if (month == 2) {
         bool isLeapYear =
