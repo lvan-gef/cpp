@@ -1,14 +1,11 @@
 #ifndef BITCOINEXCHANGE_HPP
 #define BITCOINEXCHANGE_HPP
 
-#include <cstdint>
-#include <iostream>
 #include <map>
 #include <sstream>
 #include <vector>
 
 #include "./FileHandler.hpp"
-#include "./Utils.hpp"
 
 struct ExchangeDay {
     std::string date;

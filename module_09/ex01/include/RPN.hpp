@@ -1,9 +1,9 @@
 #ifndef RPN_HPP
 #define RPN_HPP
 
-#include <algorithm>
-#include <iostream>
 #include <stack>
+#include <stdexcept>
+#include <string>
 
 class RPN {
   public:

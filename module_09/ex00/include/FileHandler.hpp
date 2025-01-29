@@ -14,10 +14,14 @@ class FileHandler {
     FileHandler(FileHandler &&rhs) noexcept;
     FileHandler &operator=(FileHandler &&rhs) noexcept;
 
+    ~FileHandler();
+
+  public:
     void gnl(std::string &buffer);
     bool isEof() const;
-
     const std::string &getFilename() const;
+
+  public:
     class FileEOF : public std::runtime_error {
       public:
         explicit FileEOF(const std::string &msg);
@@ -27,8 +31,6 @@ class FileHandler {
       public:
         explicit FileError(const std::string &msg);
     };
-
-    ~FileHandler();
 
   private:
     std::fstream _file;

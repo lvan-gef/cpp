@@ -1,4 +1,6 @@
-#include "../include/RPN.hpp"
+#include <iostream>
+
+#include "RPN.hpp"
 
 int main(int argc, char **argv) {
     if (argc != 2) {
@@ -6,7 +8,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    RPN rpn; // make input std::string
+    RPN rpn;
     try {
         rpn.result(argv[1]);
     } catch (RPN::Error &e) {

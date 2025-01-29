@@ -1,4 +1,4 @@
-#include "../include/FileHandler.hpp"
+#include "FileHandler.hpp"
 
 FileHandler::FileHandler() : _file(""), _filename("") {
 }

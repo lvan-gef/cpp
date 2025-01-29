@@ -1,4 +1,6 @@
-#include "../include/Utils.hpp"
+#include <algorithm>
+
+#include "Utils.hpp"
 
 void ltrim(std::string &s) {
     s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](unsigned char ch) {

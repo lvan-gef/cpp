@@ -1,4 +1,7 @@
-#include "../include/BitcoinExchange.hpp"
+#include <iostream>
+
+#include "BitcoinExchange.hpp"
+#include "Utils.hpp"
 
 BitcoinExchange::BitcoinExchange(const std::string &file)
     : _fd(file), _targetSeperator('|'), _maxValue(1000) {

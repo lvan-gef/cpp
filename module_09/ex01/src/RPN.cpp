@@ -1,4 +1,8 @@
-#include "../include/RPN.hpp"
+#include <ios>
+#include <iostream>
+#include <algorithm>
+
+#include "RPN.hpp"
 
 RPN::RPN() {
     std::cout << std::fixed;
