@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iterator>
 
 #include "BitcoinExchange.hpp"
 #include "Utils.hpp"
@@ -12,7 +13,7 @@ BitcoinExchange::BitcoinExchange(const std::string &file)
         _dbSeperator = _getSeperator(_fd);
         _loadDB();
         _lineBuffer.reserve(100);
-        _tokenBuffer.reserve(2);
+        _tokenBuffer.resize(2);
     } catch (FileHandler::FileError &) {
         throw;
     } catch (FileHandler::FileEOF &) {
@@ -158,22 +159,22 @@ ExchangeDay BitcoinExchange::_getExchangeData(const std::string &line,
 
     ExchangeDay ed;
     try {
-        trim(_tokenBuffer[0]);
-        _validateDate(_tokenBuffer[0]);
-        ed.date = std::move(_tokenBuffer[0]);
+        trim(_tokenBuffer.front());
+        _validateDate(_tokenBuffer.front());
+        ed.date = std::move(_tokenBuffer.front());
     } catch (BitcoinExchange::BE &) {
         throw;
     }
 
     try {
-        ed.value = std::stof(_tokenBuffer[1]);
+        ed.value = std::stof(_tokenBuffer.back());
         if (ed.value < 0) {
             _errorBuffer << "value must be more then 0.0 got: '" << ed.value
                          << "'";
             throw BitcoinExchange::BE(_errorBuffer.str());
         }
     } catch (std::invalid_argument &e) {
-        _errorBuffer << "value: '" << _tokenBuffer[1]
+        _errorBuffer << "value: '" << _tokenBuffer.back()
                      << "' is not a valid float... (" << e.what() << ")";
         throw BitcoinExchange::BE(_errorBuffer.str());
     } catch (std::out_of_range &) {
@@ -214,16 +215,19 @@ void BitcoinExchange::_validateDate(const std::string &line) {
         throw BitcoinExchange::BE(_errorBuffer.str());
     }
 
-    static const std::vector<int> daysInMonth = {31, 28, 31, 30, 31, 30,
-                                                 31, 31, 30, 31, 30, 31};
+    static const std::list<int> daysInMonth = {31, 28, 31, 30, 31, 30,
+                                               31, 31, 30, 31, 30, 31};
     if (month == 2) {
         bool isLeapYear =
             (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
         if (day > (isLeapYear ? 29 : 28)) {
             throw BitcoinExchange::BE("Invalid day for February");
         }
-    } else if (day > daysInMonth[static_cast<size_t>(month - 1)]) {
-        throw BitcoinExchange::BE("Invalid day for given month");
+    } else {
+        auto it = std::next(daysInMonth.begin(), month - 1);
+        if (day > *it) {
+            throw BitcoinExchange::BE("Invalid day for given month");
+        }
     }
 }
 

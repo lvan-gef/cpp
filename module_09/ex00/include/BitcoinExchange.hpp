@@ -1,9 +1,9 @@
 #ifndef BITCOINEXCHANGE_HPP
 #define BITCOINEXCHANGE_HPP
 
+#include <list>
 #include <map>
 #include <sstream>
-#include <vector>
 
 #include "./FileHandler.hpp"
 
@@ -36,7 +36,7 @@ class BitcoinExchange {
   private:
     FileHandler _fd;
     std::map<std::string, float> _db;
-    std::vector<std::string> _tokenBuffer;
+    std::list<std::string> _tokenBuffer;
     char _dbSeperator;
     char _targetSeperator;
     float _maxValue;
