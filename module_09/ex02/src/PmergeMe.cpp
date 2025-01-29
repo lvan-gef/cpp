@@ -1,37 +1,22 @@
 #include "../include/PmergeMe.hpp"
 
-PmergeMe::PmergeMe() {
-    std::cout << "Default constructor for PmergeMe is called" << '\n';
+
+void PmergeMe::run_list(int size, char **args) {
+    std::list<int> lis = {size};
+
 }
 
-PmergeMe::PmergeMe(const PmergeMe &rhs) {
-    (void) rhs;
-    std::cout << "Default copy constructor for PmergeMe is called" << '\n';
+void PmergeMe::run_vector(int size, char **args) {
+
 }
 
-PmergeMe &PmergeMe::operator=(const PmergeMe &rhs) {
-    std::cout << "Copy assigment constructor for PmergeMe is called" << '\n';
-    if (this != &rhs) {
+// private
+bool PmergeMe::_parse_input_list(char **args, std::list<int> &lis) {
 
-    }
-
-    return *this;
+    return true;
 }
 
-PmergeMe::PmergeMe(PmergeMe && rhs) noexcept {
-    (void) rhs;
-    std::cout << "Default move constructor for PmergeMe is called" << '\n';
-}
+bool PmergeMe::_parse_input_vector(char **args, std::vector<int> &vec) {
 
-PmergeMe &PmergeMe::operator=(PmergeMe && rhs) noexcept {
-    std::cout << "Move assigment constructor for PmergeMe is called" << '\n';
-    if (this != &rhs) {
-
-    }
-
-    return *this;
-}
-
-PmergeMe::~PmergeMe() {
-    std::cout << "Default destructor for PmergeMe is called" << '\n';
+    return true;
 }
