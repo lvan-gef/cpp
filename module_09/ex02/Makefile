@@ -26,7 +26,7 @@ OBJDIR_DEBUG := $(OBJDIR)debug/
 VENV_DIR := $(TESTDIR).venv
 
 # files
-SRCFILES := main.cpp PmergeMeArray.cpp PmergeMe.cpp PmergeMeDeque.cpp
+SRCFILES := PmergeMe.cpp main.cpp
 SRCS := $(addprefix $(SRCDIR), $(SRCFILES))
 
 # build dirs
@@ -58,11 +58,10 @@ test: $(NAME)  ## Build the release and run tests agains it
 		python3 -m venv .venv && \
 		source .venv/bin/activate && \
 		pip install --upgrade pip && \
-		pip install -r requirements.txt && \
 		deactivate && \
 		cd ..; \
 	fi
-	$(VENV_PATH)/bin/python $(TESTDIR)$(NAME_TEST) $(NAME)
+	$(VENV_DIR)/bin/python $(TESTDIR)$(NAME_TEST) $(NAME)
 
 .PHONY: fmt
 fmt:  ## Format code via clang-format

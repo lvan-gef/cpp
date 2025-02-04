@@ -24,6 +24,16 @@ class PmergeMe {
     bool _parse_input_list(int size, char **args, std::list<int> &lis);
     bool _parse_input_vector(int size, char **args, std::vector<int> &vec);
     int _toInt(char *str);
+
+  private:
+    template <typename Container, typename T>
+    void binary_insert(Container &sorted_list, T value);
+
+    template <typename Container, typename T>
+    Container ford_johnson_sort(Container arr);
+
 };
+
+#include "../templates/PmergeMe.tpp"
 
 #endif // !PMERGEME_HPP

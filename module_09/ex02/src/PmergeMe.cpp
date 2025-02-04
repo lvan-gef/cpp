@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <cerrno>
 #include <climits>
 #include <cstdlib>
@@ -8,6 +9,8 @@
 #include "../include/PmergeMe.hpp"
 
 void PmergeMe::run_list(int size, char **args) {
+    auto start = std::chrono::high_resolution_clock::now();
+
     std::list<int> list((size_t)size);
 
     if (_parse_input_list(size, args, list) != true) {
@@ -15,7 +18,12 @@ void PmergeMe::run_list(int size, char **args) {
     }
 
     if (list.size() <= 1) {
-        // print duration
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration =
+            std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "Time to process a range of " << size
+                  << " elements with std::list: " << duration.count() << " us"
+                  << '\n';
         return;
     }
 
@@ -26,25 +34,57 @@ void PmergeMe::run_list(int size, char **args) {
             std::iter_swap(it, next_it);
         }
 
-        // print duration
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration =
+            std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "Time to process a range of " << size
+                  << " elements with std::list: " << duration.count() << " us"
+                  << '\n';
         return;
     }
+
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Time to process a range of " << size
+              << " elements with std::list: " << duration.count() << " us"
+              << '\n';
 }
 
 void PmergeMe::run_vector(int size, char **args) {
+    auto start = std::chrono::high_resolution_clock::now();
+
     std::vector<int> vector;
     vector.reserve((size_t)size);
 
     if (_parse_input_vector(size, args, vector) != true) {
         return;
     }
+
+    if (vector.size() <= 1) {
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration =
+            std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+        std::cout << "Time to process a range of " << size
+                  << " elements with std::vector: " << duration.count() << " us"
+                  << '\n';
+        return;
+    }
+
+    ford_johnson_sort<std::vector<int>, int>(vector);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration =
+        std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    std::cout << "Time to process a range of " << size
+              << " elements with std::vector: " << duration.count() << " us"
+              << '\n';
 }
 
 // private
 bool PmergeMe::_parse_input_list(int size, char **args, std::list<int> &lis) {
     std::list<int>::iterator it = lis.begin();
 
-    for (int index = 0; index < size; index++, ++it) {
+    for (int index = 1; index < size; index++, ++it) {
         int value = _toInt(args[index]);
         if (errno != 0) {
             return false;
@@ -57,7 +97,7 @@ bool PmergeMe::_parse_input_list(int size, char **args, std::list<int> &lis) {
 
 bool PmergeMe::_parse_input_vector(int size, char **args,
                                    std::vector<int> &vec) {
-    for (int index = 0; index < size; index++) {
+    for (int index = 1; index < size; index++) {
         int value = _toInt(args[index]);
         if (errno != 0) {
             return false;
