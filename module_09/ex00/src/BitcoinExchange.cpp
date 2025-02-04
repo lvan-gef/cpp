@@ -137,7 +137,7 @@ char BitcoinExchange::_getSeperator(FileHandler &fh) {
 
 ExchangeDay BitcoinExchange::_getExchangeData(const std::string &line,
                                               const char separator) {
-    _tokenBuffer.empty();
+    (void)_tokenBuffer.empty();
     _errorBuffer.str("");
     size_t prev = 0;
     size_t pos = 0;
