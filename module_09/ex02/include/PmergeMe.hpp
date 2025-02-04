@@ -28,7 +28,6 @@ class PmergeMe {
   private:
     template <typename Container, typename T>
     Container ford_johnson_sort(Container arr) const;
-    ;
 };
 
 #include "../templates/PmergeMe.tpp"
