@@ -21,8 +21,9 @@ class PmergeMe {
     void run_vector(int size, char **args);
 
   private:
-    bool _parse_input_list(char **args, std::list<int> &lis);
-    bool _parse_input_vector(char **args, std::vector<int> &vec);
+    bool _parse_input_list(int size, char **args, std::list<int> &lis);
+    bool _parse_input_vector(int size, char **args, std::vector<int> &vec);
+    int _toInt(char *str);
 };
 
 #endif // !PMERGEME_HPP

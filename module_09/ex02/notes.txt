@@ -1,0 +1,2 @@
+Merge insertion sort, 184-187, 192,
+193, 381, 389.
