@@ -1,34 +1,33 @@
-#ifndef PmergeMe_TPP
-#define PmergeMe_TPP
+#ifndef PMERGEME_TPP
+#define PMERGEME_TPP
 
-template <typename T>
-void binary_insert(std::vector<T> &sorted_list, T value) {
+template <typename Container, typename T>
+void binary_insert(Container& sorted_list, T value) {
     auto pos = lower_bound(sorted_list.begin(), sorted_list.end(), value);
     sorted_list.insert(pos, value);
 }
 
-template <typename T>
-std::vector<T> ford_johnson_sort(std::vector<T> arr) {
+template <typename Container, typename T>
+Container PmergeMe::ford_johnson_sort(Container arr) const {
     if (arr.size() <= 1) {
         return arr;
     }
 
-    std::vector<std::pair<T, T>> pairs;
+    Container primary, secondary;
     auto it = arr.begin();
     while (distance(it, arr.end()) > 1) {
         T first = *it, second = *(++it);
-        pairs.emplace_back(std::min(first, second), std::max(first, second));
+        if (first > second) {
+            std::swap(first, second);
+        }
+
+        primary.push_back(first);
+        secondary.push_back(second);
         ++it;
     }
 
-    Container primary, secondary;
-    for (auto& p : pairs) {
-        primary.push_back(p.first);
-        secondary.push_back(p.second);
-    }
-
     if (arr.size() % 2 == 1) {
-        primary.push_back(*it); // If odd, last element goes into primary
+        primary.push_back(*it);
     }
 
     primary = ford_johnson_sort<Container, T>(primary);
@@ -41,4 +40,4 @@ std::vector<T> ford_johnson_sort(std::vector<T> arr) {
     return sorted_list;
 }
 
-#endif // !PmergeMe_TPP
+#endif // PMERGEME_TPP

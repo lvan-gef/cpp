@@ -5,6 +5,7 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <chrono>
 
 #include "../include/PmergeMe.hpp"
 
@@ -43,6 +44,7 @@ void PmergeMe::run_list(int size, char **args) {
         return;
     }
 
+    ford_johnson_sort<std::list<int>, int>(list);
     auto end = std::chrono::high_resolution_clock::now();
     auto duration =
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);

@@ -9,7 +9,8 @@ int main(int argc, char **argv) {
     }
 
     PmergeMe sorter;
-    sorter.run_vector(argc - 1, argv);
+    /*sorter.run_vector(argc - 1, argv);*/
+    sorter.run_list(argc - 1, argv);
 
     return 0;
 }
