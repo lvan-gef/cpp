@@ -2,7 +2,7 @@
 #define PMERGEME_TPP
 
 template <typename Container, typename T>
-void binary_insert(Container& sorted_list, T value) {
+void binary_insert(Container &sorted_list, T value) {
     auto pos = lower_bound(sorted_list.begin(), sorted_list.end(), value);
     sorted_list.insert(pos, value);
 }
