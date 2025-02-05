@@ -7,7 +7,8 @@
 
 #include "PmergeVector.hpp"
 
-PmergeVector::PmergeVector() {}
+PmergeVector::PmergeVector() {
+}
 
 PmergeVector::PmergeVector(const PmergeVector &rhs) {
     (void)rhs;
@@ -31,7 +32,8 @@ PmergeVector &PmergeVector::operator=(PmergeVector &&rhs) noexcept {
     return *this;
 }
 
-PmergeVector::~PmergeVector() {}
+PmergeVector::~PmergeVector() {
+}
 
 void PmergeVector::sort(int size, char **args) {
     int max_seq = 10;
@@ -165,8 +167,7 @@ int PmergeVector::_toInt(char *str) const {
     return static_cast<int>(value);
 }
 
-void PmergeVector::_printSeq(const std::vector<int> &vec,
-                             int max_print) const {
+void PmergeVector::_printSeq(const std::vector<int> &vec, int max_print) const {
     auto start = vec.begin();
     auto end = vec.end();
     int index = 0;

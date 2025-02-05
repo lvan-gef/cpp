@@ -7,7 +7,8 @@
 
 #include "PmergeDeque.hpp"
 
-PmergeDeque::PmergeDeque() {}
+PmergeDeque::PmergeDeque() {
+}
 
 PmergeDeque::PmergeDeque(const PmergeDeque &rhs) {
     (void)rhs;
@@ -31,7 +32,8 @@ PmergeDeque &PmergeDeque::operator=(PmergeDeque &&rhs) noexcept {
     return *this;
 }
 
-PmergeDeque::~PmergeDeque() {}
+PmergeDeque::~PmergeDeque() {
+}
 
 void PmergeDeque::sort(int size, char **args) {
     int max_seq = 10;
