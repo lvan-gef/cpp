@@ -140,7 +140,7 @@ int PmergeVector::_toInt(char *str) const {
 }
 
 void PmergeVector::_printSeq(const std::vector<int> &vec,
-                            std::size_t max_print) const {
+                             std::size_t max_print) const {
     auto start = vec.begin();
     auto end = vec.end();
     std::size_t index = 0;

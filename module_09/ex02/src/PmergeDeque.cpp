@@ -4,8 +4,8 @@
 #include <chrono>
 #include <climits>
 #include <cstdlib>
-#include <iostream>
 #include <deque>
+#include <iostream>
 
 void PmergeDeque::sort(int size, char **args) {
     std::size_t max_seq = 7;
@@ -98,7 +98,7 @@ PmergeDeque::_fordJohnsonSort(const std::deque<int> &arr) const {
 }
 
 bool PmergeDeque::_parseInputDeque(int size, char **args,
-                                     std::deque<int> &deq) {
+                                   std::deque<int> &deq) {
     for (int index = 1; index < size; ++index) {
         int value = _toInt(args[index]);
         if (errno != 0) {
