@@ -1,5 +1,3 @@
-#include "PmergeDeque.hpp"
-
 #include <algorithm>
 #include <chrono>
 #include <climits>
@@ -7,15 +5,43 @@
 #include <deque>
 #include <iostream>
 
+#include "PmergeDeque.hpp"
+
+PmergeDeque::PmergeDeque() {}
+
+PmergeDeque::PmergeDeque(const PmergeDeque &rhs) {
+    (void)rhs;
+};
+
+PmergeDeque &PmergeDeque::operator=(const PmergeDeque &rhs) {
+    if (this != &rhs) {
+    }
+
+    return *this;
+}
+
+PmergeDeque::PmergeDeque(PmergeDeque &&rhs) noexcept {
+    (void)rhs;
+}
+
+PmergeDeque &PmergeDeque::operator=(PmergeDeque &&rhs) noexcept {
+    if (this != &rhs) {
+    }
+
+    return *this;
+}
+
+PmergeDeque::~PmergeDeque() {}
+
 void PmergeDeque::sort(int size, char **args) {
-    std::size_t max_seq = 7;
+    int max_seq = 10;
     std::cout << "Before: ";
-    std::size_t index = 1;
-    for (; index < max_seq + 1 && index < (std::size_t)size; ++index) {
+    int index = 1;
+    for (; index < max_seq + 1 && index < size; ++index) {
         std::cout << args[index] << " ";
     }
 
-    if (index < (std::size_t)size) {
+    if (index < size) {
         std::cout << "[...]";
     }
     std::cout << '\n';
@@ -34,7 +60,7 @@ void PmergeDeque::sort(int size, char **args) {
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
     _printSeq(deq, max_seq);
-    std::cout << "Time to process a range of " << size
+    std::cout << "Time to process a range of " << size - 1
               << " elements with std::deq: " << duration.count() << " us"
               << '\n'
               << '\n';
@@ -57,34 +83,34 @@ PmergeDeque::_fordJohnsonSort(const std::deque<int> &arr) const {
         return arr;
     }
 
-    std::deque<int> small, large;
+    std::deque<int> smallSeq, largeSeq;
     int extra = -1;
 
-    for (size_t i = 0; i + 1 < arr.size(); i += 2) {
-        int a = arr[i];
-        int b = arr[i + 1];
+    for (size_t index = 0; index + 1 < arr.size(); index += 2) {
+        int a = arr[index];
+        int b = arr[index + 1];
         if (a > b) {
             std::swap(a, b);
         }
 
-        small.push_back(a);
-        large.push_back(b);
+        smallSeq.push_back(a);
+        largeSeq.push_back(b);
     }
 
     if (arr.size() % 2 == 1) {
         extra = arr.back();
     }
 
-    small = _fordJohnsonSort(small);
+    smallSeq = _fordJohnsonSort(smallSeq);
 
-    std::deque<size_t> jacobsthal = _generateJacob(large.size());
+    std::deque<size_t> jacobsthal = _generateJacob(largeSeq.size());
 
-    std::deque<int> result = small;
-    if (!large.empty()) {
-        for (int i : large) {
-            auto it = std::upper_bound(result.begin(), result.end(), i);
+    std::deque<int> result = smallSeq;
+    if (!largeSeq.empty()) {
+        for (int index : largeSeq) {
+            auto it = std::upper_bound(result.begin(), result.end(), index);
             long int actualPos = it - result.begin();
-            result.insert(result.begin() + actualPos, i);
+            result.insert(result.begin() + actualPos, index);
         }
     }
 
@@ -138,11 +164,10 @@ int PmergeDeque::_toInt(char *str) const {
     return static_cast<int>(value);
 }
 
-void PmergeDeque::_printSeq(const std::deque<int> &deq,
-                            std::size_t max_print) const {
+void PmergeDeque::_printSeq(const std::deque<int> &deq, int max_print) const {
     auto start = deq.begin();
     auto end = deq.end();
-    std::size_t index = 0;
+    int index = 0;
 
     std::cout << "After : ";
     while (index < max_print && start != end) {

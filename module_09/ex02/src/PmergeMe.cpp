@@ -1,7 +1,3 @@
-#include <cerrno>
-#include <climits>
-#include <cstdlib>
-
 #include "PmergeMe.hpp"
 
 void PmergeMe::run_vector(int size, char **args) {

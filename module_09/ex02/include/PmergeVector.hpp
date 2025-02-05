@@ -5,15 +5,15 @@
 
 class PmergeVector {
   public:
-    PmergeVector() = default;
+    PmergeVector();
 
-    PmergeVector(const PmergeVector &rhs) = default;
-    PmergeVector &operator=(const PmergeVector &rhs) = default;
+    PmergeVector(const PmergeVector &rhs);
+    PmergeVector &operator=(const PmergeVector &rhs);
 
-    PmergeVector(PmergeVector &&rhs) noexcept = default;
-    PmergeVector &operator=(PmergeVector &&rhs) noexcept = default;
+    PmergeVector(PmergeVector &&rhs) noexcept;
+    PmergeVector &operator=(PmergeVector &&rhs) noexcept;
 
-    ~PmergeVector() = default;
+    ~PmergeVector();
 
   public:
     void sort(int size, char **args);
@@ -25,7 +25,7 @@ class PmergeVector {
   private:
     bool _parseInputVector(int size, char **args, std::vector<int> &vec) const;
     int _toInt(char *str) const;
-    void _printSeq(const std::vector<int> &vec, std::size_t max_print) const;
+    void _printSeq(const std::vector<int> &vec, int max_print) const;
 };
 
 #endif // !PMERGEVECTOR_HPP

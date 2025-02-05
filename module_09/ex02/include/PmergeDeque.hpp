@@ -5,15 +5,15 @@
 
 class PmergeDeque {
   public:
-    PmergeDeque() = default;
+    PmergeDeque();
 
-    PmergeDeque(const PmergeDeque &rhs) = default;
-    PmergeDeque &operator=(const PmergeDeque &rhs) = default;
+    PmergeDeque(const PmergeDeque &rhs);
+    PmergeDeque &operator=(const PmergeDeque &rhs);
 
-    PmergeDeque(PmergeDeque &&rhs) noexcept = default;
-    PmergeDeque &operator=(PmergeDeque &&rhs) noexcept = default;
+    PmergeDeque(PmergeDeque &&rhs) noexcept;
+    PmergeDeque &operator=(PmergeDeque &&rhs) noexcept;
 
-    ~PmergeDeque() = default;
+    ~PmergeDeque();
 
   public:
     void sort(int size, char **args);
@@ -25,7 +25,7 @@ class PmergeDeque {
   private:
     bool _parseInputDeque(int size, char **args, std::deque<int> &deq) const;
     int _toInt(char *str) const;
-    void _printSeq(const std::deque<int> &deq, std::size_t max_print) const;
+    void _printSeq(const std::deque<int> &deq, int max_print) const;
 };
 
 #endif // !PMERGELIST_HPP

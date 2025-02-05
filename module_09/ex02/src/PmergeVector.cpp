@@ -1,5 +1,3 @@
-#include "PmergeVector.hpp"
-
 #include <algorithm>
 #include <chrono>
 #include <climits>
@@ -7,15 +5,43 @@
 #include <iostream>
 #include <vector>
 
+#include "PmergeVector.hpp"
+
+PmergeVector::PmergeVector() {}
+
+PmergeVector::PmergeVector(const PmergeVector &rhs) {
+    (void)rhs;
+};
+
+PmergeVector &PmergeVector::operator=(const PmergeVector &rhs) {
+    if (this != &rhs) {
+    }
+
+    return *this;
+}
+
+PmergeVector::PmergeVector(PmergeVector &&rhs) noexcept {
+    (void)rhs;
+}
+
+PmergeVector &PmergeVector::operator=(PmergeVector &&rhs) noexcept {
+    if (this != &rhs) {
+    }
+
+    return *this;
+}
+
+PmergeVector::~PmergeVector() {}
+
 void PmergeVector::sort(int size, char **args) {
-    std::size_t max_seq = 7;
+    int max_seq = 10;
     std::cout << "Before: ";
-    std::size_t index = 1;
-    for (; index < max_seq + 1 && index < (std::size_t)size; ++index) {
+    int index = 1;
+    for (; index < max_seq + 1 && index < size; ++index) {
         std::cout << args[index] << " ";
     }
 
-    if (index < (std::size_t)size) {
+    if (index < size) {
         std::cout << "[...]";
     }
     std::cout << '\n';
@@ -35,7 +61,7 @@ void PmergeVector::sort(int size, char **args) {
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
     _printSeq(vec, max_seq);
-    std::cout << "Time to process a range of " << size
+    std::cout << "Time to process a range of " << size - 1
               << " elements with std::vector: " << duration.count() << " us"
               << '\n'
               << '\n';
@@ -58,34 +84,34 @@ PmergeVector::_fordJohnsonSort(const std::vector<int> &arr) const {
         return arr;
     }
 
-    std::vector<int> small, large;
+    std::vector<int> smallSeq, largeSeq;
     int extra = -1;
 
-    for (size_t i = 0; i + 1 < arr.size(); i += 2) {
-        int a = arr[i];
-        int b = arr[i + 1];
+    for (size_t index = 0; index + 1 < arr.size(); index += 2) {
+        int a = arr[index];
+        int b = arr[index + 1];
         if (a > b) {
             std::swap(a, b);
         }
 
-        small.push_back(a);
-        large.push_back(b);
+        smallSeq.push_back(a);
+        largeSeq.push_back(b);
     }
 
     if (arr.size() % 2 == 1) {
         extra = arr.back();
     }
 
-    small = _fordJohnsonSort(small);
+    smallSeq = _fordJohnsonSort(smallSeq);
 
-    std::vector<size_t> jacobsthal = _generateJacob(large.size());
+    std::vector<size_t> jacobsthal = _generateJacob(largeSeq.size());
 
-    std::vector<int> result = small;
-    if (!large.empty()) {
-        for (int i : large) {
-            auto it = std::upper_bound(result.begin(), result.end(), i);
+    std::vector<int> result = smallSeq;
+    if (!largeSeq.empty()) {
+        for (int index : largeSeq) {
+            auto it = std::upper_bound(result.begin(), result.end(), index);
             long int actualPos = it - result.begin();
-            result.insert(result.begin() + actualPos, i);
+            result.insert(result.begin() + actualPos, index);
         }
     }
 
@@ -140,10 +166,10 @@ int PmergeVector::_toInt(char *str) const {
 }
 
 void PmergeVector::_printSeq(const std::vector<int> &vec,
-                             std::size_t max_print) const {
+                             int max_print) const {
     auto start = vec.begin();
     auto end = vec.end();
-    std::size_t index = 0;
+    int index = 0;
 
     std::cout << "After : ";
     while (index < max_print && start != end) {
