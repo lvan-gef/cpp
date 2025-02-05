@@ -29,19 +29,19 @@ void PmergeVector::sort(int size, char **args) {
         return;
     }
 
-    vec = fordJohnsonSort(vec);
+    vec = _fordJohnsonSort(vec);
     auto end = std::chrono::high_resolution_clock::now();
     auto duration =
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-    printSeq(vec, max_seq);
+    _printSeq(vec, max_seq);
     std::cout << "Time to process a range of " << size
               << " elements with std::vector: " << duration.count() << " us"
               << '\n'
               << '\n';
 }
 
-std::vector<std::size_t> PmergeVector::generateJacob(std::size_t n) {
+std::vector<std::size_t> PmergeVector::_generateJacob(std::size_t n) const {
     std::vector<size_t> jacobsthal = {0, 1};
 
     while (jacobsthal.back() < n) {
@@ -53,7 +53,7 @@ std::vector<std::size_t> PmergeVector::generateJacob(std::size_t n) {
 }
 
 std::vector<int>
-PmergeVector::fordJohnsonSort(const std::vector<int> &arr) const {
+PmergeVector::_fordJohnsonSort(const std::vector<int> &arr) const {
     if (arr.size() <= 1) {
         return arr;
     }
@@ -76,9 +76,9 @@ PmergeVector::fordJohnsonSort(const std::vector<int> &arr) const {
         extra = arr.back();
     }
 
-    small = fordJohnsonSort(small);
+    small = _fordJohnsonSort(small);
 
-    std::vector<size_t> jacobsthal = generateJacob(large.size());
+    std::vector<size_t> jacobsthal = _generateJacob(large.size());
 
     std::vector<int> result = small;
     if (!large.empty()) {
@@ -112,7 +112,7 @@ bool PmergeVector::_parseInputVector(int size, char **args,
     return true;
 }
 
-int PmergeVector::_toInt(char *str) {
+int PmergeVector::_toInt(char *str) const {
     char *endptr = nullptr;
     long int value = strtol(str, &endptr, 10);
 
@@ -139,8 +139,8 @@ int PmergeVector::_toInt(char *str) {
     return static_cast<int>(value);
 }
 
-void PmergeVector::printSeq(const std::vector<int> &vec,
-                            std::size_t max_print) {
+void PmergeVector::_printSeq(const std::vector<int> &vec,
+                            std::size_t max_print) const {
     auto start = vec.begin();
     auto end = vec.end();
     std::size_t index = 0;

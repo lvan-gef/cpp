@@ -28,19 +28,19 @@ void PmergeDeque::sort(int size, char **args) {
         return;
     }
 
-    deq = fordJohnsonSort(deq);
+    deq = _fordJohnsonSort(deq);
     auto end = std::chrono::high_resolution_clock::now();
     auto duration =
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-    printSeq(deq, max_seq);
+    _printSeq(deq, max_seq);
     std::cout << "Time to process a range of " << size
               << " elements with std::deq: " << duration.count() << " us"
               << '\n'
               << '\n';
 }
 
-std::deque<std::size_t> PmergeDeque::generateJacob(std::size_t n) {
+std::deque<std::size_t> PmergeDeque::_generateJacob(std::size_t n) const {
     std::deque<size_t> jacobsthal = {0, 1};
 
     while (jacobsthal.back() < n) {
@@ -52,7 +52,7 @@ std::deque<std::size_t> PmergeDeque::generateJacob(std::size_t n) {
 }
 
 std::deque<int>
-PmergeDeque::fordJohnsonSort(const std::deque<int> &arr) const {
+PmergeDeque::_fordJohnsonSort(const std::deque<int> &arr) const {
     if (arr.size() <= 1) {
         return arr;
     }
@@ -75,9 +75,9 @@ PmergeDeque::fordJohnsonSort(const std::deque<int> &arr) const {
         extra = arr.back();
     }
 
-    small = fordJohnsonSort(small);
+    small = _fordJohnsonSort(small);
 
-    std::deque<size_t> jacobsthal = generateJacob(large.size());
+    std::deque<size_t> jacobsthal = _generateJacob(large.size());
 
     std::deque<int> result = small;
     if (!large.empty()) {
@@ -111,7 +111,7 @@ bool PmergeDeque::_parseInputDeque(int size, char **args,
     return true;
 }
 
-int PmergeDeque::_toInt(char *str) {
+int PmergeDeque::_toInt(char *str) const {
     char *endptr = nullptr;
     long int value = strtol(str, &endptr, 10);
 
@@ -138,7 +138,7 @@ int PmergeDeque::_toInt(char *str) {
     return static_cast<int>(value);
 }
 
-void PmergeDeque::printSeq(const std::deque<int> &deq, std::size_t max_print) {
+void PmergeDeque::_printSeq(const std::deque<int> &deq, std::size_t max_print) {
     auto start = deq.begin();
     auto end = deq.end();
     std::size_t index = 0;

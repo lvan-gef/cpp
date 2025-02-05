@@ -19,15 +19,13 @@ class PmergeDeque {
     void sort(int size, char **args);
 
   private:
-  private:
-    static std::deque<std::size_t> generateJacob(std::size_t n);
-    static void insert(std::deque<int> &chain, int element, std::size_t hint);
-    std::deque<int> fordJohnsonSort(const std::deque<int> &deq) const;
+    std::deque<std::size_t> _generateJacob(std::size_t n) const;
+    std::deque<int> _fordJohnsonSort(const std::deque<int> &deq) const;
 
   private:
     bool _parseInputDeque(int size, char **args, std::deque<int> &deq);
-    int _toInt(char *str);
-    void printSeq(const std::deque<int> &deq, std::size_t max_print);
+    int _toInt(char *str) const;
+    void _printSeq(const std::deque<int> &deq, std::size_t max_print);
 };
 
 #endif // !PMERGELIST_HPP
