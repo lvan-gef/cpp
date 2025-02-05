@@ -1,10 +1,10 @@
-#include "PmergeVector.hpp"
+#include "PmergeList.hpp"
 
 #include <cstdlib>
 #include <chrono>
 #include <climits>
 #include <iostream>
-#include <vector>
+#include <list>
 
 PmergeList::Pair::Pair(int a, int b) {
     if (a > b) {
@@ -19,10 +19,9 @@ PmergeList::Pair::Pair(int a, int b) {
 void PmergeList::sort(int size, char **args) {
     auto start = std::chrono::high_resolution_clock::now();
 
-    std::vector<int> arr;
-    arr.reserve((size_t)size);
+    std::list<int> arr{size};
 
-    if (_parse_input_vector(size, args, arr) != true) {
+    if (_parse_input_list(size, args, arr) != true) {
         return;
     }
 
@@ -31,14 +30,14 @@ void PmergeList::sort(int size, char **args) {
     auto duration =
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     std::cout << "Time to process a range of " << size
-              << " elements with std::vector: " << duration.count() << " us"
+              << " elements with std::list: " << duration.count() << " us"
               << '\n';
 
     std::cout << *arr.begin() << '\n';
 }
 
-std::vector<std::size_t> PmergeList::generate_jacob(std::size_t n) {
-    std::vector<std::size_t> sequence;
+std::list<std::size_t> PmergeList::generate_jacob(std::size_t n) {
+    std::list<std::size_t> sequence;
     sequence.reserve(n);
 
     if (n == 0) {
@@ -63,21 +62,21 @@ std::vector<std::size_t> PmergeList::generate_jacob(std::size_t n) {
     return sequence;
 }
 
-void PmergeList::insert(std::vector<int> &chain, int element,
+void PmergeList::insert(std::list<int> &chain, int element,
                           std::size_t hint) {
-    std::vector<int>::iterator start = chain.begin() + (long)hint;
-    std::vector<int>::iterator pos =
+    std::list<int>::iterator start = chain.begin() + (long)hint;
+    std::list<int>::iterator pos =
         std::lower_bound(start, chain.end(), element);
     chain.insert(pos, element);
 }
 
-std::vector<int>
-PmergeList::ford_johnson_sort(const std::vector<int> &arr) const {
+std::list<int>
+PmergeList::ford_johnson_sort(const std::list<int> &arr) const {
     if (arr.size() <= 1) {
         return arr;
     }
 
-    std::vector<Pair> pairs;
+    std::list<Pair> pairs;
     pairs.reserve(arr.size());
 
     std::size_t i = 0;
@@ -91,8 +90,8 @@ PmergeList::ford_johnson_sort(const std::vector<int> &arr) const {
     }
     bool has_extra = i < arr.size();
 
-    std::vector<int> small_elements;
-    std::vector<int> large_elements;
+    std::list<int> small_elements;
+    std::list<int> large_elements;
 
     small_elements.reserve(pairs.size());
     large_elements.reserve(pairs.size());
@@ -106,9 +105,9 @@ PmergeList::ford_johnson_sort(const std::vector<int> &arr) const {
         small_elements = ford_johnson_sort(small_elements);
     }
 
-    std::vector<int> result = small_elements;
+    std::list<int> result = small_elements;
 
-    std::vector<std::size_t> jacobsthal = generate_jacob(pairs.size());
+    std::list<std::size_t> jacobsthal = generate_jacob(pairs.size());
 
     if (!large_elements.empty()) {
         result.insert(result.begin() + 1, large_elements[0]);
@@ -136,8 +135,8 @@ PmergeList::ford_johnson_sort(const std::vector<int> &arr) const {
     return result;
 }
 
-bool PmergeList::_parse_input_vector(int size, char **args,
-                                       std::vector<int> &vec) {
+bool PmergeList::_parse_input_list(int size, char **args,
+                                       std::list<int> &vec) {
     for (int index = 1; index < size; ++index) {
         int value = _toInt(args[index]);
         if (errno != 0) {

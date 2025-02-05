@@ -1,6 +1,7 @@
 #ifndef PMERGEME_HPP
 #define PMERGEME_HPP
 
+#include "PmergeList.hpp"
 #include "PmergeVector.hpp"
 
 class PmergeMe {
@@ -20,6 +21,7 @@ class PmergeMe {
 
   private:
     PmergeVector _vec;
+    PmergeList _list;
 };
 
 #endif // !PMERGEME_HPP
