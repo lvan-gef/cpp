@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "../include/PmergeMe.hpp"
+#include "PmergeMe.hpp"
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -8,9 +8,9 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    PmergeMe sorter;
-    /*sorter.run_vector(argc - 1, argv);*/
-    sorter.run_list(argc - 1, argv);
+    PmergeMe merge{};
+    merge.run_vector(argc - 1, argv);
+
 
     return 0;
 }
