@@ -26,7 +26,7 @@ OBJDIR_DEBUG := $(OBJDIR)debug/
 VENV_DIR := $(TESTDIR).venv
 
 # files
-SRCFILES := main.cpp PmergeMe.cpp PmergeVector.cpp
+SRCFILES := main.cpp PmergeDeque.cpp PmergeMe.cpp PmergeVector.cpp
 SRCS := $(addprefix $(SRCDIR), $(SRCFILES))
 
 # build dirs

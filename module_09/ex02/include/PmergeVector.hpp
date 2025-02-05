@@ -19,21 +19,13 @@ class PmergeVector {
     void sort(int size, char **args);
 
   private:
-    struct Pair {
-        int small;
-        int large;
-
-        Pair(int a, int b);
-    };
+    static std::vector<std::size_t> generateJacob(std::size_t n);
+    std::vector<int> fordJohnsonSort(const std::vector<int> &arr) const;
 
   private:
-    static std::vector<std::size_t> generate_jacob(std::size_t n);
-    static void insert(std::vector<int> &chain, int element, std::size_t hint);
-    std::vector<int> ford_johnson_sort(const std::vector<int> &arr) const;
-
-  private:
-    bool _parse_input_vector(int size, char **args, std::vector<int> &vec);
+    bool _parseInputVector(int size, char **args, std::vector<int> &vec);
     int _toInt(char *str);
+    void printSeq(const std::vector<int> &vec, std::size_t max_print);
 };
 
 #endif // !PMERGEVECTOR_HPP

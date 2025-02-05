@@ -1,7 +1,7 @@
 #ifndef PMERGEME_HPP
 #define PMERGEME_HPP
 
-#include "PmergeList.hpp"
+#include "PmergeDeque.hpp"
 #include "PmergeVector.hpp"
 
 class PmergeMe {
@@ -18,10 +18,11 @@ class PmergeMe {
 
   public:
     void run_vector(int size, char **args);
+    void run_deque(int size, char **args);
 
   private:
     PmergeVector _vec;
-    PmergeDeque _list;
+    PmergeDeque _deq;
 };
 
 #endif // !PMERGEME_HPP

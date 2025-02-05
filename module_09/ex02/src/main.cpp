@@ -9,8 +9,8 @@ int main(int argc, char **argv) {
     }
 
     PmergeMe merge{};
-    merge.run_vector(argc - 1, argv);
-
+    merge.run_vector(argc, argv);
+    merge.run_deque(argc, argv);
 
     return 0;
 }
