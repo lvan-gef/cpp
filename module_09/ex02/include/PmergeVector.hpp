@@ -23,7 +23,7 @@ class PmergeVector {
     std::vector<int> _fordJohnsonSort(const std::vector<int> &arr) const;
 
   private:
-    bool _parseInputVector(int size, char **args, std::vector<int> &vec);
+    bool _parseInputVector(int size, char **args, std::vector<int> &vec) const;
     int _toInt(char *str) const;
     void _printSeq(const std::vector<int> &vec, std::size_t max_print) const;
 };

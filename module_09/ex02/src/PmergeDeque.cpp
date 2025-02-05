@@ -98,7 +98,7 @@ PmergeDeque::_fordJohnsonSort(const std::deque<int> &arr) const {
 }
 
 bool PmergeDeque::_parseInputDeque(int size, char **args,
-                                   std::deque<int> &deq) {
+                                   std::deque<int> &deq) const {
     for (int index = 1; index < size; ++index) {
         int value = _toInt(args[index]);
         if (errno != 0) {
@@ -138,7 +138,8 @@ int PmergeDeque::_toInt(char *str) const {
     return static_cast<int>(value);
 }
 
-void PmergeDeque::_printSeq(const std::deque<int> &deq, std::size_t max_print) {
+void PmergeDeque::_printSeq(const std::deque<int> &deq,
+                            std::size_t max_print) const {
     auto start = deq.begin();
     auto end = deq.end();
     std::size_t index = 0;

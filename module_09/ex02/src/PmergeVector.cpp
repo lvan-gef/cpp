@@ -99,7 +99,7 @@ PmergeVector::_fordJohnsonSort(const std::vector<int> &arr) const {
 }
 
 bool PmergeVector::_parseInputVector(int size, char **args,
-                                     std::vector<int> &vec) {
+                                     std::vector<int> &vec) const {
     for (int index = 1; index < size; ++index) {
         int value = _toInt(args[index]);
         if (errno != 0) {

@@ -23,9 +23,9 @@ class PmergeDeque {
     std::deque<int> _fordJohnsonSort(const std::deque<int> &deq) const;
 
   private:
-    bool _parseInputDeque(int size, char **args, std::deque<int> &deq);
+    bool _parseInputDeque(int size, char **args, std::deque<int> &deq) const;
     int _toInt(char *str) const;
-    void _printSeq(const std::deque<int> &deq, std::size_t max_print);
+    void _printSeq(const std::deque<int> &deq, std::size_t max_print) const;
 };
 
 #endif // !PMERGELIST_HPP
