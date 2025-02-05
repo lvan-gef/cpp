@@ -5,7 +5,7 @@
 #include <climits>
 #include <cstdlib>
 #include <iostream>
-#include <deq>
+#include <deque>
 
 void PmergeDeque::sort(int size, char **args) {
     std::size_t max_seq = 7;
@@ -22,8 +22,7 @@ void PmergeDeque::sort(int size, char **args) {
 
     auto start = std::chrono::high_resolution_clock::now();
 
-    std::deq<int> deq;
-    deq.reserve((size_t)size);
+    std::deque<int> deq;
 
     if (_parseInputDeque(size, args, deq) != true) {
         return;
@@ -41,8 +40,8 @@ void PmergeDeque::sort(int size, char **args) {
               << '\n';
 }
 
-std::deq<std::size_t> PmergeDeque::generateJacob(std::size_t n) {
-    std::deq<size_t> jacobsthal = {0, 1};
+std::deque<std::size_t> PmergeDeque::generateJacob(std::size_t n) {
+    std::deque<size_t> jacobsthal = {0, 1};
 
     while (jacobsthal.back() < n) {
         jacobsthal.push_back(jacobsthal[jacobsthal.size() - 1] +
@@ -52,13 +51,13 @@ std::deq<std::size_t> PmergeDeque::generateJacob(std::size_t n) {
     return jacobsthal;
 }
 
-std::deq<int>
-PmergeDeque::fordJohnsonSort(const std::deq<int> &arr) const {
+std::deque<int>
+PmergeDeque::fordJohnsonSort(const std::deque<int> &arr) const {
     if (arr.size() <= 1) {
         return arr;
     }
 
-    std::deq<int> small, large;
+    std::deque<int> small, large;
     int extra = -1;
 
     for (size_t i = 0; i + 1 < arr.size(); i += 2) {
@@ -78,9 +77,9 @@ PmergeDeque::fordJohnsonSort(const std::deq<int> &arr) const {
 
     small = fordJohnsonSort(small);
 
-    std::deq<size_t> jacobsthal = generateJacob(large.size());
+    std::deque<size_t> jacobsthal = generateJacob(large.size());
 
-    std::deq<int> result = small;
+    std::deque<int> result = small;
     if (!large.empty()) {
         for (int i : large) {
             auto it = std::upper_bound(result.begin(), result.end(), i);
@@ -99,7 +98,7 @@ PmergeDeque::fordJohnsonSort(const std::deq<int> &arr) const {
 }
 
 bool PmergeDeque::_parseInputDeque(int size, char **args,
-                                     std::deq<int> &deq) {
+                                     std::deque<int> &deq) {
     for (int index = 1; index < size; ++index) {
         int value = _toInt(args[index]);
         if (errno != 0) {
@@ -139,7 +138,7 @@ int PmergeDeque::_toInt(char *str) {
     return static_cast<int>(value);
 }
 
-void PmergeDeque::printSeq(const std::deq<int> &deq, std::size_t max_print) {
+void PmergeDeque::printSeq(const std::deque<int> &deq, std::size_t max_print) {
     auto start = deq.begin();
     auto end = deq.end();
     std::size_t index = 0;
