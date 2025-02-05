@@ -21,7 +21,7 @@ class PmergeMe {
 
   private:
     PmergeVector _vec;
-    PmergeList _list;
+    PmergeDeque _list;
 };
 
 #endif // !PMERGEME_HPP

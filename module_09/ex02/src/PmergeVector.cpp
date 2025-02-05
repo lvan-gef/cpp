@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-PmergeList::Pair::Pair(int a, int b) {
+PmergeVector::Pair::Pair(int a, int b) {
     if (a > b) {
         large = a;
         small = b;
@@ -16,7 +16,7 @@ PmergeList::Pair::Pair(int a, int b) {
     }
 }
 
-void PmergeList::sort(int size, char **args) {
+void PmergeVector::sort(int size, char **args) {
     auto start = std::chrono::high_resolution_clock::now();
 
     std::vector<int> arr;
@@ -37,7 +37,7 @@ void PmergeList::sort(int size, char **args) {
     std::cout << *arr.begin() << '\n';
 }
 
-std::vector<std::size_t> PmergeList::generate_jacob(std::size_t n) {
+std::vector<std::size_t> PmergeVector::generate_jacob(std::size_t n) {
     std::vector<std::size_t> sequence;
     sequence.reserve(n);
 
@@ -63,7 +63,7 @@ std::vector<std::size_t> PmergeList::generate_jacob(std::size_t n) {
     return sequence;
 }
 
-void PmergeList::insert(std::vector<int> &chain, int element,
+void PmergeVector::insert(std::vector<int> &chain, int element,
                           std::size_t hint) {
     std::vector<int>::iterator start = chain.begin() + (long)hint;
     std::vector<int>::iterator pos =
@@ -72,7 +72,7 @@ void PmergeList::insert(std::vector<int> &chain, int element,
 }
 
 std::vector<int>
-PmergeList::ford_johnson_sort(const std::vector<int> &arr) const {
+PmergeVector::ford_johnson_sort(const std::vector<int> &arr) const {
     if (arr.size() <= 1) {
         return arr;
     }
@@ -136,7 +136,7 @@ PmergeList::ford_johnson_sort(const std::vector<int> &arr) const {
     return result;
 }
 
-bool PmergeList::_parse_input_vector(int size, char **args,
+bool PmergeVector::_parse_input_vector(int size, char **args,
                                        std::vector<int> &vec) {
     for (int index = 1; index < size; ++index) {
         int value = _toInt(args[index]);
@@ -150,7 +150,7 @@ bool PmergeList::_parse_input_vector(int size, char **args,
     return true;
 }
 
-int PmergeList::_toInt(char *str) {
+int PmergeVector::_toInt(char *str) {
     char *endptr = nullptr;
     long int value = strtol(str, &endptr, 10);
 

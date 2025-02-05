@@ -1,12 +1,12 @@
-#include "PmergeList.hpp"
+#include "PmergeDeque.hpp"
 
 #include <cstdlib>
 #include <chrono>
 #include <climits>
 #include <iostream>
-#include <list>
+#include <deque>
 
-PmergeList::Pair::Pair(int a, int b) {
+PmergeDeque::Pair::Pair(int a, int b) {
     if (a > b) {
         large = a;
         small = b;
@@ -16,28 +16,29 @@ PmergeList::Pair::Pair(int a, int b) {
     }
 }
 
-void PmergeList::sort(int size, char **args) {
+void PmergeDeque::sort(int size, char **args) {
     auto start = std::chrono::high_resolution_clock::now();
 
-    std::list<int> arr{size};
+    std::deque<int> deq;
+    deq.reserve((size_t)size);
 
-    if (_parse_input_list(size, args, arr) != true) {
+    if (_parse_input_deque(size, args, deq) != true) {
         return;
     }
 
-    arr = ford_johnson_sort(arr);
+    deq = ford_johnson_sort(deq);
     auto end = std::chrono::high_resolution_clock::now();
     auto duration =
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     std::cout << "Time to process a range of " << size
-              << " elements with std::list: " << duration.count() << " us"
+              << " elements with std::deque: " << duration.count() << " us"
               << '\n';
 
-    std::cout << *arr.begin() << '\n';
+    std::cout << *deq.begin() << '\n';
 }
 
-std::list<std::size_t> PmergeList::generate_jacob(std::size_t n) {
-    std::list<std::size_t> sequence;
+std::deque<std::size_t> PmergeDeque::generate_jacob(std::size_t n) {
+    std::deque<std::size_t> sequence;
     sequence.reserve(n);
 
     if (n == 0) {
@@ -62,21 +63,21 @@ std::list<std::size_t> PmergeList::generate_jacob(std::size_t n) {
     return sequence;
 }
 
-void PmergeList::insert(std::list<int> &chain, int element,
+void PmergeDeque::insert(std::deque<int> &chain, int element,
                           std::size_t hint) {
-    std::list<int>::iterator start = chain.begin() + (long)hint;
-    std::list<int>::iterator pos =
+    std::deque<int>::iterator start = chain.begin() + (long)hint;
+    std::deque<int>::iterator pos =
         std::lower_bound(start, chain.end(), element);
     chain.insert(pos, element);
 }
 
-std::list<int>
-PmergeList::ford_johnson_sort(const std::list<int> &arr) const {
+std::deque<int>
+PmergeDeque::ford_johnson_sort(const std::deque<int> &arr) const {
     if (arr.size() <= 1) {
         return arr;
     }
 
-    std::list<Pair> pairs;
+    std::deque<Pair> pairs;
     pairs.reserve(arr.size());
 
     std::size_t i = 0;
@@ -90,8 +91,8 @@ PmergeList::ford_johnson_sort(const std::list<int> &arr) const {
     }
     bool has_extra = i < arr.size();
 
-    std::list<int> small_elements;
-    std::list<int> large_elements;
+    std::deque<int> small_elements;
+    std::deque<int> large_elements;
 
     small_elements.reserve(pairs.size());
     large_elements.reserve(pairs.size());
@@ -105,9 +106,9 @@ PmergeList::ford_johnson_sort(const std::list<int> &arr) const {
         small_elements = ford_johnson_sort(small_elements);
     }
 
-    std::list<int> result = small_elements;
+    std::deque<int> result = small_elements;
 
-    std::list<std::size_t> jacobsthal = generate_jacob(pairs.size());
+    std::deque<std::size_t> jacobsthal = generate_jacob(pairs.size());
 
     if (!large_elements.empty()) {
         result.insert(result.begin() + 1, large_elements[0]);
@@ -135,8 +136,8 @@ PmergeList::ford_johnson_sort(const std::list<int> &arr) const {
     return result;
 }
 
-bool PmergeList::_parse_input_list(int size, char **args,
-                                       std::list<int> &vec) {
+bool PmergeDeque::_parse_input_deque(int size, char **args,
+                                       std::deque<int> &vec) {
     for (int index = 1; index < size; ++index) {
         int value = _toInt(args[index]);
         if (errno != 0) {
@@ -149,7 +150,7 @@ bool PmergeList::_parse_input_list(int size, char **args,
     return true;
 }
 
-int PmergeList::_toInt(char *str) {
+int PmergeDeque::_toInt(char *str) {
     char *endptr = nullptr;
     long int value = strtol(str, &endptr, 10);
 
