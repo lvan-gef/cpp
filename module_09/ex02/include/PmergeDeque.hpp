@@ -16,7 +16,8 @@ class PmergeDeque {
     ~PmergeDeque();
 
   public:
-    void sort(int size, char **args);
+    std::deque<int> sort(int size, char **args) const;
+    void printSeq(const std::deque<int> &deq, int max_print) const;
 
   private:
     std::deque<std::size_t> _generateJacob(std::size_t n) const;
@@ -25,7 +26,6 @@ class PmergeDeque {
   private:
     bool _parseInputDeque(int size, char **args, std::deque<int> &deq) const;
     int _toInt(char *str) const;
-    void _printSeq(const std::deque<int> &deq, int max_print) const;
 };
 
 #endif // !PMERGELIST_HPP

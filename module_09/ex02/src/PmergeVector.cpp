@@ -5,7 +5,7 @@
 #include <iostream>
 #include <vector>
 
-#include "PmergeVector.hpp"
+#include "../include/PmergeVector.hpp"
 
 PmergeVector::PmergeVector() {
 }
@@ -35,7 +35,7 @@ PmergeVector &PmergeVector::operator=(PmergeVector &&rhs) noexcept {
 PmergeVector::~PmergeVector() {
 }
 
-void PmergeVector::sort(int size, char **args) {
+std::vector<int> PmergeVector::sort(int size, char **args) const {
     int max_seq = 10;
     std::cout << "Before: ";
     int index = 1;
@@ -54,7 +54,8 @@ void PmergeVector::sort(int size, char **args) {
     vec.reserve((size_t)size);
 
     if (_parseInputVector(size, args, vec) != true) {
-        return;
+        errno = EINVAL;
+        return vec;
     }
 
     vec = _fordJohnsonSort(vec);
@@ -62,11 +63,32 @@ void PmergeVector::sort(int size, char **args) {
     auto duration =
         std::chrono::duration_cast<std::chrono::microseconds>(end - start);
 
-    _printSeq(vec, max_seq);
+    printSeq(vec, max_seq);
     std::cout << "Time to process a range of " << size - 1
               << " elements with std::vector: " << duration.count() << " us"
               << '\n'
               << '\n';
+
+    return vec;
+}
+
+void PmergeVector::printSeq(const std::vector<int> &vec, int max_print) const {
+    auto start = vec.begin();
+    auto end = vec.end();
+    int index = 0;
+
+    std::cout << "After : ";
+    while (index < max_print && start != end) {
+        std::cout << *start << " ";
+        start++;
+        index++;
+    }
+
+    if (start != end) {
+        std::cout << "[...]";
+    }
+
+    std::cout << '\n';
 }
 
 std::vector<std::size_t> PmergeVector::_generateJacob(std::size_t n) const {
@@ -165,23 +187,4 @@ int PmergeVector::_toInt(char *str) const {
     }
 
     return static_cast<int>(value);
-}
-
-void PmergeVector::_printSeq(const std::vector<int> &vec, int max_print) const {
-    auto start = vec.begin();
-    auto end = vec.end();
-    int index = 0;
-
-    std::cout << "After : ";
-    while (index < max_print && start != end) {
-        std::cout << *start << " ";
-        start++;
-        index++;
-    }
-
-    if (start != end) {
-        std::cout << "[...]";
-    }
-
-    std::cout << '\n';
 }

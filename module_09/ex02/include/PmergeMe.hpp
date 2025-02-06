@@ -3,6 +3,8 @@
 
 #include "PmergeDeque.hpp"
 #include "PmergeVector.hpp"
+#include <deque>
+#include <vector>
 
 class PmergeMe {
   public:
@@ -17,8 +19,8 @@ class PmergeMe {
     ~PmergeMe() = default;
 
   public:
-    void run_vector(int size, char **args);
-    void run_deque(int size, char **args);
+    std::vector<int> run_vector(int size, char **args);
+    std::deque<int> run_deque(int size, char **args);
 
   private:
     PmergeVector _vec;

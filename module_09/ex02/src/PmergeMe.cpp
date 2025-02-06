@@ -1,9 +1,12 @@
+#include <deque>
+#include <vector>
+
 #include "PmergeMe.hpp"
 
-void PmergeMe::run_vector(int size, char **args) {
-    _vec.sort(size, args);
+std::vector<int> PmergeMe::run_vector(int size, char **args) {
+    return _vec.sort(size, args);
 }
 
-void PmergeMe::run_deque(int size, char **args) {
-    _deq.sort(size, args);
+std::deque<int> PmergeMe::run_deque(int size, char **args) {
+    return _deq.sort(size, args);
 }
