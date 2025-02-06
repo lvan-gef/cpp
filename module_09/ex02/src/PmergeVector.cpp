@@ -179,8 +179,8 @@ int PmergeVector::_toInt(char *str) const {
             std::cerr << "Interger overflow" << '\n';
             errno = ERANGE;
             return 0;
-        } else if (value < INT_MIN) {
-            std::cerr << "Interger underflow" << '\n';
+        } else if (value < 0) {
+            std::cerr << "Error: invalid interger" << '\n';
             errno = ERANGE;
             return 0;
         }

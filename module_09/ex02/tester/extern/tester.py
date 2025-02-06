@@ -7,6 +7,7 @@ import random
 from pathlib import Path
 
 MAX_INT = 2147483647
+MIN_INT = -2147483648
 
 INPUT_SIZES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 35, 42, 100, 166, 200, 259,
                300, 369, 400, 444, 500, 512, 600, 666, 700, 714, 800, 823,
@@ -28,6 +29,10 @@ def get_uniq_valid_seq(size: int) -> list[int]:
 
 def get_valid_seq(size: int) -> list[int]:
     return random.choices(range(0, MAX_INT), k=size)
+
+
+def get_uniq_invalid_seq(size: int) -> list[int]:
+    return random.sample(range(MIN_INT, 0), size)
 
 
 def run_program(exe: Path, seq: list[int], should_pass = True) -> tuple[list[int], int, list[int], int]:
@@ -54,7 +59,10 @@ def run_program(exe: Path, seq: list[int], should_pass = True) -> tuple[list[int
         assert result.returncode == 0
         assert result.stderr == ''
     else:
-        assert result.returncode != 1
+        print(result.returncode)
+        print(result.stdout)
+        print(result.stderr)
+        assert result.returncode != 0
         assert result.stderr != ''
 
     lines = [line for line in result.stdout.split('\n') if line]
@@ -74,36 +82,44 @@ def main(exe: Path, retry: int) -> None:
         print(f'could not found: {exe}', file=sys.stderr)
         return
 
-    print('Start uniq random seq test')
+    # print('Start uniq random seq test')
+    # for inp in INPUT_SIZES:
+    #     vec_times = []
+    #     seq = get_uniq_valid_seq(size=inp)
+    #     py_seq = sorted(seq)
+    #
+    #     for _ in range(retry):
+    #         vec_seq, vec_time, _, _ = run_program(exe=exe, seq=seq, should_pass=True)
+    #         vec_times.append(int(vec_time))
+    #
+    #         assert vec_seq == py_seq
+    #
+    #     print(f'\tsize: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
+    # print('Pass uniq random seq test\n')
+    #
+    #
+    # print('Start random seq test')
+    # for inp in INPUT_SIZES:
+    #     vec_times = []
+    #     seq = get_valid_seq(size=inp)
+    #     py_seq = sorted(seq)
+    #
+    #     for _ in range(retry):
+    #         vec_seq, vec_time, _, _ = run_program(exe=exe, seq=seq, should_pass=True)
+    #         vec_times.append(int(vec_time))
+    #
+    #         assert vec_seq == py_seq
+    #
+    #     print(f'\tsize: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
+    # print('Pass random seq test')
+
+    print('Start uniq random invalid seq test')
     for inp in INPUT_SIZES:
-        vec_times = []
-        seq = get_uniq_valid_seq(size=inp)
-        py_seq = sorted(seq)
+        seq = get_uniq_invalid_seq(size=inp)
 
-        for _ in range(retry):
-            vec_seq, vec_time, _, _ = run_program(exe=exe, seq=seq, should_pass=True)
-            vec_times.append(int(vec_time))
+        run_program(exe=exe, seq=seq, should_pass=False)
 
-            assert vec_seq == py_seq
-
-        print(f'\tsize: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
     print('Pass uniq random seq test\n')
-
-
-    print('Start random seq test')
-    for inp in INPUT_SIZES:
-        vec_times = []
-        seq = get_valid_seq(size=inp)
-        py_seq = sorted(seq)
-
-        for _ in range(retry):
-            vec_seq, vec_time, _, _ = run_program(exe=exe, seq=seq, should_pass=True)
-            vec_times.append(int(vec_time))
-
-            assert vec_seq == py_seq
-
-        print(f'\tsize: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
-    print('Pass random seq test')
 
 
 if __name__ == '__main__':

@@ -15,7 +15,8 @@ int runTest(int argc, char **args) {
     }
     vec.printSeq(vec_result, argc - 1);
 
-    return 0;}
+    return 0;
+}
 
 int main(int argc, char **argv) {
     return runTest(argc, argv);
