@@ -18,6 +18,7 @@ def get_valid_seq(size: int) -> list[int]:
 
 def run_program(exe: Path, seq: list[int], should_pass = True):
     nbrs = ' '.join(str(x) for x in seq)
+
     try:
         result = subprocess.run(f'{exe} {nbrs}', shell=True, capture_output=True, text=True)
     except OSError as ose:
@@ -44,6 +45,10 @@ def run_program(exe: Path, seq: list[int], should_pass = True):
 
 
 def main(exe: Path, retry: int):
+    if not exe.exists():
+        print(f'could not found: {exe}', file=sys.stderr)
+        return
+
     inputs = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 35, 42, 100, 166, 200, 259,
               300, 369, 400, 444, 500, 512, 600, 666, 700, 714, 800, 823,
               900, 999, 1000, 1111, 1222, 1333, 1444, 1555, 1666, 1777, 1888, 1999,
@@ -80,7 +85,7 @@ def main(exe: Path, retry: int):
         py_seq = sorted(seq)
 
         for _ in range(retry):
-            vec_seq, vec_time = run_program(exe=Path().cwd().joinpath('test'), seq=seq, should_pass=True)
+            vec_seq, vec_time = run_program(exe=exe, seq=seq, should_pass=True)
             vec_times.append(int(vec_time))
 
             assert vec_seq == py_seq
@@ -91,8 +96,8 @@ def main(exe: Path, retry: int):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='PmergeMeTester', description='A simple tester')
-    parser.add_argument('exe', help='The exe of the tester for PmergeMe')
+    parser.add_argument('exe', help='The exe of the tester for PmergeMe', type=Path)
     parser.add_argument('-r', '--retry', help='How many times to test with the same input, to get a better result', default=100, type=int)
     args = parser.parse_args()
 
-    main(exe=args.exe, retry=args.retry)
+    main(exe=args.exe.resolve(), retry=args.retry)
