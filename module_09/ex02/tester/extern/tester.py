@@ -5,6 +5,7 @@ import sys
 import subprocess
 import random
 from pathlib import Path
+from string import ascii_lowercase, digits
 
 MAX_INT = 2147483647
 MIN_INT = -2147483648
@@ -34,6 +35,17 @@ def get_valid_seq(size: int) -> list[int]:
 def get_uniq_invalid_seq(size: int) -> list[int]:
     return random.sample(range(MIN_INT, 0), size)
 
+def get_uniq_overflow_seq(size: int) -> list[int]:
+    sample = random.sample(range(MAX_INT - 10, MAX_INT + 1), size)
+    sample.append(MAX_INT + 1)
+    sample.append(MAX_INT * 2)
+    return sample
+
+
+def get_chars_invalid_seq(size: int) -> list[int]:
+    chars = ascii_lowercase + digits
+    return [''.join(random.choice(chars) for _ in range(10)) for _ in range(size)]
+
 
 def run_program(exe: Path, seq: list[int], should_pass = True) -> tuple[list[int], int, list[int], int]:
     """
@@ -59,11 +71,9 @@ def run_program(exe: Path, seq: list[int], should_pass = True) -> tuple[list[int
         assert result.returncode == 0
         assert result.stderr == ''
     else:
-        print(result.returncode)
-        print(result.stdout)
-        print(result.stderr)
         assert result.returncode != 0
         assert result.stderr != ''
+        return [], 0, [], 0
 
     lines = [line for line in result.stdout.split('\n') if line]
     index = 0
@@ -82,44 +92,56 @@ def main(exe: Path, retry: int) -> None:
         print(f'could not found: {exe}', file=sys.stderr)
         return
 
-    # print('Start uniq random seq test')
-    # for inp in INPUT_SIZES:
-    #     vec_times = []
-    #     seq = get_uniq_valid_seq(size=inp)
-    #     py_seq = sorted(seq)
-    #
-    #     for _ in range(retry):
-    #         vec_seq, vec_time, _, _ = run_program(exe=exe, seq=seq, should_pass=True)
-    #         vec_times.append(int(vec_time))
-    #
-    #         assert vec_seq == py_seq
-    #
-    #     print(f'\tsize: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
-    # print('Pass uniq random seq test\n')
-    #
-    #
-    # print('Start random seq test')
-    # for inp in INPUT_SIZES:
-    #     vec_times = []
-    #     seq = get_valid_seq(size=inp)
-    #     py_seq = sorted(seq)
-    #
-    #     for _ in range(retry):
-    #         vec_seq, vec_time, _, _ = run_program(exe=exe, seq=seq, should_pass=True)
-    #         vec_times.append(int(vec_time))
-    #
-    #         assert vec_seq == py_seq
-    #
-    #     print(f'\tsize: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
-    # print('Pass random seq test')
+    print('Start uniq random seq test')
+    for inp in INPUT_SIZES[1:]:
+        vec_times = []
+        seq = get_uniq_valid_seq(size=inp)
+        py_seq = sorted(seq)
+
+        for _ in range(retry):
+            vec_seq, vec_time, deq_seq, deq_time = run_program(exe=exe, seq=seq, should_pass=True)
+            vec_times.append(int(vec_time))
+
+            assert vec_seq == py_seq
+
+        print(f'\tsize: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
+    print('Pass uniq random seq test\n')
+
+    print('Start random seq test')
+    for inp in INPUT_SIZES[1:]:
+        vec_times = []
+        seq = get_valid_seq(size=inp)
+        py_seq = sorted(seq)
+
+        for _ in range(retry):
+            vec_seq, vec_time, _, _ = run_program(exe=exe, seq=seq, should_pass=True)
+            vec_times.append(int(vec_time))
+
+            assert vec_seq == py_seq
+
+        print(f'\tsize: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
+    print('Pass random seq test')
 
     print('Start uniq random invalid seq test')
     for inp in INPUT_SIZES:
         seq = get_uniq_invalid_seq(size=inp)
 
         run_program(exe=exe, seq=seq, should_pass=False)
+    print('Pass uniq random invalid seq test\n')
 
-    print('Pass uniq random seq test\n')
+    print('Start uniq random invalid overflow seq test')
+    for inp in INPUT_SIZES:
+        seq = get_uniq_overflow_seq(size=inp)
+
+        run_program(exe=exe, seq=seq, should_pass=False)
+    print('Pass uniq random invalid overflow seq test\n')
+
+    print('Start uniq random invalid overflow seq test')
+    for inp in INPUT_SIZES:
+        seq = get_chars_invalid_seq(size=inp)
+
+        run_program(exe=exe, seq=seq, should_pass=False)
+    print('Pass uniq random invalid overflow seq test\n')
 
 
 if __name__ == '__main__':
