@@ -1,9 +1,11 @@
 #include <cerrno>
+#include <deque>
 #include <iostream>
 #include <unistd.h>
 #include <vector>
 
 #include "../../include/PmergeVector.hpp"
+#include "../../include/PmergeDeque.hpp"
 #include "../include/PmergeMeTester.hpp"
 
 int runTest(int argc, char **args) {
@@ -15,6 +17,14 @@ int runTest(int argc, char **args) {
     }
 
     vec.printSeq(vec_result, argc - 1);
+
+    PmergeDeque deq;
+    std::deque<int> deq_result = deq.sort(argc, args);
+    if (errno != 0 || deq_result.empty()) {
+        return 1;
+    }
+
+    deq.printSeq(deq_result, argc - 1);
     return 0;
 }
 
