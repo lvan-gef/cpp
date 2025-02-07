@@ -77,14 +77,17 @@ def run_program(exe: Path, seq: list[int], should_pass = True) -> tuple[list[int
 
     lines = [line for line in result.stdout.split('\n') if line]
     index = 0
+    output = []
     for index, line in enumerate(lines):
         if not line:
             continue
 
         if line.lower().startswith('time'):
-            break
+            output.append([int(nbr) for nbr in lines[index + 1].split(':')[1].split(' ') if nbr])
+            output.append(int(lines[index].split(':')[-1].split(' ')[1]))
+            continue
 
-    return [int(nbr) for nbr in lines[index + 1].split(':')[1].split(' ') if nbr], int(lines[index].split(':')[-1].split(' ')[1]), [], 0
+    return output
 
 
 def main(exe: Path, retry: int) -> None:
@@ -95,31 +98,41 @@ def main(exe: Path, retry: int) -> None:
     print('Start uniq random seq test')
     for inp in INPUT_SIZES[1:]:
         vec_times = []
-        seq = get_uniq_valid_seq(size=inp)
+        deq_times = []
+
+        seq = get_valid_seq(size=inp)
         py_seq = sorted(seq)
 
         for _ in range(retry):
             vec_seq, vec_time, deq_seq, deq_time = run_program(exe=exe, seq=seq, should_pass=True)
-            vec_times.append(int(vec_time))
+            vec_times.append(vec_time)
+            deq_times.append(deq_time)
 
             assert vec_seq == py_seq
+            assert deq_seq == py_seq
 
-        print(f'\tsize: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
+        print(f'\tvector: size: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
+        print(f'\tdeque : size: {inp}, min/avg/max: {min(deq_times)} {sum(deq_times) / len(deq_times)} {max(deq_times)}\n')
     print('Pass uniq random seq test\n')
 
     print('Start random seq test')
     for inp in INPUT_SIZES[1:]:
         vec_times = []
+        deq_times = []
+
         seq = get_valid_seq(size=inp)
         py_seq = sorted(seq)
 
         for _ in range(retry):
-            vec_seq, vec_time, _, _ = run_program(exe=exe, seq=seq, should_pass=True)
-            vec_times.append(int(vec_time))
+            vec_seq, vec_time, deq_seq, deq_time = run_program(exe=exe, seq=seq, should_pass=True)
+            vec_times.append(vec_time)
+            deq_times.append(deq_time)
 
             assert vec_seq == py_seq
+            assert deq_seq == py_seq
 
-        print(f'\tsize: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
+        print(f'\tvector: size: {inp}, min/avg/max: {min(vec_times)} {sum(vec_times) / len(vec_times)} {max(vec_times)}')
+        print(f'\tdeque : size: {inp}, min/avg/max: {min(deq_times)} {sum(deq_times) / len(deq_times)} {max(deq_times)}\n')
     print('Pass random seq test')
 
     print('Start uniq random invalid seq test')
