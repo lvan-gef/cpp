@@ -12,7 +12,7 @@ PmergeVector::PmergeVector() {
 
 PmergeVector::PmergeVector(const PmergeVector &rhs) {
     (void)rhs;
-};
+}
 
 PmergeVector &PmergeVector::operator=(const PmergeVector &rhs) {
     if (this != &rhs) {

@@ -12,7 +12,7 @@ PmergeDeque::PmergeDeque() {
 
 PmergeDeque::PmergeDeque(const PmergeDeque &rhs) {
     (void)rhs;
-};
+}
 
 PmergeDeque &PmergeDeque::operator=(const PmergeDeque &rhs) {
     if (this != &rhs) {
