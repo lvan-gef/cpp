@@ -99,9 +99,10 @@ void PmergeVector::printSeq(const std::vector<int> &vec, int max_print) const {
 
 std::vector<std::size_t> PmergeVector::_generateJacob(std::size_t n) const {
     std::vector<size_t> jacobsthal = {0, 1};
+    jacobsthal.reserve(n);
 
     while (jacobsthal.back() < n) {
-        jacobsthal.push_back(jacobsthal[jacobsthal.size() - 1] +
+        jacobsthal.emplace_back(jacobsthal[jacobsthal.size() - 1] +
                              2 * jacobsthal[jacobsthal.size() - 2]);
     }
 
@@ -124,8 +125,8 @@ PmergeVector::_fordJohnsonSort(const std::vector<int> &arr) const {
             std::swap(a, b);
         }
 
-        smallSeq.push_back(a);
-        largeSeq.push_back(b);
+        smallSeq.emplace_back(a);
+        largeSeq.emplace_back(b);
     }
 
     if (arr.size() % 2 == 1) {
@@ -173,11 +174,11 @@ int PmergeVector::_toInt(char *str) const {
     long int value = strtol(str, &endptr, 10);
 
     if (endptr == str) {
-        std::cerr << "Error: No digits found" << '\n';
+        std::cerr << "Error: A non digit char found" << '\n';
         errno = EINVAL;
         return 0;
     } else if (*endptr != '\0') {
-        std::cerr << "Error: Invalid arr" << '\n';
+        std::cerr << "Error: Invalid argument" << '\n';
         errno = EINVAL;
         return 0;
     } else {
