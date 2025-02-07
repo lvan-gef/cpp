@@ -36,6 +36,12 @@ PmergeVector::~PmergeVector() {
 }
 
 std::vector<int> PmergeVector::sort(int size, char **args) const {
+    if (size < 2) {
+        std::cerr << "Error: Expect at least 1 argument got: 0" << '\n';
+        errno = EINVAL;
+        return {};
+    }
+
     int max_seq = 10;
     std::cout << "Before: ";
     int index = 1;
@@ -55,7 +61,7 @@ std::vector<int> PmergeVector::sort(int size, char **args) const {
 
     if (_parseInputVector(size, args, vec) != true) {
         errno = EINVAL;
-        return vec;
+        return {};
     }
 
     vec = _fordJohnsonSort(vec);
@@ -167,16 +173,16 @@ int PmergeVector::_toInt(char *str) const {
     long int value = strtol(str, &endptr, 10);
 
     if (endptr == str) {
-        std::cerr << "No digits found" << '\n';
+        std::cerr << "Error: No digits found" << '\n';
         errno = EINVAL;
         return 0;
     } else if (*endptr != '\0') {
-        std::cerr << "Invalid arr" << '\n';
+        std::cerr << "Error: Invalid arr" << '\n';
         errno = EINVAL;
         return 0;
     } else {
         if (value > INT_MAX) {
-            std::cerr << "Interger overflow" << '\n';
+            std::cerr << "Error: Interger overflow" << '\n';
             errno = ERANGE;
             return 0;
         } else if (value < 0) {

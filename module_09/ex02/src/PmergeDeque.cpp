@@ -36,6 +36,12 @@ PmergeDeque::~PmergeDeque() {
 }
 
 std::deque<int> PmergeDeque::sort(int size, char **args) const {
+    if (size < 2) {
+        std::cerr << "Expect at least 1 argument got: 0" << '\n';
+        errno = EINVAL;
+        return {};
+    }
+
     int max_seq = 10;
     std::cout << "Before: ";
     int index = 1;
