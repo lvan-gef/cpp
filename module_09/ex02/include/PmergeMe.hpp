@@ -1,10 +1,11 @@
 #ifndef PMERGEME_HPP
 #define PMERGEME_HPP
 
-#include "PmergeDeque.hpp"
-#include "PmergeVector.hpp"
 #include <deque>
 #include <vector>
+
+#include "../include/PmergeDeque.hpp"
+#include "../include/PmergeVector.hpp"
 
 class PmergeMe {
   public:

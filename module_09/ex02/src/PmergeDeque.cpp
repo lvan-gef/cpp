@@ -101,7 +101,7 @@ std::deque<std::size_t> PmergeDeque::_generateJacob(std::size_t n) const {
 
     while (jacobsthal.back() < n) {
         jacobsthal.emplace_back(jacobsthal[jacobsthal.size() - 1] +
-                             2 * jacobsthal[jacobsthal.size() - 2]);
+                                2 * jacobsthal[jacobsthal.size() - 2]);
     }
 
     return jacobsthal;
