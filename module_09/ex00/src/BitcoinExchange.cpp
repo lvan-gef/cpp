@@ -1,8 +1,8 @@
 #include <iostream>
 #include <iterator>
 
-#include "BitcoinExchange.hpp"
-#include "Utils.hpp"
+#include "../include/BitcoinExchange.hpp"
+#include "../include/Utils.hpp"
 
 BitcoinExchange::BitcoinExchange(const std::string &file)
     : _fd(file), _targetSeperator('|'), _maxValue(1000) {
