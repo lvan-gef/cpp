@@ -1,6 +1,6 @@
+#include <algorithm>
 #include <ios>
 #include <iostream>
-#include <algorithm>
 
 #include "../include/RPN.hpp"
 
