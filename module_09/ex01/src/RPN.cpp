@@ -2,7 +2,7 @@
 #include <iostream>
 #include <algorithm>
 
-#include "RPN.hpp"
+#include "../include/RPN.hpp"
 
 RPN::RPN() {
     std::cout << std::fixed;
