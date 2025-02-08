@@ -215,7 +215,7 @@ void BitcoinExchange::_validateDate(const std::string &line) {
     }
 
     static const std::array<int, 12> daysInMonth = {31, 28, 31, 30, 31, 30,
-                                               31, 31, 30, 31, 30, 31};
+                                                    31, 31, 30, 31, 30, 31};
     if (month == 2) {
         bool isLeapYear =
             (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
